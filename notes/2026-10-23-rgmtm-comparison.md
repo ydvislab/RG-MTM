@@ -38,6 +38,11 @@
 3. 正文没有图，审稿人很难一眼看懂。我们已有的首页图、流程图、概念图、案例图可以直接补进去。
 4. 我们论文里的读反分析、ERA5 2013/14、树状图（RQ4）、交错距离解释都被删掉了；需要决定要不要放回去。
 
-## 待决定
+## 决定（2026-10-24）
 
-用 RG-MTM 覆盖 RA-MTM 的具体方式还需要和用户确认，见对话记录。
+用户选择以 RG-MTM 为新工作仓库：
+- 私有仓库 `ydvislab/RG-MTM`（本地 `~/Research/RG-MTM`）；upstream 为 `lelewang1109/RG-MTM`，已禁止 push。
+- 我们的 `paper/`、`notes/`、`.aris/` 和 `references/provenance.json` 已拷贝过去并纳入跟踪；为此在私有仓库的 `.gitignore` 里取消了对 `/paper/`、`/notes/` 的忽略。
+- 本地 `data/real` 软链接到 RA-MTM 的数据目录。
+- 验证：新环境里单元测试通过，`experiments/publication2027/validate.py` 全部一致。
+- RA-MTM 从此作为存档，不再修改。

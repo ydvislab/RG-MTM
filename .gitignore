@@ -40,7 +40,7 @@ paper/**/*.log
 paper/**/*.out
 paper/**/*.synctex.gz
 
-# Manuscripts and writing notes are local-only; never publish to GitHub
-/paper/
-/notes/
+# Private fork (ydvislab/RG-MTM): paper/ and notes/ ARE tracked here.
+# The collaborator's public repo keeps them local-only; never push this fork to upstream.
+references/pdf/
 *.bundle

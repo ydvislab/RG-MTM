@@ -39,7 +39,7 @@
 \vgtccategory{Research}
 \vgtcinsertpkg
 \hypersetup{pdftitle={AnchorMTM: Spatially Anchored Merge Tree Maps for Time-Varying Scalar Fields},pdfauthor={Anonymous Authors}}
-\abstract{Temporal merge tree maps summarize evolving scalar topology, but their display coordinates need not correspond to a common spatial direction. AnchorMTM links these coordinates to a fixed reference estimated once from matched extremum motion across a 2D or 3D sequence. The leading eigenvector of the motion scatter matrix maximizes squared projected motion; a physically meaningful direction can alternatively be supplied. This standard estimation step provides targets for topology-budgeted layout rather than a separate direction-optimization contribution. A finite heuristic search seeks a leaf order with small worst reference displacement under a declared merge-level error budget. Exact fixed-order displacement and optimal-barrier evaluations support this search, followed by a capped quadratic program that balances spatial anchoring and projected motion with relative geometry and interval centering. Scalar-profile reconstruction produces the temporal map. Three certified bounds explain unavoidable position error under exact topology, finite widths, and bounded topological error; they benchmark layouts rather than prune the search. TMTM and ST-MTM are exact-topology special cases of the same formulation, so the bounds also measure them. Continuous feasibility and actual rendered errors are reported separately.}
+\abstract{Temporal merge tree maps summarize evolving scalar topology in one image, but their display axis need not correspond to any spatial direction. We formulate merge tree maps as one constrained layout problem, with a leaf order within a merge-level allowance, an interval layout under a position cap and a composite objective; TMTM and ST-MTM are exact-topology instances. Within it, AnchorMTM anchors the display axis to a fixed spatial reference, estimated once from matched extremum motion or supplied, and exposes one control, the merge-error budget $\varepsilon$: Exact Mode keeps the merge tree, and Budgeted Mode trades a declared merge-level error for position. A topology-budgeted order search with optimal merge barriers and a capped quadratic program construct the map. Three certified bounds state the displacement that exact topology, finite widths and bounded topological error make unavoidable; they depend only on the constraints and thus measure existing maps too. On seven planar and volumetric sequences (917 frames), 54--95\% of the order error of TMTM and ST-MTM is avoidable; Exact Mode comes within 0.03 percentage points of the bound on every planar sequence with an unchanged merge tree, and $\varepsilon$ traces the position--topology trade-off with every rendered map within its allowance.}
 \keywords{Time-varying scalar fields, merge tree maps, spatial anchoring, topology preservation, constrained layout.}
 \teaser{
 \centering
@@ -70,9 +70,9 @@ Our main contributions are as follows:
 \begin{itemize}
 \setlength{\itemsep}{2pt}
 \setlength{\parsep}{0pt}
-\item We formulate automatic spatial anchoring for temporal merge tree maps, using a single direction estimated from matched extremum motion to establish consistent spatial references across a 2D or 3D sequence.
-\item We develop a topology-budgeted layout framework that combines reference-aware leaf ordering with capped spatiotemporal anchor optimization. Exact and budgeted modes share the same framework, with explicit position and merge-level error accounting, and existing merge tree maps are special cases of its formulation.
-\item We establish certified position bounds that quantify unavoidable reference displacement under exact topology, finite feature widths, and bounded topological error.
+\item We formulate merge tree maps as hierarchy-constrained interval layouts with a merge-level allowance, a position cap and a composite objective, of which TMTM, ST-MTM, the reference projection and AnchorMTM are instances.
+\item We introduce AnchorMTM, which gives the display axis a spatial meaning through a fixed reference, topology-budgeted leaf ordering with optimal merge barriers and capped anchor optimization, governed by one merge-error budget.
+\item We establish three certified position bounds that hold for every instance meeting their assumptions, and show on seven sequences that most of the order error of existing maps is avoidable.
 \end{itemize}
 
 \section{Related Work}\label{sec:related}
@@ -346,7 +346,7 @@ where $\Pi_\eta(T_t)$ contains the orders whose optimal barriers meet the allowa
 
 \begin{table}[t]
 \caption{Merge tree maps as instances of Eq.~\ref{eq:general}.}\label{tab:instances}
-\centering\scriptsize\setlength{\tabcolsep}{2.4pt}
+\centering\scriptsize\setlength{\tabcolsep}{1.8pt}
 \begin{tabular}{lllll}\toprule
 Map & allowance $\eta$ & cap $B_t$ & order rule & objective\\\midrule
 TMTM~\cite{Koepp:2023:TMTM} & $0$ & $\infty$ & greedy subtree flips & $E_O$\\

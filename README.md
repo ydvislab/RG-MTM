@@ -1,141 +1,20 @@
-# RG-MTM: Reference-Guided Merge Tree Maps
+# AnchorMTM
 
-Implementation, experiments, and visualization assets for reference-guided merge tree maps.
+Spatial anchoring, topology-budgeted merge-tree layouts, and certified position bounds for temporal maps of scalar fields.
 
-RG-MTM diagnoses how far feature anchors must move when a merge-tree hierarchy
-is kept, and measures the scalar merge-level cost of optional relaxation. It
-preserves the selected extrema and their values. The contribution is a quantified
-trade-off, with mixed geometric motion-proxy benefits across datasets.
+## Current paper — 2026-11-02
 
-## Start here
+- [Main paper (PDF)](paper/pvis2027/drafts/method_anchor_figures_updated_en.pdf) · [LaTeX](paper/pvis2027/drafts/method_anchor_figures_updated_en.tex)
+- [Companion supplement (PDF)](paper/pvis2027/drafts/method_anchor_single_parameter_supplement.pdf) · [LaTeX](paper/pvis2027/drafts/method_anchor_single_parameter_supplement.tex)
+- [Figures, editable PowerPoint sources, and build instructions](paper/pvis2027/README.md)
 
-- 最新论文与配套附录 PDF：[`publications/`](publications/README.md)。
-- 最新实验、公共指标与复现入口：[`experiments/latest/`](experiments/latest/README.md)。
-- 三维实验：[`实验设计与证据总览`](experiments/volume3d/EXPERIMENTS.md)、[`原网格 Tangaroa 结果与图片`](results/volume3d/README.md)。
-- RG-MTM 实验图片：[统一图片索引](results/figures/README.md)（PNG / SVG，含生成脚本及来源哈希）。
-- Experiment code and commands: [`experiments/publication2027/`](experiments/publication2027/README.md).
-- Scientific reproduction: [`experiments/publication2027/REPRODUCING.md`](experiments/publication2027/REPRODUCING.md).
-- Organized results and provenance: [`results/publication2027/`](results/publication2027/README.md).
-- Raw-data acquisition/preparation: [`data/README.md`](data/README.md).
+The paper directory retains only the latest manuscript, its supplement, and the two current figures with editable sources. Figure 1 shows the central Storms sequence through five snapshots, scalar profiles, rotated strips, and the selected temporal-map region; Figure 2 is the compact cross-frame correspondence diagram. Earlier manuscript and figure versions remain in Git history. Experiments, Discussion, and Conclusion currently retain placeholder headings.
 
+## Research materials
 
-## Main experiments
+- [Method and baseline code](code/)
+- [Data documentation](data/)
+- [Research documentation](docs/)
+- [References](references/)
 
-| Dataset | Frames | Tree | Purpose |
-|---|---:|---|---|
-| ERA5 pressure, 1999/2000 | 118 | Join | Atmospheric minima and illustrated conflict |
-| Australian fire, 2019 | 30 | Split | More complex feature configurations |
-| NOAA OLR, June–July 2024 | 60 | Join | Additional domain and no motion-proxy benefit case |
-| China PM2.5, January 2000 | 30 | Split | Selected, sparse descriptive case |
-| Ring | 40 | Split | Synthetic expanding geometry |
-| Gaussians | 64 | Split | Synthetic hierarchy/position control |
-
-Membership is defined in `analysis/dataset_suite.py`: six sequences / 342 frames.
-The 2013/14 ERA5 period and OISST are excluded from main aggregates. Four PM2.5
-months are a separate exploratory selection audit. Gaussian motion error is
-undefined at the default setting because no clear events occur.
-
-The main methods are TMTM, a reimplementation of ST-MTM, native Hilbert and Morton,
-packed reference sorting, and RG-MTM-P / RG-MTM-R. Native curves retain
-all processed samples and do not receive optimal filling. This rendering-policy
-difference is explicit in the paper. Fixed-X and exact projection are controls.
-
-## Reproduce
-
-Use Python 3.10+ and the pinned dependencies:
-
-```sh
-python -m pip install -e .
-PYTHONPATH=src python -m unittest discover -s tests -v
-# Recompute five critical numerical stages on all six prepared sequences:
-PYTHONPATH=src python experiments/publication2027/run.py
-# Regenerate tables, quantitative figures, organized records and provenance:
-PYTHONPATH=src python experiments/publication2027/build.py
-# Verify source/figure hashes and numerical manuscript claims:
-PYTHONPATH=src python experiments/publication2027/validate.py
-```
-
-The scientific/contract tests cover the main suite and 3-D extension. Full numerical runs require prepared raw
-inputs; saved records suffice to regenerate publication tables and figures.
-The runner writes timestamped status manifests and logs. Exact-frontier,
-sensitivity, scalability, and transfer records retained from prior runs are
-identified separately. See the experiment README for the explicit ten-stage run.
-
-The organized export includes a 42-row unrounded comparison CSV, a claim ledger,
-source/snapshot hashes, and separate `main`, `sensitivity`, `validation`, `transfer`,
-and `protocols` folders. No original result files or raw observations are removed.
-
-## Reading the results
-
-Full interval certificates, width-free calibrated order error, and achieved anchor
-displacement measure different feasible sets. Scalar-cost means do not bound the
-worst frame, and the relaxation eligibility threshold is not an error guarantee.
-The motion proxy assumes known identities and is not a participant study. Improved
-reference alignment may worsen two-dimensional stress or provide no proxy benefit.
-
-The retained [visualization gallery](results/visualizations/README.md) provides
-additional spatial/tree views, six-method temporal maps, fragmentation, and
-geometric diagnostics. The new publication figures have PDF, PNG, and SVG exports.
-The source reference papers are held locally under `references/`; their text and
-figures are not redistributed in the new source bundle.
-
-## Three-dimensional extension
-
-The separate [3-D experiment](experiments/volume3d/README.md) supports temporal
-volume inputs, physical-coordinate Q derivation for the public SquareCylinder
-velocity data, volume-based feature widths, and full-3-D versus projected motion
-evaluation. Its results remain outside the six-sequence / 342-frame main suite.
-The 3-D primary baseline is TMTM; ST-MTM is an explicitly optional project
-extension. Official FAU Tangaroa velocity-to-speed acquisition and an independently
-recorded ECNR VTM release are kept separate, with source checksums and version limits.
-An [input audit against the authors' workspaces](results/volume3d/tangaroa-input-audit-20261018/REPORT.md)
-corrects the previous Tangaroa pilot: it omitted the authors' mask/clip operations
-and used split trees instead of join trees. Its coarse pilot metrics must not be
-used as a same-input reproduction of the paper. The audit checks original-resolution
-frames 0/100/200 before TTK simplification. The subsequent [full 201-frame experiment](results/volume3d/tangaroa-paper-p10-full201/REPORT.md)
-has now completed and passed independent verification on the original 300×180×120 grid,
-using the author workspace scalar protocol and pinned TTK 0.9.9 at persistence 10%.
-The derived node-count range is 36–186 versus the paper's 50–186; exact reproduction of
-the unpublished final trees remains unresolved. [Paper-style figures](results/volume3d/tangaroa-paper-p10-full201/paper_style/README.md)
-pair temporal scalar maps with original-resolution volume renderings.
-See [the supplement index](results/volume3d/README.md) for saved reports, figures,
-threshold diagnostics, and independent raster verification.
-
-The [3-D experiment overview](experiments/volume3d/EXPERIMENTS.md) separates the
-official full-grid run, two synthetic mechanism checks, and historical coarse
-pilots. The completed full-grid comparison uses TMTM, RG-MTM-P, three RG-MTM-R
-eligibility settings, and an exact-projection control. Persistence stays at 10%:
-the four RG panels are not the paper's four persistence settings. Cylinder has
-not completed a real-data run. Verify the saved 3-D evidence without downloading
-the raw data:
-
-```sh
-PYTHONPATH=src:. python -m experiments.volume3d.verify_saved
-```
-
-## Implementation details
-
-`src/rgmtm/` contains the certificate, interval layout, rendering, and baseline
-implementations. `analysis/` contains shared preprocessing, exact frontiers,
-filling, motion evaluation, and controls. `experiments/publication2027/` supplies
-publication orchestration. `results/` retains original computation evidence;
-`results/publication2027/` is the organized active snapshot. This repository contains
-experimental code and outputs. The current manuscript and matching supplement PDFs are published separately in `publications/`. LaTeX sources, historical drafts, and writing notes stay local; code/results bundles exclude the publications folder.
-
-## Naming and repository migration
-
-The repository is **RG-MTM** and the installable distribution is `rg-mtm`. Import the core implementation from `rgmtm`, including `rgmtm.reference_guided`. Preserving and relaxed modes are **RG-MTM-P** and **RG-MTM-R**. Historical records keep the keys `A` and `R 20%`; `src/rgmtm/names.py` defines the display mapping.
-
-```sh
-git clone https://github.com/lelewang1109/RG-MTM.git
-cd RG-MTM
-python -m pip install -e .
-PYTHONPATH=src python tools/build_rgmtm_figures.py
-PYTHONPATH=src python tools/verify_rgmtm_migration.py
-```
-
-The current figure set is generated in `results/figures/rgmtm_*`. Original numeric files, arrays, and historical paper images remain unchanged. `provenance/rgmtm_rename_20261016.json` records exact reversible source edits; validators distinguish historical source hashes from a new numerical run. The separate RA-MTM project retains its own name and Git repository.
-
-## Public repository contents
-
-The repository publishes code, experimental evidence, plots, reproduction documentation, and the two selected PDFs in `publications/`. Editable manuscript sources, historical drafts, and writing notes remain local. Historical experimental figures/tables are in `results/legacy_publication/`; current figures are in `results/figures/`. Run `python tools/check_public_export.py` before publishing. The code/results packager excludes `paper/`, `notes/`, and `publications/`; paper PDFs are downloaded separately.
+This publication update replaces paper artifacts only; implementation, saved experimental results, and data are unchanged. Historical reports under `docs/` describe earlier research stages and may refer to paper paths available only in Git history.

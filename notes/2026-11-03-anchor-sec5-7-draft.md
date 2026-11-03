@@ -97,3 +97,22 @@
   - `.gitignore`：采用 upstream 版本，再加上私有仓库专用的几行；
   - `references/README.md`：采用 upstream 的文献索引，末尾补充 provenance 说明。
 - 注意：`data/real` 原来是指向 RA-MTM 数据目录的软链接，现在被 upstream 跟踪的目录取代，里面只有元数据。大文件仍在 `~/Research/RA-MTM/data/real`，重跑实验前要逐个链接过来。
+
+## 第 5 版（2026-11-04）：摘要和贡献改为以统一框架为主
+
+按用户要求做了"问题清单"中的第 4、7 条。第 2 条（AI 使用声明）用户决定暂不加。
+
+- **摘要重写**：
+  - 先给出统一表述（叶序容许量、位置上限、复合目标），TMTM 和 ST-MTM 是其中的精确拓扑特例；
+  - 再介绍 AnchorMTM 是框架内的一个实例，只有一个控制量 ε；
+  - 然后是三个界：只依赖约束，所以也能衡量已有方法；
+  - 最后是结果：54–95% 的顺序误差可以避免；精确模式在平面序列上与下界相差不超过 0.03 个百分点；渲染误差都在容许量之内。
+  - 删去了合作者原文中两句偏保守的说法："rather than a separate direction-optimization contribution" 和 "Continuous feasibility and actual rendered errors are reported separately"。后一点仍保留在局限部分。
+  - 导言中"方向估计是标准计算"这一诚实说明保持不变。
+- **贡献列表**：三条依次为统一表述、AnchorMTM、三个界及实验结论。
+- **特例表**：`tabcolsep` 从 2.4pt 改为 1.8pt，消除了 4.7pt 的溢出。
+- 中文版 `main_zh.tex` 已同步。中文单栏版的表格不受影响；第 4.2.1 节有 9pt 的溢出，只出现在中文阅读版里。
+- 页数：
+  - 正文和全部图表仍在第 9 页内结束，参考文献从第 9 页末排到第 10 页，全文 10 页。
+  - 第一次改写的摘要较长，曾把图 6 挤到第 10 页，所以压回了与原摘要相近的长度。
+- PDF：`AnchorMTM_draft_v5_en.pdf` 和 `AnchorMTM_draft_v5_zh.pdf`。

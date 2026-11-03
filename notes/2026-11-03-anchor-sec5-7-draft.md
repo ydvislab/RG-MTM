@@ -88,3 +88,12 @@
   4. 第 5–7 节删约 300 词，主要是重复表述和可放附录的细节；`fig_frontier` 改到 5.3 节开头定义，图号按讨论顺序排列。
 - 结果：正文和全部图表在第 9 页内结束，参考文献占第 10 页，**全文 10 页**。
 - **附录需要补上**：五组数据快照图、OLR/Ring 地图对比、Tangaroa 前 30 步的逐帧 τ 图，以及第 4 节移出的失败处理细节。
+
+## 合并合作者更新（2026-11-03）
+
+- 合并了 upstream/main 到 `6f0f2dc`（11 月 2 日），共 40 个提交。合作者把代码统一移到 `code/` 下，并在 `paper/pvis2027/` 放了 11 月 2 日稿和补充材料草稿 `method_anchor_single_parameter_supplement.tex`。
+- 他们的正文 tex 和两张图（storms overview、leaf correspondence）与我们 `paper/anchor_full/` 中的副本逐字节相同，所以 v4 不需要同步。
+- 冲突处理：
+  - `.gitignore`：采用 upstream 版本，再加上私有仓库专用的几行；
+  - `references/README.md`：采用 upstream 的文献索引，末尾补充 provenance 说明。
+- 注意：`data/real` 原来是指向 RA-MTM 数据目录的软链接，现在被 upstream 跟踪的目录取代，里面只有元数据。大文件仍在 `~/Research/RA-MTM/data/real`，重跑实验前要逐个链接过来。

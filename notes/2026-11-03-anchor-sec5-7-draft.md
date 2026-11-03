@@ -75,3 +75,16 @@
   - Cylinder 的 N1 NROE 为 8.01，高于 ν\*=7.72；
   - tab_direction 中 z 轴的 ν\* 落在"400 个采样方向"的范围之外，说明坐标轴不在采样集中。正文已改为"400 个采样方向"。
 - 页数：第 4.4 节约 450 词，加一张表；第 5–7 节约 2900 词，加 5 张图和 2 张表。估计超出约 1 页。建议优先把 `fig_dataset_overview_extended` 或 `fig_direction` 移到附录。
+
+## 第 4 版（2026-11-03 夜）：本机编译，压到 9 页
+
+- 本机已装 tectonic（Homebrew），可以直接编译：在 `paper/anchor_full/` 下运行 `tectonic -X compile main.tex`。
+- 全文中文翻译放在 `main_zh.tex`（ctexart 单栏，系统字体 STSong / Hiragino Sans GB / STHeiti）。PDF 为 `AnchorMTM_draft_v4_zh.pdf`，英文为 `AnchorMTM_draft_v4_en.pdf`。
+- 压缩前：正文文字在第 9 页结束，但两张大图被排到第 10–11 页，共 12 页。
+- 按顺序做的压缩：
+  1. `fig_dataset_overview_extended` 移到附录，"跨领域"一段压成两句。
+  2. `fig_direction` 换成单栏版 `fig_direction_col`（`make_figs_anchor.py` 从 `figdata/reference_direction20261027` 重画，数据和编码不变）。
+  3. 第 4.2.1 节"Helpers inherit…"整段和第 4.2.4 节栅格失败细节压成一句，指向附录。这是合作者第 4 节的改动。
+  4. 第 5–7 节删约 300 词，主要是重复表述和可放附录的细节；`fig_frontier` 改到 5.3 节开头定义，图号按讨论顺序排列。
+- 结果：正文和全部图表在第 9 页内结束，参考文献占第 10 页，**全文 10 页**。
+- **附录需要补上**：五组数据快照图、OLR/Ring 地图对比、Tangaroa 前 30 步的逐帧 τ 图，以及第 4 节移出的失败处理细节。

@@ -289,9 +289,9 @@ def fig_frontier_v2():
     hs = [Line2D([], [], color=M['Exact']['c'], lw=1.1, marker='o', ms=3), Line2D([], [], color=M['Exact']['c'], lw=.7, ls='--', alpha=.6),
           Line2D([], [], **mstyle('Projection', 4))]
     axes[7].legend(hs, [r'AnchorMTM worst $E_\infty$', r'AnchorMTM mean $E_{pool}$', r'projection ($\varepsilon=\infty$)'],
-                   loc='center', fontsize=5.6, handlelength=1.6)
-    axes[7].text(.5, .02, 'dot shade and labels: $\\varepsilon$ (%), dark = 0\ngrey box: TMTM/ST-MTM objectives in the\nsame interval model, worst / mean (planar);\narrow: both lie above the plotted range',
-                 transform=axes[7].transAxes, ha='center', fontsize=5.0)
+                   loc='upper center', fontsize=5.4, handlelength=1.6, bbox_to_anchor=(.5, 1.08))
+    axes[7].text(.5, .0, 'shade, labels: $\\varepsilon$ (%), dark = 0\ngrey box: TMTM / ST-MTM objectives,\nsame model, worst / mean\narrow: above the plotted range',
+                 transform=axes[7].transAxes, ha='center', va='bottom', fontsize=4.9, linespacing=1.2)
     fig.subplots_adjust(hspace=.48, wspace=.3)
     save(fig, 'draft_frontier_v2')
 

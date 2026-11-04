@@ -135,3 +135,27 @@ OLR 的 Hovmöller 为 0.041。
 - Storms 和 Ring 上，所有合并树图在有事件的步变化都是无事件步的 2–3 倍。
 
 **不能写的**："竖条纹主要来自拓扑事件"。相关性弱（约 0.2），而且在无事件的步上，AnchorMTM 的变化也大于 TMTM 目标（Storms 0.041 对 0.017）。这部分来自跟随数据运动和布局跳动，与 TD、布局跳动的分析一致。
+
+## 第 6 版（2026-11-05 凌晨）：第 5–7 节按新范围重写
+
+- 私有仓库里停用了合作者带来的 GitHub Actions 检查 "Validate research snapshot"（`gh workflow disable`，用户同意）。它失败的原因是 `.gitignore` 的哈希值与合作者发布的不同，不是我们的代码出错。需要时可以用 `gh workflow enable` 恢复。
+- **第 5 节新结构**：
+  - 5.1 实验设置；
+  - 5.2 界在受控树中被达到、在真实数据上有参考价值（图 3）；
+  - 5.3 已有地图的大部分位移可以避免（图 4，堆叠柱）；
+  - 5.4 单一控制量描出权衡曲线（图 5，加上同一模型下 TMTM、ST-MTM 的位移）；
+  - 5.5 看图：OLR（图 6，Hovmöller 加四个实例，并写入 P1 和逐列变化 9.0% 对 4.1%）、Storms；
+  - 5.6 参考方向、排序与计算代价。
+- **讨论部分**：
+  - 新增"Stable is not faithful"一段：TD 与 ME、布局跳动、P2 的结论、体数据的局限；
+  - "Using AnchorMTM"一段加了一句：Hovmöller 可以和地图一起读；
+  - 局限部分加了一句：时间行为和相对几何是"度量"的，不是"证明"的。
+- **结论**：后续工作加入"时间行为的证书"。
+- **事实修正**：原稿写 Storms 用"给定的西–东轴"。实际上五个平面序列都用自动估计的方向（Storms 为 −1.1°，画布长度与之完全一致），只有 Cylinder 用给定的顺流轴。正文已改。
+- **压缩篇幅**：删掉了第 4 节中与附录重复的实现细节（符号规则、数组约定、旧路径说明等），合并了"跨领域"一段，精简了结论。
+- **页数**：正文和全部图表在第 9 页内结束，参考文献占第 10–11 页，全文 11 页，符合 9+2。
+- **新图**：
+  - `figures/fig_olr_maps.pdf`（`figure_drafts/make_olr_hovmoller.py paper`）；
+  - `fig_compare_v2`、`fig_frontier_v2`、`fig_controlled_v2`（`figure_drafts/make_figure_drafts.py`）；
+  - `fig_concept_anchor`。
+- PDF：`AnchorMTM_draft_v6_en.pdf`。**中文版尚未同步。**

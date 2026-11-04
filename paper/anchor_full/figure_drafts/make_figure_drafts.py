@@ -225,12 +225,13 @@ def fig_compare_v2():
     h = [Rectangle((0, 0), 1, 1, color=FORCED)] + [Rectangle((0, 0), 1, 1, color=M[m]['c']) for m in ('TMTM', 'ST-MTM', 'Exact')]
     ax.legend(h, [r'forced by hierarchy ($\nu^*$, Thm. 1)', 'avoidable: TMTM', 'avoidable: ST-MTM', r'avoidable: AnchorMTM $\varepsilon=0$'],
               fontsize=5.6, loc='upper center', ncol=2, handlelength=1, columnspacing=.8, bbox_to_anchor=(.5, -.1))
-    ax.set_title('Most order error of existing maps is avoidable (labels: % avoidable)', pad=3, fontsize=6.6)
+    ax.set_title('(a) Order error: forced by the hierarchy vs avoidable (labels: % avoidable)', pad=3, fontsize=6.3, fontweight='normal')
     print('avoidable % TMTM', np.round(frac['TMTM'], 1), 'ST-MTM', np.round(frac['ST-MTM'], 1))
     print('exact minus nu*', {n: round(V[n]['Exact']['NROE'] - V[n]['nu'], 3) for n in NAMES})
     small = [('NMLE', 'Worst merge error (%)', g[0, 1]), ('ME', 'Motion error (%)', g[0, 2]),
              ('SNS', r'Distance stress SNS $\downarrow$', g[1, 1]), ('TW', r'Trustworthiness TW $\uparrow$', g[1, 2])]
-    for key, title, cell in small:
+    for j, (key, title, cell) in enumerate(small):
+        title = '(' + 'bcde'[j] + ') ' + title
         ax = fig.add_subplot(cell); off = np.linspace(-.3, .3, 5)
         for k, m in enumerate(['TMTM', 'ST-MTM', 'Projection', 'Exact', 'Budgeted']):
             ax.plot(x + off[k], [V[n][m][key] for n in NAMES], **mstyle(m, 2.6))
@@ -258,7 +259,7 @@ def baseline_displacement(n):
 
 
 def fig_frontier_v2():
-    fig, axes = plt.subplots(2, 4, figsize=(7.0, 3.05)); axes = axes.ravel()
+    fig, axes = plt.subplots(2, 4, figsize=(7.0, 2.45)); axes = axes.ravel()
     keys = [k for k in FRONT['Ring']['methods'] if k.startswith('eps=')]; cm = plt.get_cmap('Blues')
     for ax, n in zip(axes, NAMES):
         F = FRONT[n]['methods']; ms = [F[k] for k in keys]; P = F['projection']
@@ -292,7 +293,6 @@ def fig_frontier_v2():
     axes[7].text(.5, .02, 'dot shade and labels: $\\varepsilon$ (%), dark = 0\ngrey box: TMTM/ST-MTM objectives in the\nsame interval model, worst / mean (planar);\narrow: both lie above the plotted range',
                  transform=axes[7].transAxes, ha='center', fontsize=5.0)
     fig.subplots_adjust(hspace=.48, wspace=.3)
-    fig.suptitle('One control traces the position–topology trade-off; existing maps sit far above it', fontsize=7, y=1.0, fontweight='bold')
     save(fig, 'draft_frontier_v2')
 
 

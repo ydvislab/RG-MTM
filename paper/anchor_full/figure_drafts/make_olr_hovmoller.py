@@ -147,4 +147,48 @@ def plot():
 
 
 if __name__ == '__main__':
-    build_cache() if sys.argv[1:] == ['cache'] else plot()
+    build_cache() if sys.argv[1:] == ['cache'] else (plot() if sys.argv[1:] != ['paper'] else None)
+
+
+def paper_figure():
+    """Final single-row figure for Section 5.5: Hovmoller and four instances on the same reference axis, one colour scale."""
+    Z = np.load(CACHE, allow_pickle=True); H = Z['H']; dates = Z['dates']
+    maps = dict(np.load(RES / 'maps20261030/maps_olr.npz')); qs = json.loads((RES / 'maps20261030/q_olr.json').read_text())
+    F = json.loads((RES / 'frontier20261027/olr.json').read_text())['methods']
+    U = json.loads((ROOT / 'code/results/unified20261025/olr.json').read_text()); L = U['parameters']['canvas']
+    def same_model(key):
+        e = np.concatenate([np.abs(np.asarray(r['x'], float) - np.asarray(r['reference'], float)) / L for r in U['regimes'][key]['rows']])
+        return 100 * e.mean(), 100 * e.max()
+    P1 = json.loads((RES / 'olr_hovmoller/checks_p1_p2.json').read_text())['P1']
+    cols = [(H, 'Hovmöller', 'average across the reference',
+             f"{100 * P1['Hovmoller']['delta=0.02']['fraction']:.0f}% of minima resolved,\n"
+             f"{P1['Hovmoller']['delta=0.02']['depth_mean']:.0f} W m$^{{-2}}$ too shallow"),
+            (maps['topology_time'], 'TMTM objective', r'$\eta=0$, no cap', 'E$_{{pool}}$ {:.1f}%, E$_\\infty$ {:.0f}%'.format(*same_model('topology_time'))),
+            (maps['topology_geometry'], 'ST-MTM objective', r'$\eta=0$, no cap', 'E$_{{pool}}$ {:.1f}%, E$_\\infty$ {:.0f}%'.format(*same_model('topology_geometry'))),
+            (maps['ours_0'], r'AnchorMTM, $\varepsilon=0$', r'$\eta=\varepsilon_0\Delta_F$, cap $\tau+\beta_0$',
+             'E$_{{pool}}$ {:.1f}%, E$_\\infty$ {:.0f}%'.format(100 * F['eps=0']['E_pool'], 100 * F['eps=0']['E_inf'])),
+            (maps['ours_0.1'], r'AnchorMTM, $\varepsilon=10\%$', r'$\eta=(\varepsilon_0+0.1)\Delta_F$, cap $\tau+\beta_0$',
+             'E$_{{pool}}$ {:.1f}%, E$_\\infty$ {:.0f}%'.format(100 * F['eps=0.1']['E_pool'], 100 * F['eps=0.1']['E_inf']))]
+    vmin = min(np.nanmin(c[0]) for c in cols); vmax = max(np.nanmax(c[0]) for c in cols)
+    fig = plt.figure(figsize=(7.0, 1.72)); g = fig.add_gridspec(1, 6, width_ratios=[1] * 5 + [.05], wspace=.1)
+    for k, (img, name, par, note) in enumerate(cols):
+        ax = fig.add_subplot(g[k]); T = img.shape[1]
+        im = ax.imshow(img, origin='lower', aspect='auto', cmap='RdBu_r', vmin=vmin, vmax=vmax, extent=[-.5, T - .5, 0, 1],
+                       interpolation='nearest', rasterized=True)
+        for tt, qq in enumerate(qs): ax.plot([tt] * len(qq), qq, 'o', ms=1.1, mfc='k', mec='white', mew=.2)
+        ax.set_title(f'{name}\n{par}', fontsize=5.9, pad=2.5, fontweight='normal', linespacing=1.15)
+        ax.text(.03, .025, note, transform=ax.transAxes, ha='left', va='bottom', fontsize=4.8,
+                bbox=dict(boxstyle='round,pad=.15', fc='white', ec='none', alpha=.88))
+        ax.set_xticks([0, T - 1]); ax.set_xticklabels(['1 Jun', '30 Jul'], fontsize=5)
+        for lab_, ha_ in zip(ax.get_xticklabels(), ('left', 'right')): lab_.set_ha(ha_)
+        ax.set_yticks([0, 1] if k == 0 else []); ax.set_yticklabels(['E', 'W'] if k == 0 else [], fontsize=5.2); ax.tick_params(length=1.5, pad=1)
+        if k == 0: ax.set_ylabel('reference axis (171°)', fontsize=5.6, labelpad=1)
+        for s in ax.spines.values(): s.set_visible(True); s.set_linewidth(.4)
+    cb = fig.colorbar(im, cax=fig.add_subplot(g[5])); cb.ax.tick_params(labelsize=5, length=1.5); cb.set_label(r'OLR (W m$^{-2}$)', fontsize=5.5)
+    for ext_ in ('pdf', 'png'):
+        fig.savefig(HERE.parent / 'figures' / f'fig_olr_maps.{ext_}', dpi=220, bbox_inches='tight', pad_inches=.02)
+    print('fig_olr_maps written')
+
+
+if __name__ == '__main__' and sys.argv[1:] == ['paper']:
+    paper_figure()

@@ -1,0 +1,104 @@
+% AnchorMTM 配图改版草图说明（2026-11-04）
+% 编译：tectonic -X compile figure_drafts_zh.tex    图由 make_figure_drafts.py 生成
+\documentclass[fontset=none,zihao=5,a4paper]{ctexart}
+\setCJKmainfont{STSong}[BoldFont=STHeiti]
+\setCJKsansfont{Hiragino Sans GB}
+\usepackage[margin=1.8cm]{geometry}
+\usepackage{graphicx,booktabs,enumitem,amssymb}
+\usepackage[hidelinks]{hyperref}
+\setlist{nosep,leftmargin=1.5em}
+\newcommand{\fig}[2][\linewidth]{\begin{center}\includegraphics[width=#1]{#2}\end{center}}
+\title{AnchorMTM 配图改版草图}
+\author{}
+\date{2026 年 11 月 4 日 · 草图，供讨论}
+\begin{document}
+\maketitle
+\vspace{-2em}
+
+\section*{说明}
+\begin{itemize}
+\item 下面每张图都由 \texttt{figure\_drafts/make\_figure\_drafts.py} 从\textbf{已保存的结果}直接画出，没有重跑任何实验；示意图（概念图、设计空间图）按论文里的四叶受控例子精确计算。
+\item 目的是定下\textbf{每张图要说的结论、布局和编码}。定稿时可以直接用这些 PDF，也可以在 PPT / Illustrator 里按同样的布局重画、精修。
+\item 全文统一配色：TMTM 灰色方块，ST-MTM 粉色菱形，AnchorMTM 精确模式深蓝实心圆，预算模式青色空心圆，投影黑星；红蓝色图只用于标量场数据。
+\item 每张图的标题直接写结论，图注可以照着改。
+\end{itemize}
+
+\section*{0\quad 版面规划}
+\fig{draft_page_plan.pdf}
+\begin{itemize}
+\item 移到附录：图 2（叶子匹配示意）、图 6（三维方向）、两个证明草图；表 1 的内容并入设计空间图的图注。
+\item 新增或重画（绿色）：设计空间图、概念图、地图并排对比、方法对比 v2、权衡曲线 v2、受控实验 v2。
+\item 估算：新增约 0.7 页，移出约 0.5 页，还差约 0.2 页，需要再压缩一些文字。高度只是粗略估计，要实际排版后核对。
+\end{itemize}
+
+\newpage
+\section*{1\quad 概念图（新增，通栏，放在第 4 节开头）}
+\fig{draft_concept.pdf}
+\textbf{要说的结论：}参考方向与合并树冲突时，只能二选一：位置让步，或者合并值让步；$\varepsilon$ 决定选哪一边。
+\begin{itemize}
+\item (a) 四个极小值，按参考方向投影后的顺序是 A C B D；(b) 合并树要求 (A B)(C D) 各自连续。
+\item (c) 精确模式：保持子树连续，B、C 各偏 14\%（对应宽度界；点模型下界 $\nu^*=12\%$），合并误差 0。
+\item (d) 预算模式 $\varepsilon=30\%=h/2$：按参考顺序排，三个屏障都设为 0.7，所有合并值误差恰好 0.3，位置误差 0。
+\item 每个剖面下方的色条就是"地图上的一列"，把概念图和首页图的地图联系起来。
+\item 数字全部来自受控实验的设置（$d=24\%$，内层合并 0.4，根 1.0，宽度 0.06，$\rho=0.5$，间隙 0.01），与正文第 5.3 节一致。
+\item \textbf{精修建议：}(a) 的场可以换成真实的 Storms 局部截图；字母标注可以统一放大；(c)(d) 之间可以加一个"$\varepsilon$ 增大"的箭头。
+\end{itemize}
+
+\section*{2\quad 设计空间图（新增，单栏，放在引言或 4.4 节）}
+\fig[.55\linewidth]{draft_design_space.pdf}
+\textbf{要说的结论：}已有的合并树图和 AnchorMTM 是同一个表述里的不同点；AnchorMTM 是一条由 $\varepsilon$ 控制的连续路径。
+\begin{itemize}
+\item 横轴：合并值容许量（0 到 $\infty$）；纵轴：位置约束（无 / 上限 $\tau_t+\beta_0$）。
+\item 左下：TMTM、ST-MTM（轴不受参考约束）；上方一行：AnchorMTM 从 $\varepsilon=0$ 到投影。
+\item 浅蓝竖带标出定理 1 的适用范围（所有精确拓扑的图）；竖箭头写出"加参考和上限：去掉 54--95\% 的顺序误差"。
+\item 可以替代表 1；表 1 中的目标函数（$E_O$、$E_G$ 等）写在点旁边。
+\item \textbf{精修建议：}三个定理的适用范围可以用三种底色区块表示，比现在的文字更直观。
+\end{itemize}
+
+\newpage
+\section*{3\quad 地图并排对比（新增，通栏，放在 5.2 节）}
+\fig{draft_maps_v2.pdf}
+\textbf{要说的结论：}只有锚定后的图，特征（蓝色低值区）落在参考位置（黑点）上。
+\begin{itemize}
+\item 上排 Storms（118 帧，参考为西--东向），下排 OLR（60 帧）。四列依次为 TMTM 目标、ST-MTM 目标、精确模式、预算模式 10\%。
+\item 每个面板左下角标出平均 / 最坏位移：Storms 上 TMTM 目标 25.3\% / 63\%，ST-MTM 目标 33.6\% / 99\%，精确模式 4.2\% / 26\%，预算模式 2.4\% / 18\%。
+\item Storms 预算模式中的黄色短线：合并值被改动的屏障，即正文说的"在图上标出"。
+\item \textbf{数据来源：}地图是合作者 10 月 30 日（\texttt{91e1fb8}）用同一渲染器渲染并缓存的结果；TMTM、ST-MTM 两列是"它们的目标函数在我们的区间模型中求解"，与正文 Storms 案例的口径相同（重算得到的平均最坏位移 37.3\% / 50.7\% 与正文一致），\textbf{不是}它们的原生输出。图注必须写明这一点。
+\item \textbf{待确认：}OLR 的参考方向是估计的还是给定的（问合作者）。
+\item \textbf{精修建议：}可以在每行加一条被追踪特征的轨迹（需要特征编号，缓存里没有）；纵轴若能换成经度刻度，"位置即地理"会更直接。
+\end{itemize}
+
+\section*{4\quad 方法对比 v2（重画图 3，通栏）}
+\fig{draft_compare_v2.pdf}
+\textbf{要说的结论：}已有方法的顺序误差大部分可以避免。
+\begin{itemize}
+\item 左侧大图是堆叠柱：黑色为合并树强制的部分 $\nu^*$（定理 1），彩色为可避免部分；柱顶数字为可避免比例。TMTM 54--95\%，ST-MTM 57--95\%，精确模式在平面数据上几乎为 0（Tangaroa、Cylinder 分别多出 0.43、0.29 个百分点）。
+\item 右侧四个小图保留合并误差、运动误差，以及 ST-MTM 擅长的 SNS、TW。后两项不能删：它们是我们如实承认的代价。
+\item 数据与当前图 3 完全相同，只是编码变了。
+\end{itemize}
+
+\newpage
+\section*{5\quad 权衡曲线 v2（重画图 5，通栏）}
+\fig{draft_frontier_v2.pdf}
+\textbf{要说的结论：}一个 $\varepsilon$ 描出整条权衡曲线；已有方法的位移远在曲线之上。
+\begin{itemize}
+\item 点的深浅编码 $\varepsilon$（深色为 0）；灰框写出 TMTM、ST-MTM 目标在同一区间模型、$\varepsilon=0$ 时的最坏 / 平均位移，它们都超出画出的范围（左上角箭头）。
+\item \textbf{新数字：}灰框中的数字由 \texttt{code/results/unified20261025} 中保存的布局重算，帧数和画布与权衡曲线的数据逐一核对一致；Storms 上的重算结果与正文案例数字一致。这些数字\textbf{还没写进正文}，用之前需要在正文或附录中说明来源。
+\item 体数据（Tangaroa、Cylinder）没有同一模型下的基线结果，所以没有灰框。
+\item \textbf{备选方案：}纵轴改成对数刻度，把基线点直接画进图里。
+\end{itemize}
+
+\section*{6\quad 受控实验 v2（重画图 4，单栏）}
+\fig[.55\linewidth]{draft_controlled_v2.pdf}
+\begin{itemize}
+\item (a) 加了四叶树和参考位置的小示意，读者不用回到正文就知道 $d$ 是什么。
+\item (b) 原来只画一个父间隙；现在画全部四个（$h=20\%$--$80\%$），每条线都在 $\varepsilon=h/2$ 处降到 0，直接标注，不用图例。
+\item 数据：\texttt{code/results/controlled\_conflict20261030}。
+\end{itemize}
+
+\section*{7\quad 没有用代码画的部分}
+\begin{itemize}
+\item \textbf{首页图}：合作者用 PPT 制作。建议：底部地图纵轴改为西--东经度刻度；中间一排剖面从 16 个减到 9 个左右。
+\item \textbf{算法 1}：只保留五步主流程（提取匹配、构造参考、选叶序、锚点优化、重建剖面），守卫和日志放到附录。
+\end{itemize}
+\end{document}

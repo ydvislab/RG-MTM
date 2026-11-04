@@ -1,0 +1,9 @@
+Approved: use exactly these four reviewer roles plus the Devil's Advocate. No further checkpoints are needed for this review; proceed directly to the full substantive review now and do not pause again for confirmation.
+
+Deliver the final report in the output format of the brief (/Users/yudong/Research/RG-MTM/.aris/traces/research-review/2026-11-05_run01/REVIEW_BRIEF.md):
+1. Mock review: one consolidated summary/strengths/weaknesses/questions, then each reviewer's score (1-5) with confidence, an overall editorial recommendation, and best-paper potential.
+2. Ranked issues [Critical/Major/Minor] with location, problem and concrete fix (replacement wording where useful). Mark which reviewer raised each.
+3. "Untraceable or mismatched numbers": exact quote, file you checked, what the record says. Actually check the records (run read-only python/grep); do not guess.
+4. Prioritized TODO for the next three days (at most 12 items, with effort).
+5. Items deferred to the journal version.
+Keep the scope limits of the brief.

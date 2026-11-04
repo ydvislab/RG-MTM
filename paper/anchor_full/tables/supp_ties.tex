@@ -1,6 +1,6 @@
-\begin{table}[h]
+\begin{table}[H]
 \centering\small\setlength{\tabcolsep}{3.2pt}
-\caption{Sensitivity of the mean order bound $\nu^*$ (percent) to the relative tie tolerance on merge levels. Saddles closer than the tolerance are treated as one multifurcation. Last column: value used in the paper.}\label{tab:supp_ties}
+\caption{Mean order bound (percent) for maps whose merge error is at most $\varepsilon_0\Delta_F$, for several numerical allowances $\varepsilon_0$. Rows give the optimum attained by the order search, which equals $C_\eta$ of Theorem~\ref{thm:chain} at $\eta=\varepsilon_0\Delta_F$ on every frame; for Cylinder, the weaker bound obtained by flattening every parent gap of at most $2\eta$ is also listed. Last column: value used in the paper ($\varepsilon_0=10^{-7}$).}\label{tab:supp_ties}
 \begin{tabular}{lrrrrrr}\toprule
 Sequence & 0 & $10^{-8}$ & $10^{-7}$ & $10^{-6}$ & $10^{-5}$ & paper\\\midrule
 Storms & 3.77 & 3.77 & 3.77 & 3.77 & 3.77 & 3.77\\
@@ -9,7 +9,8 @@ OLR & 0.89 & 0.89 & 0.89 & 0.89 & 0.89 & 0.89\\
 PM$_{2.5}$ & 0.97 & 0.97 & 0.97 & 0.97 & 0.97 & 0.97\\
 Ring & 2.66 & 2.66 & 2.66 & 2.66 & 2.66 & 2.66\\
 Tangaroa & 9.24 & 9.24 & 9.24 & 9.24 & 9.24 & 9.24\\
-Cylinder & 12.24 & 11.22 & 7.72 & 6.15 & 5.84 & 7.72\\
+Cylinder (attained) & 12.24 & 11.22 & 8.01 & 6.15 & 5.91 & 8.01\\
+Cylinder (flattening only) & 12.24 & 11.22 & 7.72 & 6.15 & 5.84 & --\\
 \bottomrule\end{tabular}
-\par\smallskip\parbox{\linewidth}{\footnotesize Only Cylinder is sensitive: about half of its hierarchy cost comes from merge levels that differ by less than $10^{-6}$ of the scalar range.}
+\par\smallskip\parbox{\linewidth}{\footnotesize Only Cylinder is sensitive. At $\varepsilon_0=10^{-7}$, flattening every parent gap of at most $2\varepsilon_0\Delta_F$ and applying Theorem~\ref{thm:order} gives 7.72\%, the value reported in earlier drafts. It is valid but not attained: on frames 58 and 62, chains of near-tied saddles make it certify 4.85\% and 4.48\%, but the order that reaches these values has merge error 1.6 and 2.0 times $\varepsilon_0\Delta_F$. Enumerating all 92{,}160 and 368{,}640 orders that are legal after this flattening and keeping those within the allowance gives the optimum 19.03\% and 19.40\%, equal to $C_\eta$ of Theorem~\ref{thm:chain} at $\eta=\varepsilon_0\Delta_F$. On every frame the order search attains $C_\eta$ (102/102 frames, merge error below $\varepsilon_0\Delta_F$), so the paper reports 8.01\%. TMTM and ST-MTM have zero merge error; on the exact tree ($\varepsilon_0=0$) the bound is 12.24\%, and their avoidable shares on Cylinder in Fig.~4a would be 54\% and 31\% instead of 70\% and 55\%.}
 \end{table}

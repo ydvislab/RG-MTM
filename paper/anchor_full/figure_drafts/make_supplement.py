@@ -28,7 +28,7 @@ f2 = lambda v: f'{v:.2f}'; f3 = lambda v: f'{v:.3f}'
 
 
 def table(path, caption, label, head, rows, spec, note=''):
-    lines = [r'\begin{table}[h]', r'\centering\small\setlength{\tabcolsep}{3.2pt}', rf'\caption{{{caption}}}\label{{{label}}}',
+    lines = [r'\begin{table}[H]', r'\centering\small\setlength{\tabcolsep}{3.2pt}', rf'\caption{{{caption}}}\label{{{label}}}',
              rf'\begin{{tabular}}{{{spec}}}\toprule', head + r'\\\midrule'] + [' & '.join(r) + r'\\' for r in rows] + [r'\bottomrule\end{tabular}']
     if note: lines.append(r'\par\smallskip\parbox{\linewidth}{\footnotesize ' + note + '}')
     lines.append(r'\end{table}'); (TAB / path).write_text('\n'.join(lines) + '\n')
@@ -44,7 +44,7 @@ def values():
         for m, k in (('Exact', 'eps=0'), ('Budgeted', 'eps=0.1'), ('Projection', 'projection')):
             c = Q[n][k]; d[m] = dict(NROE=100 * F[n]['methods'][k]['NROE'], NMLE=100 * F[n]['methods'][k]['NMLE_max'],
                                      ME=100 * c['ME_errors'] / c['ME_clear'], SNS=c['SNS'], TW=c['TW1'], TD=c['TD'])
-        d['nu'] = 100 * B[n]['nu_mean']; out[n] = d
+        d['nu'] = 100 * B[n]['budget_sweep'][0]['lower_mean']; out[n] = d   # bound at the numerical allowance eps0 (S16)
     return out
 
 
@@ -59,7 +59,7 @@ def two(first, groups, sub):
 
 def tables_values(V):
     rows = [[TEX[n], f2(V[n]['nu'])] + [f2(V[n][m]['NROE']) for m in M5] + [f2(V[n][m]['NMLE']) for m in ('Budgeted', 'Projection')] for n in NAMES]
-    table('supp_values_position.tex', r'Position and topology behind Fig.~4(a,b) of the paper (percent). $\nu^*$: mean exact-topology order bound; NROE: mean order error; NMLE: worst rendered merge error (zero for TMTM, ST-MTM and $\varepsilon=0$).',
+    table('supp_values_position.tex', r'Position and topology behind Fig.~4(a,b) of the paper (percent). $\nu^*$: mean order bound at the numerical allowance $\varepsilon_0$ (Section~\ref{sec:supp_ties}); NROE: mean order error; NMLE: worst rendered merge error (zero for TMTM, ST-MTM and $\varepsilon=0$).',
           'tab:supp_values_position', two(r'Sequence & $\nu^*$', [('NROE', 5), ('NMLE', 2)], H5 + r' & $\varepsilon{=}10\%$ & Proj.'), rows, 'l' + 'r' * 8)
     rows = [[TEX[n]] + [f'{V[n][m]["ME"]:.1f}' for m in M5] + [f'{V[n][m]["TD"]:.1f}' for m in M5] for n in NAMES]
     table('supp_values_temporal.tex', r'Temporal measures behind Fig.~4(c) and the discussion. ME: share of clear approach or separation events shown wrongly (percent); TD: summed map displacement of matched features in canvas units, protocol of ST-MTM.',
@@ -113,11 +113,33 @@ def same_model_and_jumps():
 
 
 def table_ties():
+    """S16: order bound at the numerical allowance eps0 (attained optimum) vs Theorem B alone."""
     keys = ['0', '1e-08', '1e-07', '1e-06', '1e-05']
-    rows = [[TEX[n]] + [f'{100 * B[n]["nu_tie_sensitivity"][k]:.2f}' for k in keys] + [f'{100 * B[n]["nu_mean"]:.2f}'] for n in NAMES]
-    table('supp_ties.tex', r'Sensitivity of the mean order bound $\nu^*$ (percent) to the relative tie tolerance on merge levels. Saddles closer than the tolerance are treated as one multifurcation. Last column: value used in the paper.',
-          'tab:supp_ties', r'Sequence & 0 & $10^{-8}$ & $10^{-7}$ & $10^{-6}$ & $10^{-5}$ & paper', rows, 'lrrrrrr',
-          note=r'Only Cylinder is sensitive: about half of its hierarchy cost comes from merge levels that differ by less than $10^{-6}$ of the scalar range.')
+    res = lambda n: {str(r['epsilon']): r for r in B[n]['resolution_sweep']}
+    rows = []
+    for n in NAMES:
+        r = res(n); assert all(abs(r[k]['NROE_mean'] - r[k]['lower_c_mean']) < 1e-12 for k in keys)
+        rows.append([TEX[n] + (' (attained)' if n == 'Cylinder' else '')] + [f2(100 * r[k]['NROE_mean']) for k in keys]
+                    + [f2(100 * B[n]['budget_sweep'][0]['lower_mean'])])
+    rows.append([r'Cylinder (flattening only)'] + [f2(100 * B['Cylinder']['nu_tie_sensitivity'][k]) for k in keys] + ['--'])
+    K = load(RES / 'bound_allowance20261105/cylinder_frames.json'); lf = K['loose_frames']
+    assert K['max_attained_merge_error'] < K['tie']
+    big = lambda v: f'{v:,}'.replace(',', '{,}')
+    nu_c = 100 * B['Cylinder']['budget_sweep'][0]['lower_mean']; nu_0 = 100 * B['Cylinder']['nu_tie_sensitivity']['0']
+    share = lambda m, nu: 100 * (float(st('Cylinder', m)['NROE']) - nu) / float(st('Cylinder', m)['NROE'])
+    note = (rf'Only Cylinder is sensitive. At $\varepsilon_0=10^{{-7}}$, flattening every parent gap of at most $2\varepsilon_0\Delta_F$ and applying Theorem~\ref{{thm:order}} gives '
+            rf'{f2(100 * B["Cylinder"]["nu_mean"])}\%, the value reported in earlier drafts. It is valid but not attained: on frames {lf[0]["frame"]} and {lf[1]["frame"]}, '
+            rf'chains of near-tied saddles make it certify {f2(100 * lf[0]["nu_B"])}\% and {f2(100 * lf[1]["nu_B"])}\%, but the order that reaches these values has merge error '
+            rf'{lf[0]["B_order_merge_error"] / K["tie"]:.1f} and {lf[1]["B_order_merge_error"] / K["tie"]:.1f} times $\varepsilon_0\Delta_F$. '
+            rf'Enumerating all {big(lf[0]["enumerated"])} and {big(lf[1]["enumerated"])} orders that are legal after this flattening and keeping those within the allowance '
+            rf'gives the optimum {f2(100 * lf[0]["enumerated_optimum"])}\% and {f2(100 * lf[1]["enumerated_optimum"])}\%, equal to $C_\eta$ of Theorem~\ref{{thm:chain}} at $\eta=\varepsilon_0\Delta_F$. '
+            rf'On every frame the order search attains $C_\eta$ ({K["frames_attained"]}/{K["frames"]} frames, merge error below $\varepsilon_0\Delta_F$), so the paper reports {nu_c:.2f}\%. '
+            rf'TMTM and ST-MTM have zero merge error; on the exact tree ($\varepsilon_0=0$) the bound is {nu_0:.2f}\%, and their avoidable shares on Cylinder in Fig.~4a '
+            rf'would be {share("TMTM", nu_0):.0f}\% and {share("ST-MTM", nu_0):.0f}\% instead of {share("TMTM", nu_c):.0f}\% and {share("ST-MTM", nu_c):.0f}\%.')
+    table('supp_ties.tex', r'Mean order bound (percent) for maps whose merge error is at most $\varepsilon_0\Delta_F$, for several numerical allowances $\varepsilon_0$. '
+          r'Rows give the optimum attained by the order search, which equals $C_\eta$ of Theorem~\ref{thm:chain} at $\eta=\varepsilon_0\Delta_F$ on every frame; for Cylinder, the weaker bound obtained by flattening every parent gap of at most $2\eta$ is also listed. '
+          r'Last column: value used in the paper ($\varepsilon_0=10^{-7}$).',
+          'tab:supp_ties', r'Sequence & 0 & $10^{-8}$ & $10^{-7}$ & $10^{-6}$ & $10^{-5}$ & paper', rows, 'lrrrrrr', note=note)
     for r in rows: print('ties', r)
 
 

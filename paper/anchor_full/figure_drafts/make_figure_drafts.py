@@ -201,7 +201,7 @@ def compare_values():
                                       ME=100 * int(r['motion_errors']) / int(r['N_clear']), SNS=float(r['SNS']), TW=float(r['TW1']))
         for m, k in [('Projection', 'projection'), ('Exact', 'eps=0'), ('Budgeted', 'eps=0.1')]:
             d[m] = dict(NROE=100 * F[k]['NROE'], NMLE=100 * F[k]['NMLE_max'], ME=me(Qs[k]), SNS=Qs[k]['SNS'], TW=Qs[k]['TW1'])
-        d['nu'] = 100 * BUDGET[n]['nu_mean']; out[n] = d
+        d['nu'] = 100 * BUDGET[n]['budget_sweep'][0]['lower_mean']; out[n] = d   # bound at the numerical allowance eps0 (S16)
     return out
 
 

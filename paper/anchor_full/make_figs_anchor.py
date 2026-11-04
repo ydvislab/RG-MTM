@@ -106,8 +106,9 @@ def fig_direction_column():
     fig = plt.figure(figsize=(3.4, 3.15))
     g = fig.add_gridspec(2, 2, width_ratios=[.9, 1.35], hspace=.55, wspace=.45)
     for k, n in enumerate(['Tangaroa', 'Cylinder']):
-        D = json.loads((RES / f'reference_direction20261027/{n.lower()}.json').read_text())
-        dirs = np.array([r['direction'] for r in D['sweep']]); nu = 100 * np.array([r['nu_mean'] for r in D['sweep']])
+        # order bound at the numerical allowance eps0 (C_eta at eta = eps0 * range), recomputed by figure_drafts/bound_allowance.py
+        D = json.loads((RES / f'bound_allowance20261105/{n.lower()}_direction.json').read_text())
+        dirs = np.array([r['direction'] for r in D['sweep']]); nu = 100 * np.array([r['nu_allow'] for r in D['sweep']])
         ax = fig.add_subplot(g[k, 0])
         th = np.arccos(np.clip(dirs[:, 2], -1, 1)); ph = np.arctan2(dirs[:, 1], dirs[:, 0]); rr = np.sqrt(2) * np.sin(th / 2)
         sc = ax.scatter(rr * np.cos(ph), rr * np.sin(ph), c=nu, s=6, cmap='viridis', lw=0)
@@ -123,7 +124,7 @@ def fig_direction_column():
         cb.ax.tick_params(labelsize=5.2, length=2); cb.set_label(r'$\nu^*$ (%)', fontsize=5.6, labelpad=1)
         ax.set_title(n, fontsize=7, pad=2)
         ax = fig.add_subplot(g[k, 1]); labs = ['x', 'y', 'z', 'stored', 'smallest bound']; x = np.arange(len(labs)); w = .2
-        for j, (key, col, lab) in enumerate([('nu_mean', '#000000', r'$\nu^*$'), ('ours_NROE', C['A'], r'AnchorMTM, $\varepsilon=0$'),
+        for j, (key, col, lab) in enumerate([('nu_allow', '#000000', r'$\nu^*$'), ('ours_NROE', C['A'], r'AnchorMTM, $\varepsilon=0$'),
                                               ('ST-MTM_NROE', C['D'], 'ST-MTM'), ('TMTM_NROE', C['base'], 'TMTM')]):
             ax.bar(x + (j - 1.5) * w, [100 * K[l][key] for l in labs], w, color=col, label=lab, lw=0)
         ax.set_xticks(x); ax.set_xticklabels(['x', 'y', 'z', 'stored', 'best'], fontsize=5.6)

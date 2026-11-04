@@ -1,0 +1,1 @@
+Read the review brief at /Users/yudong/Research/RG-MTM/.aris/traces/research-review/2026-11-05_run02/REVIEW_BRIEF.md and follow all instructions in it. Work as a single reviewer without loading any reviewer skill, panels or sub-agents, and write the full review in one go.

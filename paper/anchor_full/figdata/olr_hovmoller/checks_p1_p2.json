@@ -1,0 +1,159 @@
+{
+ "P1": {
+  "Hovmoller": {
+   "delta=0.02": {
+    "resolved": 155,
+    "total": 264,
+    "fraction": 0.5871212121212122,
+    "depth_mean": 31.692530136194993,
+    "depth_median": 34.482557384758564,
+    "depth_max": 67.47755852049266
+   },
+   "delta=0.05": {
+    "resolved": 204,
+    "total": 264,
+    "fraction": 0.7727272727272727,
+    "depth_mean": 30.831475044615754,
+    "depth_median": 31.833542581175507,
+    "depth_max": 67.47755852049266
+   },
+   "frames_with_fewer_dips_than_minima": 1,
+   "mean_dips_per_frame": 12.116666666666667,
+   "mean_minima_per_frame": 4.4
+  },
+  "AnchorMTM eps=0": {
+   "delta=0.02": {
+    "resolved": 249,
+    "total": 264,
+    "fraction": 0.9431818181818182,
+    "depth_mean": -0.001185974242447976,
+    "depth_median": 0.0,
+    "depth_max": 32.98769760769599
+   },
+   "delta=0.05": {
+    "resolved": 255,
+    "total": 264,
+    "fraction": 0.9659090909090909,
+    "depth_mean": 0.0664326660162845,
+    "depth_median": 0.0,
+    "depth_max": 32.98769760769599
+   },
+   "frames_with_fewer_dips_than_minima": 0,
+   "mean_dips_per_frame": 4.4,
+   "mean_minima_per_frame": 4.4
+  },
+  "AnchorMTM eps=10%": {
+   "delta=0.02": {
+    "resolved": 260,
+    "total": 264,
+    "fraction": 0.9848484848484849,
+    "depth_mean": 0.12473412722499863,
+    "depth_median": 0.0,
+    "depth_max": 32.98769760769599
+   },
+   "delta=0.05": {
+    "resolved": 262,
+    "total": 264,
+    "fraction": 0.9924242424242424,
+    "depth_mean": 0.0,
+    "depth_median": 0.0,
+    "depth_max": 32.98769760769599
+   },
+   "frames_with_fewer_dips_than_minima": 0,
+   "mean_dips_per_frame": 4.4,
+   "mean_minima_per_frame": 4.4
+  }
+ },
+ "P2": {
+  "OLR": {
+   "steps": 59,
+   "event_steps": 59,
+   "topology_time": {
+    "mean": 0.050701532278586696,
+    "no_event": null,
+    "event": 0.050701532278586696,
+    "spearman_events": 0.3637054354178843
+   },
+   "topology_geometry": {
+    "mean": 0.07821541457584084,
+    "no_event": null,
+    "event": 0.07821541457584084,
+    "spearman_events": 0.010870835768556401
+   },
+   "ours_0": {
+    "mean": 0.09036490615237171,
+    "no_event": null,
+    "event": 0.09036490615237171,
+    "spearman_events": 0.194739918176505
+   },
+   "ours_0.1": {
+    "mean": 0.09111577067859163,
+    "no_event": null,
+    "event": 0.09111577067859163,
+    "spearman_events": 0.201344243132671
+   },
+   "Hovmoller": {
+    "mean": 0.04103943498184169,
+    "no_event": null,
+    "event": 0.04103943498184169,
+    "spearman_events": 0.05634132086499124
+   }
+  },
+  "Storms": {
+   "steps": 117,
+   "event_steps": 100,
+   "topology_time": {
+    "mean": 0.032842886149131674,
+    "no_event": 0.016778134580199715,
+    "event": 0.03557389391585011,
+    "spearman_events": 0.23972335865965322
+   },
+   "topology_geometry": {
+    "mean": 0.07268654441226775,
+    "no_event": 0.03515795093667559,
+    "event": 0.0790664053031184,
+    "spearman_events": 0.18309880261955072
+   },
+   "ours_0": {
+    "mean": 0.09457772798224348,
+    "no_event": 0.04142624997837803,
+    "event": 0.10361347924290061,
+    "spearman_events": 0.22097588754514527
+   },
+   "ours_0.1": {
+    "mean": 0.0912021676169224,
+    "no_event": 0.042711251457563895,
+    "event": 0.09944562336401334,
+    "spearman_events": 0.21054563982676194
+   }
+  },
+  "Ring": {
+   "steps": 39,
+   "event_steps": 24,
+   "topology_time": {
+    "mean": 0.005664541023336022,
+    "no_event": 0.0028538817225820198,
+    "event": 0.007421203086307275,
+    "spearman_events": 0.5109311740890689
+   },
+   "topology_geometry": {
+    "mean": 0.026074066360499255,
+    "no_event": 0.010193703318692151,
+    "event": 0.035999293261628686,
+    "spearman_events": 0.5165991902834008
+   },
+   "ours_0": {
+    "mean": 0.021125727309398344,
+    "no_event": 0.009714767926046442,
+    "event": 0.028257576923993288,
+    "spearman_events": 0.3882591093117409
+   },
+   "ours_0.1": {
+    "mean": 0.017712867798561325,
+    "no_event": 0.008976145539303159,
+    "event": 0.023173319210597676,
+    "spearman_events": 0.45485829959514174
+   }
+  }
+ }
+}

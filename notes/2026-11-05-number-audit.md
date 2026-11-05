@@ -63,3 +63,20 @@
 - Storms 案例中"per step""31 of 118 steps"实际是逐帧（118 帧），可改成"per frame""31 of 118 frames"。
 - 5.6 "where the worst frame meets the lower bound"：达到下界的是叶序的 τ（13.72%），显示的最坏位移 14.55% 还加上了位置松弛 β0；可写成"where the worst frame's order meets the width bound"。
 - 运行时间里的"二次规划时间"含指标计算，是偏保守的上界，可以不改。
+
+## 11/5 已按上表修改（用户确认后）
+
+A–G 和两条小措辞都已改进 `paper/anchor_full/main.tex` 和 `main_zh.tex`，G 的参数说明加在 `supplement.tex` S10 开头（"ST-MTM setting" 段），没有新增附录节，S 编号不变。
+
+| # | 实际改法 |
+|---|---|
+| A | "only 4 of the 400 sampled directions"；中文"只有 4 个" |
+| B | "By the same test, Exact Mode has a dip within 2% (5%) for 94% (97%) of the minima, and 93% are shown at their exact values within 2%; the others are displaced farther or swapped with a neighbouring minimum. Their nesting is kept." 保留与 Hovmöller 同一检验的对比，同时写出更严格的 93% |
+| C | "…on most planar frames and on the worst Cylinder frame at every budget, but not uniformly: on Tangaroa the worst frame meets it only at ε=2%, and on Wildfires at ε>0 and on one OLR frame at ε=10%, a worst-frame gap remains." |
+| D | "whereas on these sequences no point of the AnchorMTM curves exceeds 26.2% and 4.2%" |
+| E | 5.6："the point-model order search attains the exhaustive NROE optimum"；局限段："matched exhaustive enumeration in NROE" |
+| F | "lies 1.1° from west–east" |
+| G | 5.1 Instances 加 "with one untuned setting on all sequences rather than the original per-dataset settings (Supplement S10)"；S10 新段写明 uniform / r=0.95 / λ=0.5 / K=AnchorMTM 首帧总叶宽，原论文 Storms 为 inverse / K=135 / r=0.65 / λ=0.05、Wildfires 为 K=10 / r=0.85，并说明直接替换参数也不能复现原图，因此不是原结果的复现 |
+| 小措辞 | Storms 案例 "per frame, averaged over frames""in a few frames""31 of 118 frames"；5.6 "where the worst frame's order meets the width bound" |
+
+编译检查：正文仍在第 9 页结束，参考文献从第 9 页底开始，共 10 页；补充材料 16 页（原 15 页）；中文版 18 页。Overleaf 包已更新（37 个文件不变）。

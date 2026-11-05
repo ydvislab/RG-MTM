@@ -27,3 +27,7 @@ Scope limits: report what is actually wrong; do not propose new user studies or 
 3. Theory check: one line per theorem/proposition: correct / correct with caveat / incorrect, with the reason.
 4. Prioritized TODO for the remaining days (at most 12 items, each with effort).
 5. Journal-version items.
+
+## Update (2026-11-05, before this run)
+
+Fixes A–G from the audit note have now been applied to `paper/anchor_full/main.tex`, `main_zh.tex` and `supplement.tex` (commit b85482a; the applied wording is listed at the end of `notes/2026-11-05-number-audit.md`, and the ST-MTM setting paragraph is at the start of supplement S10). Review the manuscript as it is now, and for A–G judge the applied wording rather than the proposals.

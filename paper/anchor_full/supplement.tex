@@ -356,6 +356,8 @@ Sections~S9--S16 support statements in Sections~5 and~6 of the paper. Every tabl
 
 \section{All Values of the Comparison of Instances}\label{sec:supp_values}
 TMTM and ST-MTM are evaluated on their native outputs; AnchorMTM at $\varepsilon=0$ (with $\varepsilon_0=10^{-7}$) and $\varepsilon=10\%$; the projection is the instance with unlimited allowance.
+
+\paragraph{ST-MTM setting.} ST-MTM has no public code, so the comparison is with a reimplementation of its published description under the shared-input protocol: it receives the same processed fields, trees, leaf supports and correspondences as the other instances. One setting is fixed in advance for all sequences and not tuned: uniform leaf weights, reordering threshold $r=0.95$, temporal weight $\lambda=0.5$, and total leaf extent $K$ equal to the total leaf width that AnchorMTM gives the first frame. The original paper chooses these per dataset; for its storm sequence it uses inverse weights, $K=135$, $r=0.65$ and $\lambda=0.05$, and for its wildfire sequence $K=10$ and $r=0.85$. Because $K$ is expressed in input coordinates and our coordinate normalization, frame counts, scalar preprocessing and trees differ from the original inputs, substituting those values would not reproduce the original figures. The values in this section are therefore not a reproduction of the original results.
 \input{tables/supp_values_position}
 \input{tables/supp_values_temporal}
 \input{tables/supp_values_geometry}

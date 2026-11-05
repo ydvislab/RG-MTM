@@ -44,7 +44,9 @@ def values():
         for m, k in (('Exact', 'eps=0'), ('Budgeted', 'eps=0.1'), ('Projection', 'projection')):
             c = Q[n][k]; d[m] = dict(NROE=100 * F[n]['methods'][k]['NROE'], NMLE=100 * F[n]['methods'][k]['NMLE_max'],
                                      ME=100 * c['ME_errors'] / c['ME_clear'], SNS=c['SNS'], TW=c['TW1'], TD=c['TD'])
-        d['nu'] = 100 * B[n]['budget_sweep'][0]['lower_mean']; out[n] = d   # bound at the numerical allowance eps0 (S16)
+        d['nu'] = 100 * B[n]['budget_sweep'][0]['lower_mean']   # c0: bound at Exact Mode's numerical allowance eps0 (S16)
+        d['nu_strict'] = 100 * B[n]['nu_tie_sensitivity']['0']   # nu*: strict exact-topology bound (Theorem 1)
+        out[n] = d
     return out
 
 
@@ -58,9 +60,9 @@ def two(first, groups, sub):
 
 
 def tables_values(V):
-    rows = [[TEX[n], f2(V[n]['nu'])] + [f2(V[n][m]['NROE']) for m in M5] + [f2(V[n][m]['NMLE']) for m in ('Budgeted', 'Projection')] for n in NAMES]
-    table('supp_values_position.tex', r'Position and topology behind Fig.~4(a,b) of the paper (percent). $\nu^*$: mean order bound at the numerical allowance $\varepsilon_0$ (Section~\ref{sec:supp_ties}); NROE: mean order error; NMLE: worst rendered merge error (zero for TMTM, ST-MTM and $\varepsilon=0$).',
-          'tab:supp_values_position', two(r'Sequence & $\nu^*$', [('NROE', 5), ('NMLE', 2)], H5 + r' & $\varepsilon{=}10\%$ & Proj.'), rows, 'l' + 'r' * 8)
+    rows = [[TEX[n], f2(V[n]['nu_strict']), f2(V[n]['nu'])] + [f2(V[n][m]['NROE']) for m in M5] + [f2(V[n][m]['NMLE']) for m in ('Budgeted', 'Projection')] for n in NAMES]
+    table('supp_values_position.tex', r'Position and topology behind Fig.~4(a,b) of the paper (percent). $\nu^*$: mean strict exact-topology bound (Theorem~\ref{thm:order}), against which TMTM and ST-MTM are measured; $c_0$: mean bound at Exact Mode\textquoteright s numerical allowance $\varepsilon_0\Delta_F$ (Section~\ref{sec:supp_ties}); the two differ only on Cylinder. NROE: mean order error; NMLE: worst rendered merge error (zero for TMTM and ST-MTM, and at most $\varepsilon_0$ for $\varepsilon=0$).',
+          'tab:supp_values_position', two(r'Sequence & $\nu^*$ & $c_0$', [('NROE', 5), ('NMLE', 2)], H5 + r' & $\varepsilon{=}10\%$ & Proj.'), rows, 'l' + 'r' * 9)
     rows = [[TEX[n]] + [f'{V[n][m]["ME"]:.1f}' for m in M5] + [f'{V[n][m]["TD"]:.1f}' for m in M5] for n in NAMES]
     table('supp_values_temporal.tex', r'Temporal measures behind Fig.~4(c) and the discussion. ME: share of clear approach or separation events shown wrongly (percent); TD: summed map displacement of matched features in canvas units, protocol of ST-MTM.',
           'tab:supp_values_temporal', two('Sequence', [(r'ME (\%)', 5), ('TD', 5)], H5 + ' & ' + H5), rows, 'l' + 'r' * 10)
@@ -103,8 +105,8 @@ def same_model_and_jumps():
         else:
             rows_d.append([TEX[n], '--', '--'] + ours)
             rows_t.append([TEX[n], '--', '--'] + [f'{jumps[k][0]:.2f} / {jumps[k][1]:.2f}' for k in ('eps=0', 'eps=0.1', 'projection')])
-    hd = r'Sequence & TMTM obj. & ST-MTM obj. & $\varepsilon{=}0$ & $\varepsilon{=}10\%$ & Projection'
-    table('supp_same_model.tex', r'Displacement in one interval model, mean $E_{\mathrm{pool}}$ / worst $E_\infty$ (percent of $L$). TMTM and ST-MTM objectives: their objectives solved with exact topology in the same interval model, references and canvas (grey boxes of Fig.~5 of the paper); available for the planar sequences.',
+    hd = r'Sequence & TMTM-style & ST-MTM-style & $\varepsilon{=}0$ & $\varepsilon{=}10\%$ & Projection'
+    table('supp_same_model.tex', r'Displacement in one interval model, mean $E_{\mathrm{pool}}$ / worst $E_\infty$ (percent of $L$). TMTM-style and ST-MTM-style: the two objectives of Section~\ref{sec:supp_same}, solved with exact topology in the same interval model, references and canvas (grey boxes of Fig.~5 of the paper); available for the planar sequences.',
           'tab:supp_same_model', hd, rows_d, 'lrrrrr')
     table('supp_jumps.tex', r'Layout-induced jump $|\Delta x_i-\Delta q_i|/L$ / anchor motion $|\Delta x_i|/L$ of matched features per step (percent), same interval model. A map that keeps its features still while their references move has a jump close to the reference motion.',
           'tab:supp_jumps', hd, rows_t, 'lrrrrr')
@@ -133,9 +135,10 @@ def table_ties():
             rf'{lf[0]["B_order_merge_error"] / K["tie"]:.1f} and {lf[1]["B_order_merge_error"] / K["tie"]:.1f} times $\varepsilon_0\Delta_F$. '
             rf'Enumerating all {big(lf[0]["enumerated"])} and {big(lf[1]["enumerated"])} orders that are legal after this flattening and keeping those within the allowance '
             rf'gives the optimum {f2(100 * lf[0]["enumerated_optimum"])}\% and {f2(100 * lf[1]["enumerated_optimum"])}\%, equal to $C_\eta$ of Theorem~\ref{{thm:chain}} at $\eta=\varepsilon_0\Delta_F$. '
-            rf'On every frame the order search attains $C_\eta$ ({K["frames_attained"]}/{K["frames"]} frames, merge error below $\varepsilon_0\Delta_F$), so the paper reports {nu_c:.2f}\%. '
-            rf'TMTM and ST-MTM have zero merge error; on the exact tree ($\varepsilon_0=0$) the bound is {nu_0:.2f}\%, and their avoidable shares on Cylinder in Fig.~4a '
-            rf'would be {share("TMTM", nu_0):.0f}\% and {share("ST-MTM", nu_0):.0f}\% instead of {share("TMTM", nu_c):.0f}\% and {share("ST-MTM", nu_c):.0f}\%.')
+            rf'On every frame the order search attains $C_\eta$ ({K["frames_attained"]}/{K["frames"]} frames, merge error below $\varepsilon_0\Delta_F$), so the paper reports $c_0={nu_c:.2f}\%$ for Exact Mode. '
+            rf'TMTM and ST-MTM have zero merge error, so they are measured against the strict bound $\nu^*$ of the exact tree ($\varepsilon_0=0$), {nu_0:.2f}\%: their avoidable shares on Cylinder in Fig.~4a '
+            rf'are {share("TMTM", nu_0):.0f}\% and {share("ST-MTM", nu_0):.0f}\% (against $c_0={nu_c:.2f}\%$ they would be {share("TMTM", nu_c):.0f}\% and {share("ST-MTM", nu_c):.0f}\%). '
+            rf'Exact Mode, which keeps the numerical allowance, is measured against $c_0$.')
     table('supp_ties.tex', r'Mean order bound (percent) for maps whose merge error is at most $\varepsilon_0\Delta_F$, for several numerical allowances $\varepsilon_0$. '
           r'Rows give the optimum attained by the order search, which equals $C_\eta$ of Theorem~\ref{thm:chain} at $\eta=\varepsilon_0\Delta_F$ on every frame; for Cylinder, the weaker bound obtained by flattening every parent gap of at most $2\eta$ is also listed. '
           r'Last column: value used in the paper ($\varepsilon_0=10^{-7}$).',
@@ -153,7 +156,7 @@ def tables_olr():
     table('supp_olr_resolution.tex', r'OLR, 60 days, 264 minima. Share of minima with their own profile dip within $\delta$ of their reference position (percent; one-to-one, nearest first), and depth error of matched dips, mean / median (W\,m$^{-2}$). $\delta$ was fixed before the evaluation.',
           'tab:supp_olr_resolution', r'Profile & $\delta{=}2\%$ & $\delta{=}5\%$ & depth, $\delta{=}2\%$ & depth, $\delta{=}5\%$', rows, 'lrrrr')
     rows = []
-    lab = {'topology_time': 'TMTM objective', 'topology_geometry': 'ST-MTM objective', 'ours_0': r'AnchorMTM, $\varepsilon=0$',
+    lab = {'topology_time': 'TMTM-style', 'topology_geometry': 'ST-MTM-style', 'ours_0': r'AnchorMTM, $\varepsilon=0$',
            'ours_0.1': r'AnchorMTM, $\varepsilon=10\%$', 'Hovmoller': r'Hovm\"oller'}
     for n in ('OLR', 'Storms', 'Ring'):
         r = C['P2'][n]
@@ -165,9 +168,29 @@ def tables_olr():
           'tab:supp_column_change', r'Sequence & Map & all & no event & event & $\rho_S$', rows, 'llrrrr')
 
 
+def table_space_filling():
+    """S10: Hilbert and Morton orders of the extrema (figure_drafts/space_filling_baselines.py), with the merge tree maps for reference."""
+    SF = load(RES / 'space_filling20261105/metrics.json'); V = values(); rows = []
+    for n in ('Storms', 'Wildfires', 'OLR', 'PM2.5', 'Ring'):
+        for c in ('Hilbert', 'Morton'):
+            r = SF[n][c]
+            rows.append([TEX[n] if c == 'Hilbert' else '', c, f2(100 * r['NROE']['mean']), f2(100 * r['NMLE_max']['mean']), f2(100 * r['NMLE']['mean']),
+                         f2(100 * r['NPE']['mean']), f3(r['SNS']['mean']), f3(r['TW']['mean'])])
+        rows.append(['', r'TMTM / ST-MTM / $\varepsilon{=}0$', ' / '.join(f'{V[n][m]["NROE"]:.1f}' for m in ('TMTM', 'ST-MTM', 'Exact')), '0 / 0 / 0', '0 / 0 / 0', '--',
+                     ' / '.join(f'{V[n][m]["SNS"]:.2f}' for m in ('TMTM', 'ST-MTM', 'Exact')), ' / '.join(f'{V[n][m]["TW"]:.2f}' for m in ('TMTM', 'ST-MTM', 'Exact'))])
+    note = (r'Each extremum is assigned to its unit grid cell on the smallest power-of-two square covering all extrema of the sequence; the curve index of that cell is its display coordinate. '
+            r'Curves have no canonical orientation on these domains, so every value is the mean over the eight axis-aligned orientations. '
+            r'$\delta^*$ is the smallest merge error of any profile with the curve order (Proposition~\ref{prop:barriers}), a lower bound on the merge error of a curve-ordered map. '
+            r'NPE maps the curve index linearly onto the canvas $[\min q,\min q+L]$ and therefore depends on that choice; NROE does not. '
+            r'Script: \texttt{figure\_drafts/space\_filling\_baselines.py}.')
+    table('supp_space_filling.tex', r'Space-filling curves on the five planar sequences, same inputs as all other maps: order error NROE, worst and mean least merge error $\delta^*/\Delta_F$ of the curve order, NPE (percent), SNS and TW ($k=1$). Last row of each sequence: NROE, merge error, SNS and TW of TMTM, ST-MTM and Exact Mode (Table~\ref{tab:supp_values_position}, Table~\ref{tab:supp_values_geometry}).',
+          'tab:supp_space_filling', r'Sequence & Curve & NROE & $\delta^*$ worst & $\delta^*$ mean & NPE & SNS & TW', rows, 'llrrrrrr', note=note)
+    for r in rows: print('curves', r)
+
+
 def fig_storms():
     Mp = dict(np.load(RES / 'maps20261030/maps_era5.npz')); qs = load(RES / 'maps20261030/q_era5.json'); S = load(RES / 'maps20261030/storms_case.json')
-    cols = [('topology_time', 'TMTM objective', '#7B8790'), ('topology_geometry', 'ST-MTM objective', '#CC79A7'),
+    cols = [('topology_time', 'TMTM-style objective', '#7B8790'), ('topology_geometry', 'ST-MTM-style objective', '#CC79A7'),
             ('ours_0', r'AnchorMTM, $\varepsilon=0$', '#0072B2'), ('ours_0.1', r'AnchorMTM, $\varepsilon=10\%$', '#009E73')]
     vmin = min(np.nanmin(Mp[k]) for k, *_ in cols); vmax = max(np.nanmax(Mp[k]) for k, *_ in cols)
     plt.rcParams.update({'font.family': 'Arial', 'font.size': 7, 'pdf.fonttype': 42, 'mathtext.fontset': 'dejavusans'})
@@ -186,11 +209,11 @@ def fig_storms():
     cb = fig.colorbar(im, cax=fig.add_subplot(g[0, 4])); cb.ax.tick_params(labelsize=5, length=1.5); cb.set_label('MSLP (hPa)', fontsize=5.6)
     ax = fig.add_subplot(g[1, :2])
     for k, title, col in cols: ax.plot(100 * np.array(S['worst'][k]), lw=.8, color=col, label=title)
-    ax.set_ylabel('worst displacement\nper step (%)', fontsize=5.8); ax.set_xlabel('time step', fontsize=5.8); ax.tick_params(labelsize=5.2, length=1.5)
+    ax.set_ylabel('worst displacement\nper frame (%)', fontsize=5.8); ax.set_xlabel('frame', fontsize=5.8); ax.tick_params(labelsize=5.2, length=1.5)
     ax.legend(fontsize=5, ncol=2, frameon=False, loc='upper right'); ax.spines[['top', 'right']].set_visible(False)
     ax = fig.add_subplot(g[1, 2:4]); ax.bar(range(len(S['nmle_10'])), 100 * np.array(S['nmle_10']), color='#E69F00', width=.9)
     ax.axhline(10, ls='--', lw=.6, color='k'); ax.text(len(S['nmle_10']) - 1, 10.4, r'allowance $\varepsilon=10\%$', ha='right', fontsize=5)
-    ax.set_ylabel('merge error (%)', fontsize=5.8); ax.set_xlabel(r'time step ($\varepsilon=10\%$)', fontsize=5.8); ax.tick_params(labelsize=5.2, length=1.5)
+    ax.set_ylabel('merge error (%)', fontsize=5.8); ax.set_xlabel(r'frame ($\varepsilon=10\%$)', fontsize=5.8); ax.tick_params(labelsize=5.2, length=1.5)
     ax.spines[['top', 'right']].set_visible(False)
     for e in ('pdf', 'png'): fig.savefig(FIG / f'fig_supp_storms.{e}', dpi=220, bbox_inches='tight', pad_inches=.02)
     w = {k: 100 * np.mean(v) for k, v in S['worst'].items()}; n10 = np.array(S['nmle_10'])
@@ -199,4 +222,4 @@ def fig_storms():
 
 
 if __name__ == '__main__':
-    tables_values(values()); same_model_and_jumps(); table_ties(); tables_olr(); fig_storms()
+    tables_values(values()); same_model_and_jumps(); table_ties(); tables_olr(); table_space_filling(); fig_storms()

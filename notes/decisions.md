@@ -26,3 +26,10 @@
 - 以 `paper/pacificvis2027/`（VGTC 会议模板、review 模式）为唯一投稿源文件；本机无 LaTeX，在 Overleaf 编译（`paper/pacificvis2027_overleaf.zip`）。模板原始压缩包 `vgtc_conference_latex-2024.02.14.zip` 不入库，所需的 `vgtc.cls` 与 `.bst` 已复制进目录。
 - 修改流程：先改 `paper/pacificvis2027/main.tex`，重新打包 zip 再上传；中文稿 `draft_zh.md` 仅作理解与讨论用，不再同步维护每个数字。
 
+
+## 2026-11-05 叙事调整与 Codex 第 2 轮修改（RG-MTM 私有分支 `paper/anchor_full/`）
+
+- TMTM、ST-MTM 只作为对比方法，不再写成统一表述的特例；删去式 general 和实例表。原因：用户要求只讲我们自己的方法；Codex 也指出统一式与原方法并不严格等价。
+- 可避免比例用严格口径：对比方法用定理 1 的 ν\*，精确模式用数值允许量下的 c0。正文写 TMTM 54–95%、ST-MTM 31–95%（原 54–95% 依赖 ε0 允许量，不适用于严格保树的方法）。
+- 采用 NPE；Hilbert/Morton 在我们五个平面序列上重算；不引用 ST-MTM 已发表的 SNS/TW；同模型基线改称 TMTM-style / ST-MTM-style。
+- 详情：`notes/2026-11-05-revision-after-codex-run02.md`。

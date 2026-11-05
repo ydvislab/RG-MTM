@@ -201,7 +201,9 @@ def compare_values():
                                       ME=100 * int(r['motion_errors']) / int(r['N_clear']), SNS=float(r['SNS']), TW=float(r['TW1']))
         for m, k in [('Projection', 'projection'), ('Exact', 'eps=0'), ('Budgeted', 'eps=0.1')]:
             d[m] = dict(NROE=100 * F[k]['NROE'], NMLE=100 * F[k]['NMLE_max'], ME=me(Qs[k]), SNS=Qs[k]['SNS'], TW=Qs[k]['TW1'])
-        d['nu'] = 100 * BUDGET[n]['budget_sweep'][0]['lower_mean']; out[n] = d   # bound at the numerical allowance eps0 (S16)
+        d['nu'] = 100 * BUDGET[n]['budget_sweep'][0]['lower_mean']   # c0: bound at Exact Mode's numerical allowance eps0 (S16)
+        d['nu_strict'] = 100 * BUDGET[n]['nu_tie_sensitivity']['0']   # nu*: strict exact-topology bound (Theorem 1)
+        out[n] = d
     return out
 
 
@@ -211,23 +213,24 @@ def fig_compare_v2():
     ax = fig.add_subplot(g[:, 0]); x = np.arange(len(NAMES)); w = .26
     frac = {}
     for j, m in enumerate(['TMTM', 'ST-MTM', 'Exact']):
-        xo = x + (j - 1) * w; nu = np.array([V[n]['nu'] for n in NAMES]); tot = np.array([V[n][m]['NROE'] for n in NAMES])
+        xo = x + (j - 1) * w; tot = np.array([V[n][m]['NROE'] for n in NAMES])
+        nu = np.array([V[n]['nu' if m == 'Exact' else 'nu_strict'] for n in NAMES])   # strict maps: nu*; Exact Mode: c0
         ex = np.clip(tot - nu, 0, None)
         ax.bar(xo, nu, w * .92, color=FORCED, lw=0)
         ax.bar(xo, ex, w * .92, bottom=nu, color=M[m]['c'], lw=0, alpha=1 if m != 'Exact' else .9)
         if m != 'Exact':
             frac[m] = 100 * ex / tot
-            for xi, t, fr in zip(xo, tot, frac[m]): ax.text(xi, t + .5, f'{fr:.0f}', ha='center', fontsize=4.9, rotation=90, va='bottom')
+            for xi, t, fr in zip(xo, tot, frac[m]): ax.text(xi, t + .5, f'{fr:.0f}', ha='center', fontsize=5.6, rotation=90, va='bottom')
     ax.axvline(4.5, color='#999', lw=.6); ax.text(4.4, 34, 'planar', ha='right', va='top', fontsize=5.6, color='#666'); ax.text(4.6, 34, 'volumetric', va='top', fontsize=5.6, color='#666')
-    ax.set_xticks(x); ax.set_xticklabels([LABEL[n] for n in NAMES], fontsize=6)
-    ax.set_ylabel('Order error NROE (%)', fontsize=6.3); ax.set_ylim(0, 35); ax.tick_params(labelsize=5.8, length=2)
+    ax.set_xticks(x); ax.set_xticklabels([LABEL[n] for n in NAMES], fontsize=5.7)
+    ax.set_ylabel('Order error NROE (%)', fontsize=6.3); ax.set_ylim(0, 36); ax.tick_params(labelsize=6, length=2)
     ax.yaxis.grid(True, color=GRID, lw=.5); ax.set_axisbelow(True)
     h = [Rectangle((0, 0), 1, 1, color=FORCED)] + [Rectangle((0, 0), 1, 1, color=M[m]['c']) for m in ('TMTM', 'ST-MTM', 'Exact')]
-    ax.legend(h, [r'forced by hierarchy ($\nu^*$, Thm. 1)', 'avoidable: TMTM', 'avoidable: ST-MTM', r'avoidable: AnchorMTM $\varepsilon=0$'],
-              fontsize=5.6, loc='upper center', ncol=2, handlelength=1, columnspacing=.8, bbox_to_anchor=(.5, -.1))
+    ax.legend(h, [r'forced by hierarchy ($\nu^*$, Thm. 1; $c_0$ for $\varepsilon=0$)', 'avoidable: TMTM', 'avoidable: ST-MTM', r'avoidable: AnchorMTM $\varepsilon=0$'],
+              fontsize=6, loc='upper center', ncol=2, handlelength=1, columnspacing=.8, bbox_to_anchor=(.5, -.1))
     ax.set_title('(a) Order error: forced by the hierarchy vs avoidable (labels: % avoidable)', pad=3, fontsize=6.3, fontweight='normal')
     print('avoidable % TMTM', np.round(frac['TMTM'], 1), 'ST-MTM', np.round(frac['ST-MTM'], 1))
-    print('exact minus nu*', {n: round(V[n]['Exact']['NROE'] - V[n]['nu'], 3) for n in NAMES})
+    print('exact minus c0', {n: round(V[n]['Exact']['NROE'] - V[n]['nu'], 3) for n in NAMES})
     small = [('NMLE', 'Worst merge error (%)', g[0, 1]), ('ME', 'Motion error (%)', g[0, 2]),
              ('SNS', r'Distance stress SNS $\downarrow$', g[1, 1]), ('TW', r'Trustworthiness TW $\uparrow$', g[1, 2])]
     for j, (key, title, cell) in enumerate(small):
@@ -236,11 +239,11 @@ def fig_compare_v2():
         for k, m in enumerate(['TMTM', 'ST-MTM', 'Projection', 'Exact', 'Budgeted']):
             ax.plot(x + off[k], [V[n][m][key] for n in NAMES], **mstyle(m, 2.6))
         ax.axvline(4.5, color='#999', lw=.5); ax.set_xticks(x)
-        ax.set_xticklabels([LABEL[n] for n in NAMES], fontsize=4.6, rotation=90)
-        ax.set_title(title, fontsize=6.1, pad=2, fontweight='normal'); ax.tick_params(labelsize=5.2, length=2)
+        ax.set_xticklabels([LABEL[n] for n in NAMES], fontsize=5.6, rotation=90)
+        ax.set_title(title, fontsize=6.3, pad=2, fontweight='normal'); ax.tick_params(labelsize=5.8, length=2)
         ax.yaxis.grid(True, color=GRID, lw=.5); ax.set_axisbelow(True)
     hs = [Line2D([], [], **mstyle(m, 3.2)) for m in ['TMTM', 'ST-MTM', 'Projection', 'Exact', 'Budgeted']]
-    fig.legend(hs, [MLAB[m] for m in ['TMTM', 'ST-MTM', 'Projection', 'Exact', 'Budgeted']], ncol=5, fontsize=5.8,
+    fig.legend(hs, [MLAB[m] for m in ['TMTM', 'ST-MTM', 'Projection', 'Exact', 'Budgeted']], ncol=5, fontsize=6.2,
                loc='lower center', bbox_to_anchor=(.68, -.2), handlelength=1, columnspacing=.9)
     save(fig, 'draft_compare_v2')
 
@@ -270,28 +273,28 @@ def fig_frontier_v2():
             ax.plot(xi, yi, 'o', ms=3.4, mfc=cm(.95 - .65 * i / (len(keys) - 1)), mec='white', mew=.4, zorder=3)
             ax.plot(xi, yp[i], 'o', ms=2, color=M['Exact']['c'], alpha=.6)
         for k, xi, yi in zip(keys, x, yw):
-            if k in ('eps=0', 'eps=0.02', 'eps=0.1'): ax.annotate('%g' % (100 * float(k[4:])), (xi, yi), xytext=(2, 2.5), textcoords='offset points', fontsize=5.2)
+            if k in ('eps=0', 'eps=0.02', 'eps=0.1'): ax.annotate('%g' % (100 * float(k[4:])), (xi, yi), xytext=(2, 2.5), textcoords='offset points', fontsize=5.8)
         ax.plot([x[-1], 100 * P['NMLE_max']], [yw[-1], 100 * P['E_inf']], ':', lw=.8, color=M['Exact']['c'])
         ax.plot(100 * P['NMLE_max'], 100 * P['E_inf'], **mstyle('Projection', 4))
         top = max(yw + [100 * P['E_inf']]) * 1.35
         B = baseline_displacement(n)
         if B:
-            txt = 'same model, $\\varepsilon=0$:\n' + '\n'.join(f"{m} obj.: {B[m]['E_inf']:.0f}% / {B[m]['E_pool']:.0f}%" for m in ('TMTM', 'ST-MTM'))
-            ax.text(.97, .97, txt, transform=ax.transAxes, ha='right', va='top', fontsize=4.9, linespacing=1.15,
+            txt = 'same model, $\\varepsilon=0$:\n' + '\n'.join(f"{m}-style: {B[m]['E_inf']:.0f}% / {B[m]['E_pool']:.0f}%" for m in ('TMTM', 'ST-MTM'))
+            ax.text(.97, .97, txt, transform=ax.transAxes, ha='right', va='top', fontsize=5.5, linespacing=1.15,
                     bbox=dict(boxstyle='round,pad=.25', fc='#F4F5F7', ec='none'))
             ax.annotate('', (0, top), (0, top * .86), arrowprops=dict(arrowstyle='-|>', lw=.8, color=M['TMTM']['c']), annotation_clip=False)
             print('frontier baseline', n, {m: {k: round(v, 2) for k, v in B[m].items()} for m in B})
         ax.set_ylim(0, top); ax.set_title(LABEL[n], pad=2, fontweight='normal')
-        ax.yaxis.grid(True, color=GRID, lw=.5); ax.set_axisbelow(True); ax.tick_params(labelsize=5.6, length=2)
-    for ax in axes[4:7]: ax.set_xlabel('Worst merge error NMLE (%)', fontsize=6.1)
+        ax.yaxis.grid(True, color=GRID, lw=.5); ax.set_axisbelow(True); ax.tick_params(labelsize=6, length=2)
+    for ax in axes[4:7]: ax.set_xlabel('Worst merge error NMLE (%)', fontsize=6.3)
     for ax in (axes[0], axes[4]): ax.set_ylabel('Displacement (%)', fontsize=6.3)
     axes[7].axis('off')
     hs = [Line2D([], [], color=M['Exact']['c'], lw=1.1, marker='o', ms=3), Line2D([], [], color=M['Exact']['c'], lw=.7, ls='--', alpha=.6),
           Line2D([], [], **mstyle('Projection', 4))]
     axes[7].legend(hs, [r'AnchorMTM worst $E_\infty$', r'AnchorMTM mean $E_{pool}$', r'projection ($\varepsilon=\infty$)'],
-                   loc='upper center', fontsize=5.4, handlelength=1.6, bbox_to_anchor=(.5, 1.08))
-    axes[7].text(.5, .0, 'shade, labels: $\\varepsilon$ (%), dark = 0\ngrey box: TMTM / ST-MTM objectives,\nsame model, worst / mean\narrow: above the plotted range',
-                 transform=axes[7].transAxes, ha='center', va='bottom', fontsize=4.9, linespacing=1.2)
+                   loc='upper center', fontsize=6, handlelength=1.6, bbox_to_anchor=(.5, 1.12))
+    axes[7].text(.5, .0, 'shade, labels: $\\varepsilon$ (%), dark = 0\ngrey box: TMTM-/ST-MTM-style\nobjectives, same model,\nworst / mean; arrow: off scale',
+                 transform=axes[7].transAxes, ha='center', va='bottom', fontsize=5.6, linespacing=1.2)
     fig.subplots_adjust(hspace=.48, wspace=.3)
     save(fig, 'draft_frontier_v2')
 
@@ -345,20 +348,20 @@ def fig_controlled_v2():
     ax.plot(100 * d, f('exact_tau'), '-', color=M['Exact']['c'], lw=1.1, label='interval optimum (24 orders)')
     ax.plot(100 * d[::3], f('width_lower')[::3], 'o', ms=2.6, mfc='white', mec=M['Exact']['c'], mew=.7, label='width bound (Thm. 2)')
     ax.set_xlabel('signed overlap d (%)', fontsize=6); ax.set_ylabel('displacement (%)', fontsize=6)
-    ax.legend(fontsize=4.9, loc='upper left', handlelength=1.4); ax.tick_params(labelsize=5.4, length=2)
+    ax.legend(fontsize=5.6, loc='upper left', handlelength=1.4); ax.tick_params(labelsize=5.8, length=2)
     ax.yaxis.grid(True, color=GRID, lw=.5); ax.set_axisbelow(True); ax.set_title('(a) Overlap forces displacement', fontsize=6.3, pad=2)
     ins = ax.inset_axes([.6, .03, .4, .3]); ins.set_xlim(0, 1); ins.set_ylim(-.1, 1.15); ins.axis('off')
     for k, xi in zip('ABCD', [.08, .36, .64, .92]):
-        ins.plot([xi, xi], [0, .45], color=LEAF[k], lw=1.2); ins.text(xi, -.08, k, fontsize=4.6, ha='center', va='top', color=LEAF[k])
+        ins.plot([xi, xi], [0, .45], color=LEAF[k], lw=1.2); ins.text(xi, -.08, k, fontsize=5.6, ha='center', va='top', color=LEAF[k])
     ins.plot([.08, .36], [.45, .45], 'k', lw=.6); ins.plot([.64, .92], [.45, .45], 'k', lw=.6)
-    ins.plot([.22, .22, .78, .78], [.45, .9, .9, .45], 'k', lw=.6); ins.text(.5, -.42, 'q = (.2, .5, .5−d, .8−d)', fontsize=4.3, ha='center')
+    ins.plot([.22, .22, .78, .78], [.45, .9, .9, .45], 'k', lw=.6); ins.text(.5, -.42, 'q = (.2, .5, .5−d, .8−d)', fontsize=5.2, ha='center')
     ax = axes[1]; levels = sorted({float(r['inner_level']) for r in bu}); cm = plt.get_cmap('viridis')
     for i, lv in enumerate(levels):
         sel = [r for r in bu if float(r['inner_level']) == lv]; e = 100 * np.array([float(r['epsilon']) for r in sel])
         t = 100 * np.array([float(r['tau']) for r in sel]); h = 100 * float(sel[0]['parent_gap']); c = cm(.15 + .7 * i / (len(levels) - 1))
-        ax.step(e, t, where='post', color=c, lw=1); ax.text(h / 2 + .6, 7 + 1.6 * i, f'h = {h:.0f}%', fontsize=5, color=c, rotation=90, va='center')
+        ax.step(e, t, where='post', color=c, lw=1); ax.text(h / 2 + .6, 7 + 1.6 * i, f'h = {h:.0f}%', fontsize=5.6, color=c, rotation=90, va='center')
     ax.set_xlabel(r'merge budget $\varepsilon$ (%)', fontsize=6); ax.set_ylabel('displacement (%)', fontsize=6)
-    ax.tick_params(labelsize=5.4, length=2); ax.set_title(r'(b) Released at $\varepsilon=h/2$ (Thm. 3)', fontsize=6.3, pad=2)
+    ax.tick_params(labelsize=5.8, length=2); ax.set_title(r'(b) Released at $\varepsilon=h/2$ (Thm. 3)', fontsize=6.3, pad=2)
     ax.yaxis.grid(True, color=GRID, lw=.5); ax.set_axisbelow(True)
     save(fig, 'draft_controlled_v2')
 
@@ -399,4 +402,5 @@ def fig_page_plan():
 
 
 if __name__ == '__main__':
-    fig_page_plan()
+    import sys
+    for name in (sys.argv[1:] or ['fig_page_plan']): globals()[name]()

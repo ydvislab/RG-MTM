@@ -1,0 +1,23 @@
+\begin{table}[H]
+\centering\small\setlength{\tabcolsep}{3.2pt}
+\caption{Space-filling curves on the five planar sequences, same inputs as all other maps: order error NROE, worst and mean least merge error $\delta^*/\Delta_F$ of the curve order, NPE (percent), SNS and TW ($k=1$). Last row of each sequence: NROE, merge error, SNS and TW of TMTM, ST-MTM and Exact Mode (Table~\ref{tab:supp_values_position}, Table~\ref{tab:supp_values_geometry}).}\label{tab:supp_space_filling}
+\begin{tabular}{llrrrrrr}\toprule
+Sequence & Curve & NROE & $\delta^*$ worst & $\delta^*$ mean & NPE & SNS & TW\\\midrule
+Storms & Hilbert & 18.21 & 36.54 & 3.03 & 49.48 & 0.142 & 0.709\\
+ & Morton & 17.88 & 38.57 & 2.91 & 47.67 & 0.144 & 0.700\\
+ & TMTM / ST-MTM / $\varepsilon{=}0$ & 19.2 / 16.3 / 3.8 & 0 / 0 / 0 & 0 / 0 / 0 & -- & 0.08 / 0.03 / 0.12 & 0.82 / 0.97 / 0.77\\
+Wildfires & Hilbert & 23.40 & 32.27 & 5.91 & 55.34 & 0.200 & 0.888\\
+ & Morton & 21.30 & 31.88 & 7.06 & 49.80 & 0.188 & 0.861\\
+ & TMTM / ST-MTM / $\varepsilon{=}0$ & 29.3 / 24.0 / 5.8 & 0 / 0 / 0 & 0 / 0 / 0 & -- & 0.22 / 0.08 / 0.08 & 0.82 / 0.92 / 0.87\\
+OLR & Hilbert & 18.39 & 21.54 & 2.38 & 55.64 & 0.101 & 0.848\\
+ & Morton & 17.84 & 20.51 & 2.23 & 57.33 & 0.088 & 0.862\\
+ & TMTM / ST-MTM / $\varepsilon{=}0$ & 19.3 / 17.2 / 0.9 & 0 / 0 / 0 & 0 / 0 / 0 & -- & 0.14 / 0.01 / 0.01 & 0.81 / 0.98 / 0.96\\
+PM$_{2.5}$ & Hilbert & 8.65 & 19.24 & 0.32 & 41.71 & 0.072 & 0.697\\
+ & Morton & 8.59 & 20.01 & 0.32 & 41.07 & 0.078 & 0.668\\
+ & TMTM / ST-MTM / $\varepsilon{=}0$ & 12.9 / 11.6 / 1.0 & 0 / 0 / 0 & 0 / 0 / 0 & -- & 0.05 / 0.03 / 0.06 & 0.76 / 0.92 / 0.75\\
+Ring & Hilbert & 8.56 & 33.90 & 5.49 & 55.81 & 0.167 & 0.846\\
+ & Morton & 8.30 & 34.46 & 5.95 & 54.29 & 0.160 & 0.751\\
+ & TMTM / ST-MTM / $\varepsilon{=}0$ & 7.2 / 10.4 / 2.7 & 0 / 0 / 0 & 0 / 0 / 0 & -- & 0.17 / 0.08 / 0.16 & 0.71 / 0.92 / 0.69\\
+\bottomrule\end{tabular}
+\par\smallskip\parbox{\linewidth}{\footnotesize Each extremum is assigned to its unit grid cell on the smallest power-of-two square covering all extrema of the sequence; the curve index of that cell is its display coordinate. Curves have no canonical orientation on these domains, so every value is the mean over the eight axis-aligned orientations. $\delta^*$ is the smallest merge error of any profile with the curve order (Proposition~\ref{prop:barriers}), a lower bound on the merge error of a curve-ordered map. NPE maps the curve index linearly onto the canvas $[\min q,\min q+L]$ and therefore depends on that choice; NROE does not. Script: \texttt{figure\_drafts/space\_filling\_baselines.py}.}
+\end{table}

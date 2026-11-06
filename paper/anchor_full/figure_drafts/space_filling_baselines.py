@@ -12,7 +12,7 @@ sequence; the curve index of that cell is its display coordinate. Measures, per 
   NPE    worst |x - q| / L per frame with the curve index mapped linearly onto the canvas [min q, min q + L];
   SNS, TW (k = 1) of curve coordinates against support-centroid distances (ST-MTM protocol, as all other maps).
 Curves have no canonical orientation on these domains, so every value is the mean over the eight axis-aligned
-orientations (dihedral group of the square); min and max over orientations are also stored.
+orientations (dihedral group of the square); min, max and every orientation's values are also stored.
 Run: python3 space_filling_baselines.py   (numpy, scipy; imports rgmtm from code/src)
 Output: ../figdata/space_filling20261105/metrics.json
 """
@@ -78,7 +78,8 @@ for name, (key, lm) in SEQ.items():
             per_or.append({k: float(np.mean(v)) for k, v in rows.items()} | dict(NMLE_max=float(np.max(rows['NMLE']))))
         res[curve] = {k: dict(mean=float(np.mean([p[k] for p in per_or])), min=float(np.min([p[k] for p in per_or])),
                               max=float(np.max([p[k] for p in per_or]))) for k in per_or[0]}
+        res[curve]['per_orientation'] = [dict(p, swap=bool(o[0]), flip=[bool(f) for f in o[1]]) for p, o in zip(per_or, ORIENT)]
     res['frames'] = len(fi); res['grid_side'] = side; out[name] = res
-    print(name, side, {c: {k: round(100 * v['mean'], 2) if k not in ('SNS', 'TW') else round(v['mean'], 3) for k, v in res[c].items()} for c in ('Hilbert', 'Morton')})
+    print(name, side, {c: {k: round(100 * v['mean'], 2) if k not in ('SNS', 'TW') else round(v['mean'], 3) for k, v in res[c].items() if k != 'per_orientation'} for c in ('Hilbert', 'Morton')})
 dst = HERE.parent / 'figdata/space_filling20261105'; dst.mkdir(parents=True, exist_ok=True)
 (dst / 'metrics.json').write_text(json.dumps(out, indent=1) + '\n')

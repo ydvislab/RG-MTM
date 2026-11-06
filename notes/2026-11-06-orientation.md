@@ -59,3 +59,14 @@
 - 输入 `data/real/wildfire/wildfire.json` 从 Zenodo records/11234747 下载（64,795,452 字节，SHA-256 `2a8dd31bf6d222d7de673c7e7b2af94550660f1996b0a5db256d97f2b9c2ed9f`），已加入 `.git/info/exclude`，不入库。
 - 输入场哈希与 `framework20261025` 一致；r=0.95 时 ST-MTM 与 TMTM 逐帧复现保存值。
 - 所有 r 和两种朝向下：ST-MTM 53–82%，TMTM 70–80%。已写入 5.3 和附录 S10。
+
+## 七、用户决定与执行（11/6）
+
+用户选择 "Adopt most favorable"：所有对比地图取对其最有利的朝向。
+
+- 实现：`figure_drafts/best_mirror.py`（输出 `figdata/orientation20261106/best_mirror.json`）。原生 TMTM/ST-MTM 取平均 NROE 较低的全局镜像；同模型 TMTM-style/ST-MTM-style 取平均位移较低的画布镜像 x' = 2o + L − x；空间填充曲线取 8 种朝向中平均 NROE 最低者（`space_filling_baselines.py` 现保存逐朝向数值，均值/最小/最大不变）。
+- 一致性：三维参考方向实验（`experiments/reference_direction/run.py`）本来就按"对其有利的一次全局翻转"计算原生地图，新规则与之一致。
+- 改动的图：图 4（`fig_compare_v2`）、图 5 灰框（`fig_frontier_v2`）、图 6（`fig_olr_maps`，ST-MTM-style 一列镜像）。附录表：S10 位置表、曲线表、阈值表；S11 位移与跳动表。
+- 正文：5.1 写明规则；5.3 小标题改为 "The tree forces only part of the order error of TMTM and ST-MTM"，TMTM 53–95%（每组），ST-MTM 69–95%（四个真实平面序列）、31–41%（Ring 与两组体数据）；Storms 例子 18.3%；曲线改为"最优朝向下 NROE 0.3–12.6%，有时低于 ν\*，但最坏帧合并误差 8–40%"；5.5 OLR 的 ST-MTM-style 平均位移 42.7%→19.3%；贡献 3 改为 31–95%；图 4–6 图注注明朝向。摘要、引言、结论的 31–95% 不变。
+- 为放下新句子，删去 5.6 的复杂度句和软件版本、Cylinder 宽度感知句、讨论中的重复句。正文第 9 页结束，全文 11 页；附录 18 页；Overleaf 包 42 个文件从零编译通过。
+- PDF：`AnchorMTM_draft_v10_en.pdf`、`AnchorMTM_supplement_v5.pdf`。

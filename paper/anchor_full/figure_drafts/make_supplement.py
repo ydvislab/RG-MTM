@@ -25,6 +25,8 @@ F = {n: load(RES / f'frontier20261027/{FILE[n]}.json') for n in NAMES}
 Q = {n: load(RES / f'metrics_n1c20261027/{FILE[n]}.json')['settings'] for n in NAMES}
 B = {n: load(RES / f'order_budget20261027/{FILE[n]}.json') for n in NAMES}
 f2 = lambda v: f'{v:.2f}'; f3 = lambda v: f'{v:.3f}'
+import best_mirror as bm
+NATIVE = bm.native()
 
 
 def table(path, caption, label, head, rows, spec, note=''):
@@ -38,8 +40,8 @@ def values():
     out = {}
     for n in NAMES:
         d = {}
-        for m in ('TMTM', 'ST-MTM'):
-            r = st(n, m); d[m] = dict(NROE=float(r['NROE']), NMLE=100 * float(r['NMLE_max']), ME=100 * int(r['motion_errors']) / int(r['N_clear']),
+        for m in ('TMTM', 'ST-MTM'):   # NROE in the more favourable mirror (best_mirror.py)
+            r = st(n, m); d[m] = dict(NROE=NATIVE[n][m]['best'], NROE_protocol=NATIVE[n][m]['protocol'], NMLE=100 * float(r['NMLE_max']), ME=100 * int(r['motion_errors']) / int(r['N_clear']),
                                       SNS=float(r['SNS']), TW=float(r['TW1']), TD=float(r['TD']))
         for m, k in (('Exact', 'eps=0'), ('Budgeted', 'eps=0.1'), ('Projection', 'projection')):
             c = Q[n][k]; d[m] = dict(NROE=100 * F[n]['methods'][k]['NROE'], NMLE=100 * F[n]['methods'][k]['NMLE_max'],
@@ -61,7 +63,7 @@ def two(first, groups, sub):
 
 def tables_values(V):
     rows = [[TEX[n], f2(V[n]['nu_strict']), f2(V[n]['nu'])] + [f2(V[n][m]['NROE']) for m in M5] + [f2(V[n][m]['NMLE']) for m in ('Budgeted', 'Projection')] for n in NAMES]
-    table('supp_values_position.tex', r'Position and topology behind Fig.~4(a,b) of the paper (percent). $\nu^*$: mean strict exact-topology bound (Theorem~\ref{thm:order}), against which TMTM and ST-MTM are measured; $c_0$: mean bound at Exact Mode\textquoteright s numerical allowance $\varepsilon_0\Delta_F$ (Section~\ref{sec:supp_ties}); the two differ only on Cylinder. NROE: mean order error; NMLE: worst rendered merge error (zero for TMTM and ST-MTM, and at most $\varepsilon_0$ for $\varepsilon=0$).',
+    table('supp_values_position.tex', r'Position and topology behind Fig.~4(a,b) of the paper (percent). $\nu^*$: mean strict exact-topology bound (Theorem~\ref{thm:order}), against which TMTM and ST-MTM are measured; $c_0$: mean bound at Exact Mode\textquoteright s numerical allowance $\varepsilon_0\Delta_F$ (Section~\ref{sec:supp_ties}); the two differ only on Cylinder. NROE: mean order error, for TMTM and ST-MTM in the global mirror that agrees better with the reference; NMLE: worst rendered merge error (zero for TMTM and ST-MTM, and at most $\varepsilon_0$ for $\varepsilon=0$).',
           'tab:supp_values_position', two(r'Sequence & $\nu^*$ & $c_0$', [('NROE', 5), ('NMLE', 2)], H5 + r' & $\varepsilon{=}10\%$ & Proj.'), rows, 'l' + 'r' * 9)
     rows = [[TEX[n]] + [f'{V[n][m]["ME"]:.1f}' for m in M5] + [f'{V[n][m]["TD"]:.1f}' for m in M5] for n in NAMES]
     table('supp_values_temporal.tex', r'Temporal measures behind Fig.~4(c) and the discussion. ME: share of clear approach or separation events shown wrongly (percent); TD: summed map displacement of matched features in canvas units, protocol of ST-MTM.',
@@ -89,7 +91,7 @@ def same_model_and_jumps():
         if n in UNIFIED:
             d, L, tracks = unified_rows(n); base = []; bj = {}
             for key, m in (('topology_time', 'TMTM'), ('topology_geometry', 'ST-MTM')):
-                R = d['regimes'][key]['rows']
+                R = bm.same_model_rows(n, key)[0]   # more favourable mirror
                 e = np.concatenate([np.abs(np.asarray(r['x'], float) - np.asarray(r['reference'], float)) / L for r in R])
                 base.append(f'{100 * e.mean():.2f} / {100 * e.max():.1f}')
                 jm, mv = [], []
@@ -169,24 +171,24 @@ def tables_olr():
 
 
 def table_space_filling():
-    """S10: Hilbert and Morton orders of the extrema (figure_drafts/space_filling_baselines.py), with the merge tree maps for reference."""
-    SF = load(RES / 'space_filling20261105/metrics.json'); V = values(); rows = []
+    """S10: Hilbert and Morton orders of the extrema in their most favourable orientation (space_filling_baselines.py, best_mirror.py)."""
+    V = values(); rows = []
     for n in ('Storms', 'Wildfires', 'OLR', 'PM2.5', 'Ring'):
         for c in ('Hilbert', 'Morton'):
-            r = SF[n][c]
-            rows.append([TEX[n] if c == 'Hilbert' else '', c, f2(100 * r['NROE']['mean']), f2(100 * r['NMLE_max']['mean']), f2(100 * r['NMLE']['mean']),
-                         f2(100 * r['NPE']['mean']), f3(r['SNS']['mean']), f3(r['TW']['mean'])])
+            r = bm.curve(n, c)
+            rows.append([TEX[n] if c == 'Hilbert' else '', c, f2(100 * r['NROE']), f2(100 * r['NMLE_max']), f2(100 * r['NMLE']),
+                         f2(100 * r['NPE']), f3(r['SNS']), f3(r['TW'])])
         rows.append(['', r'TMTM / ST-MTM / $\varepsilon{=}0$', ' / '.join(f'{V[n][m]["NROE"]:.1f}' for m in ('TMTM', 'ST-MTM', 'Exact')), '0 / 0 / 0', '0 / 0 / 0', '--',
                      ' / '.join(f'{V[n][m]["SNS"]:.2f}' for m in ('TMTM', 'ST-MTM', 'Exact')), ' / '.join(f'{V[n][m]["TW"]:.2f}' for m in ('TMTM', 'ST-MTM', 'Exact'))])
     note = (r'Each extremum is assigned to its unit grid cell on the smallest power-of-two square covering all extrema of the sequence; the curve index of that cell is its display coordinate. '
-            r'Curves have no canonical orientation on these domains, so every value is the mean over the eight axis-aligned orientations. '
+            r'Curves have no canonical orientation on these domains; each is shown in the axis-aligned orientation (of eight) with the lowest mean NROE, the most favourable to the curve. '
+            r'Averaged over the eight orientations, NROE is 8.3--23.4\%. '
             r'$\delta^*$ is the smallest merge error of any profile with the curve order (Proposition~\ref{prop:barriers}), a lower bound on the merge error of a curve-ordered map. '
             r'NPE maps the curve index linearly onto the canvas $[\min q,\min q+L]$ and therefore depends on that choice; NROE does not. '
-            r'Script: \texttt{figure\_drafts/space\_filling\_baselines.py}.')
-    table('supp_space_filling.tex', r'Space-filling curves on the five planar sequences, same inputs as all other maps: order error NROE, worst and mean least merge error $\delta^*/\Delta_F$ of the curve order, NPE (percent), SNS and TW ($k=1$). Last row of each sequence: NROE, merge error, SNS and TW of TMTM, ST-MTM and Exact Mode (Table~\ref{tab:supp_values_position}, Table~\ref{tab:supp_values_geometry}).',
+            r'Scripts: \texttt{figure\_drafts/space\_filling\_baselines.py}, \texttt{figure\_drafts/best\_mirror.py}.')
+    table('supp_space_filling.tex', r'Space-filling curves on the five planar sequences, same inputs as all other maps, in their most favourable orientation: order error NROE, worst and mean least merge error $\delta^*/\Delta_F$ of the curve order, NPE (percent), SNS and TW ($k=1$). Last row of each sequence: NROE, merge error, SNS and TW of TMTM, ST-MTM and Exact Mode (Table~\ref{tab:supp_values_position}, Table~\ref{tab:supp_values_geometry}).',
           'tab:supp_space_filling', r'Sequence & Curve & NROE & $\delta^*$ worst & $\delta^*$ mean & NPE & SNS & TW', rows, 'llrrrrrr', note=note)
     for r in rows: print('curves', r)
-
 
 def fig_storms():
     Mp = dict(np.load(RES / 'maps20261030/maps_era5.npz')); qs = load(RES / 'maps20261030/q_era5.json'); S = load(RES / 'maps20261030/storms_case.json')
@@ -242,32 +244,30 @@ def table_bound_attainment():
 
 
 def table_stmtm_threshold():
-    """S10: ST-MTM over its reordering threshold r and both global orientations; TMTM in both orientations (stmtm_threshold.py)."""
-    R = load(RES / 'stmtm_threshold20261106/results.json'); rows = []
-    rng = lambda xs: f'{100 * min(xs):.0f}--{100 * max(xs):.0f}'
-    for n in ('Storms', 'Wildfires', 'OLR', 'PM2.5', 'Ring'):
-        if n not in R: rows.append([TEX[n]] + ['--'] * 7); continue
-        d = R[n]; th = d['thresholds']; p = th['0.95']; tm = d['tmtm']
-        rows.append([TEX[n], f2(100 * d['nu_mean']), f2(100 * p['NROE_mean']), f'{100 * p["not_forced_share"]:.0f}',
-                     rng([v['not_forced_share'] for v in th.values()]),
-                     rng([v[k] for v in th.values() for k in ('not_forced_share', 'not_forced_share_reversed')]),
-                     f'{100 * tm["not_forced_share"]:.0f}', f'{100 * tm["not_forced_share_reversed"]:.0f}'])
-    VO = load(RES / 'stmtm_threshold20261106/volume_orientation.json')
-    for n in ('Tangaroa', 'Cylinder'):
-        st_, tm_ = VO[n]['methods']['ST-MTM'], VO[n]['methods']['TMTM']
-        rows.append([TEX[n], f2(100 * VO[n]['nu_strict_mean']), f2(100 * st_['NROE_mean']), f'{100 * st_["not_forced_share"]:.0f}', '--',
-                     rng([st_['not_forced_share'], st_['not_forced_share_reversed']]),
-                     f'{100 * tm_["not_forced_share"]:.0f}', f'{100 * tm_["not_forced_share_reversed"]:.0f}'])
-    note = (r'Share not forced by the tree: $(\mathrm{NROE}-\nu^*)/\mathrm{NROE}$ of the sequence means. ST-MTM keeps the temporally concordant order of a frame unless the OLO cost is at most $r$ times its cost; '
-            r'weights, $\lambda$ and $K$ move anchors but not the order, so $r\in\{0,0.25,0.5,0.65,0.85,0.95,1\}$ spans every ST-MTM order sequence. '
-            r'Protocol orientation: one flip fixed by the first frame against the centroid $x$ coordinate; ``both'' adds the reversed sequence. '
-            r'At $r=0.95$ the recomputed orders reproduce the stored per-frame NROE of TMTM and ST-MTM exactly. '
-            r'Volumetric rows: the saved native outputs in both orientations; their threshold was not varied (--). Scripts: \texttt{figure\_drafts/stmtm\_threshold.py}, \texttt{figure\_drafts/volume\_orientation.py}.')
-    table('supp_stmtm_threshold.tex', r'Robustness of the share of order error not forced by the tree (percent). ST-MTM at the protocol threshold $r=0.95$, over all thresholds, and over all thresholds in both global orientations; TMTM in the protocol and reversed orientation.',
-          'tab:supp_stmtm_threshold', r'Sequence & $\nu^*$ & \multicolumn{2}{c}{ST-MTM, $r{=}0.95$} & all $r$ & all $r$, both & \multicolumn{2}{c}{TMTM}\\ & & NROE & share & share & share & prot. & rev.',
+    """S10: shares not forced by the tree for TMTM and ST-MTM in their favourable mirror; ST-MTM over its threshold r."""
+    R = load(RES / 'stmtm_threshold20261106/results.json'); VO = load(RES / 'stmtm_threshold20261106/volume_orientation.json'); rows = []
+    sh = lambda e, nu: (e - nu) / e
+    for n in NAMES:
+        nb = NATIVE[n]
+        if n in R:
+            nu = R[n]['nu_mean']; th = R[n]['thresholds']
+            per_r = [sh(min(v['NROE_mean'], v['NROE_mean_reversed']), nu) for v in th.values()]
+            allr = f'{100 * min(per_r):.0f}--{100 * max(per_r):.0f}'
+        else:
+            nu = VO[n]['nu_strict_mean']; allr = '--'
+        rows.append([TEX[n], f2(100 * nu), f2(nb['TMTM']['best']), f'{100 * sh(nb["TMTM"]["best"] / 100, nu):.0f}',
+                     f2(nb['ST-MTM']['best']), f'{100 * sh(nb["ST-MTM"]["best"] / 100, nu):.0f}', allr,
+                     f'{nb["TMTM"]["protocol"]:.1f} / {nb["ST-MTM"]["protocol"]:.1f}'])
+    note = (r'Share not forced by the tree: $(\mathrm{NROE}-\nu^*)/\mathrm{NROE}$ of the sequence means, each map in the global mirror that agrees better with the reference. '
+            r'ST-MTM keeps the temporally concordant order of a frame unless the OLO cost is at most $r$ times its cost; weights, $\lambda$ and $K$ move anchors but not the order, '
+            r'so $r\in\{0,0.25,0.5,0.65,0.85,0.95,1\}$ spans every ST-MTM order sequence (``all $r$'': range over $r$, favourable mirror for each). '
+            r'Last column: NROE with the earlier orientation rule, one flip from the first frame against the centroid $x$ coordinate. '
+            r'At $r=0.95$ the recomputed orders reproduce the stored per-frame NROE exactly; volumetric rows use the saved native outputs, whose threshold was not varied (--). '
+            r'Scripts: \texttt{figure\_drafts/stmtm\_threshold.py}, \texttt{volume\_orientation.py}, \texttt{best\_mirror.py}.')
+    table('supp_stmtm_threshold.tex', r'Order error of TMTM and ST-MTM ($r=0.95$) in their favourable mirror, the share not forced by the tree, and its range over all ST-MTM thresholds (percent).',
+          'tab:supp_stmtm_threshold', r'Sequence & $\nu^*$ & \multicolumn{2}{c}{TMTM} & \multicolumn{3}{c}{ST-MTM} & earlier rule\\ & & NROE & share & NROE & share & all $r$ & TMTM / ST-MTM',
           rows, 'lrrrrrrr', note=note)
     for r in rows: print('threshold', r)
-
 
 def table_theta():
     """S10: certified frames under one-at-a-time changes of s, g and rho (theta_sensitivity.py)."""

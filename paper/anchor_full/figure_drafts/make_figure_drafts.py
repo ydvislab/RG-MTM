@@ -57,6 +57,8 @@ def load(path): return json.loads(Path(path).read_text())
 BUDGET = {n: load(RES / f'order_budget20261027/{FILE[n]}.json') for n in NAMES}
 FRONT = {n: load(RES / f'frontier20261027/{FILE[n]}.json') for n in NAMES}
 ROWS = list(csv.DictReader((RES / 'stmtm_completion20261026/unified_metrics.csv').open()))
+import best_mirror as bm
+NATIVE = bm.native()
 def st(n, m): return next(r for r in ROWS if r['dataset'] == n and r['method'] == m)
 
 
@@ -196,8 +198,8 @@ def compare_values():
     for n in NAMES:
         F = FRONT[n]['methods']; Qs = load(RES / f'metrics_n1c20261027/{FILE[n]}.json')['settings']
         me = lambda c: 100 * c['ME_errors'] / c['ME_clear']; d = {}
-        for m in ('TMTM', 'ST-MTM'):
-            r = st(n, m); d[m] = dict(NROE=float(r['NROE']), NMLE=100 * float(r['NMLE_max']),
+        for m in ('TMTM', 'ST-MTM'):   # NROE in the more favourable mirror (best_mirror.py); other measures are mirror-invariant
+            r = st(n, m); d[m] = dict(NROE=NATIVE[n][m]['best'], NMLE=100 * float(r['NMLE_max']),
                                       ME=100 * int(r['motion_errors']) / int(r['N_clear']), SNS=float(r['SNS']), TW=float(r['TW1']))
         for m, k in [('Projection', 'projection'), ('Exact', 'eps=0'), ('Budgeted', 'eps=0.1')]:
             d[m] = dict(NROE=100 * F[k]['NROE'], NMLE=100 * F[k]['NMLE_max'], ME=me(Qs[k]), SNS=Qs[k]['SNS'], TW=Qs[k]['TW1'])
@@ -255,9 +257,8 @@ def baseline_displacement(n):
     d = load(CODE / f'unified20261025/{UNIFIED[n]}.json'); L = d['parameters']['canvas']
     assert d['frames'] == FRONT[n]['frames'] and abs(L - FRONT[n]['canvas']) < 1e-9
     out = {}
-    for key, m in [('topology_time', 'TMTM'), ('topology_geometry', 'ST-MTM')]:
-        e = np.concatenate([np.abs(np.asarray(r['x'], float) - np.asarray(r['reference'], float)) / L for r in d['regimes'][key]['rows']])
-        out[m] = dict(E_inf=100 * e.max(), E_pool=100 * e.mean())
+    for key, m in [('topology_time', 'TMTM'), ('topology_geometry', 'ST-MTM')]:   # more favourable mirror (best_mirror.py)
+        v = bm.same_model(n, key); out[m] = dict(E_inf=v['E_inf'], E_pool=v['E_pool'])
     return out
 
 

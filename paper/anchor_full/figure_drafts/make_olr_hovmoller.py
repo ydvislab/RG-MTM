@@ -156,9 +156,11 @@ def paper_figure():
     maps = dict(np.load(RES / 'maps20261030/maps_olr.npz')); qs = json.loads((RES / 'maps20261030/q_olr.json').read_text())
     F = json.loads((RES / 'frontier20261027/olr.json').read_text())['methods']
     U = json.loads((ROOT / 'code/results/unified20261025/olr.json').read_text()); L = U['parameters']['canvas']
+    import best_mirror as bm   # every compared map in its more favourable mirror (notes/2026-11-06-orientation.md)
     def same_model(key):
-        e = np.concatenate([np.abs(np.asarray(r['x'], float) - np.asarray(r['reference'], float)) / L for r in U['regimes'][key]['rows']])
-        return 100 * e.mean(), 100 * e.max()
+        v = bm.same_model('OLR', key); return v['E_pool'], v['E_inf']
+    for key in ('topology_time', 'topology_geometry'):
+        if bm.same_model('OLR', key)['mirrored']: maps[key] = maps[key][::-1, :]
     P1 = json.loads((RES / 'olr_hovmoller/checks_p1_p2.json').read_text())['P1']
     cols = [(H, 'Hovmöller', 'average across the reference',
              f"{100 * P1['Hovmoller']['delta=0.02']['fraction']:.0f}% of minima resolved,\n"

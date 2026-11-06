@@ -252,11 +252,17 @@ def table_stmtm_threshold():
                      rng([v['not_forced_share'] for v in th.values()]),
                      rng([v[k] for v in th.values() for k in ('not_forced_share', 'not_forced_share_reversed')]),
                      f'{100 * tm["not_forced_share"]:.0f}', f'{100 * tm["not_forced_share_reversed"]:.0f}'])
+    VO = load(RES / 'stmtm_threshold20261106/volume_orientation.json')
+    for n in ('Tangaroa', 'Cylinder'):
+        st_, tm_ = VO[n]['methods']['ST-MTM'], VO[n]['methods']['TMTM']
+        rows.append([TEX[n], f2(100 * VO[n]['nu_strict_mean']), f2(100 * st_['NROE_mean']), f'{100 * st_["not_forced_share"]:.0f}', '--',
+                     rng([st_['not_forced_share'], st_['not_forced_share_reversed']]),
+                     f'{100 * tm_["not_forced_share"]:.0f}', f'{100 * tm_["not_forced_share_reversed"]:.0f}'])
     note = (r'Share not forced by the tree: $(\mathrm{NROE}-\nu^*)/\mathrm{NROE}$ of the sequence means. ST-MTM keeps the temporally concordant order of a frame unless the OLO cost is at most $r$ times its cost; '
             r'weights, $\lambda$ and $K$ move anchors but not the order, so $r\in\{0,0.25,0.5,0.65,0.85,0.95,1\}$ spans every ST-MTM order sequence. '
             r'Protocol orientation: one flip fixed by the first frame against the centroid $x$ coordinate; ``both'' adds the reversed sequence. '
             r'At $r=0.95$ the recomputed orders reproduce the stored per-frame NROE of TMTM and ST-MTM exactly. '
-            r'Wildfires was not rerun because its input is not on the machine used for this run. Script: \texttt{figure\_drafts/stmtm\_threshold.py}.')
+            r'Volumetric rows: the saved native outputs in both orientations; their threshold was not varied (--). Scripts: \texttt{figure\_drafts/stmtm\_threshold.py}, \texttt{figure\_drafts/volume\_orientation.py}.')
     table('supp_stmtm_threshold.tex', r'Robustness of the share of order error not forced by the tree (percent). ST-MTM at the protocol threshold $r=0.95$, over all thresholds, and over all thresholds in both global orientations; TMTM in the protocol and reversed orientation.',
           'tab:supp_stmtm_threshold', r'Sequence & $\nu^*$ & \multicolumn{2}{c}{ST-MTM, $r{=}0.95$} & all $r$ & all $r$, both & \multicolumn{2}{c}{TMTM}\\ & & NROE & share & share & share & prot. & rev.',
           rows, 'lrrrrrrr', note=note)

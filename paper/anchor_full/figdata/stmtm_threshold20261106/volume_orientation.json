@@ -1,0 +1,46 @@
+{
+ "Tangaroa": {
+  "nu_strict_mean": 0.09243721978123996,
+  "extent": 0.703074637982934,
+  "methods": {
+   "TMTM": {
+    "NROE_mean": 0.20092301252549533,
+    "NROE_mean_reversed": 0.19503823194710282,
+    "not_forced_share": 0.5399371200971292,
+    "not_forced_share_reversed": 0.5260558975621238,
+    "reproduction_max_gap": 0.0,
+    "frames": 201
+   },
+   "ST-MTM": {
+    "NROE_mean": 0.21342238139407743,
+    "NROE_mean_reversed": 0.15797433921281662,
+    "not_forced_share": 0.5668813215491318,
+    "not_forced_share_reversed": 0.41485927244986104,
+    "reproduction_max_gap": 0.0,
+    "frames": 201
+   }
+  }
+ },
+ "Cylinder": {
+  "nu_strict_mean": 0.12240269242025166,
+  "extent": 22.45026178010471,
+  "methods": {
+   "TMTM": {
+    "NROE_mean": 0.2661691542288557,
+    "NROE_mean_reversed": 0.28241147205150713,
+    "not_forced_share": 0.540131940626718,
+    "not_forced_share_reversed": 0.566580310880829,
+    "reproduction_max_gap": 0.0,
+    "frames": 102
+   },
+   "ST-MTM": {
+    "NROE_mean": 0.1777143693298215,
+    "NROE_mean_reversed": 0.28749634182031014,
+    "not_forced_share": 0.3112391930835736,
+    "not_forced_share_reversed": 0.5742460872884592,
+    "reproduction_max_gap": 0.0,
+    "frames": 102
+   }
+  }
+ }
+}

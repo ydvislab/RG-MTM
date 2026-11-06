@@ -4,10 +4,12 @@
 \begin{tabular}{lrrrrrrr}\toprule
 Sequence & $\nu^*$ & \multicolumn{2}{c}{ST-MTM, $r{=}0.95$} & all $r$ & all $r$, both & \multicolumn{2}{c}{TMTM}\\ & & NROE & share & share & share & prot. & rev.\\\midrule
 Storms & 3.77 & 16.28 & 77 & 76--82 & 73--82 & 80 & 79\\
-Wildfires & -- & -- & -- & -- & -- & -- & --\\
+Wildfires & 5.80 & 24.02 & 76 & 73--82 & 53--82 & 80 & 70\\
 OLR & 0.89 & 17.21 & 95 & 95--97 & 83--97 & 95 & 96\\
 PM$_{2.5}$ & 0.97 & 11.60 & 92 & 92--92 & 80--92 & 92 & 78\\
 Ring & 2.66 & 10.39 & 74 & 55--75 & 37--75 & 63 & 73\\
+Tangaroa & 9.24 & 21.34 & 57 & -- & 41--57 & 54 & 53\\
+Cylinder & 12.24 & 17.77 & 31 & -- & 31--57 & 54 & 57\\
 \bottomrule\end{tabular}
-\par\smallskip\parbox{\linewidth}{\footnotesize Share not forced by the tree: $(\mathrm{NROE}-\nu^*)/\mathrm{NROE}$ of the sequence means. ST-MTM keeps the temporally concordant order of a frame unless the OLO cost is at most $r$ times its cost; weights, $\lambda$ and $K$ move anchors but not the order, so $r\in\{0,0.25,0.5,0.65,0.85,0.95,1\}$ spans every ST-MTM order sequence. Protocol orientation: one flip fixed by the first frame against the centroid $x$ coordinate; ``both adds the reversed sequence. At $r=0.95$ the recomputed orders reproduce the stored per-frame NROE of TMTM and ST-MTM exactly. Wildfires was not rerun because its input is not on the machine used for this run. Script: \texttt{figure\_drafts/stmtm\_threshold.py}.}
+\par\smallskip\parbox{\linewidth}{\footnotesize Share not forced by the tree: $(\mathrm{NROE}-\nu^*)/\mathrm{NROE}$ of the sequence means. ST-MTM keeps the temporally concordant order of a frame unless the OLO cost is at most $r$ times its cost; weights, $\lambda$ and $K$ move anchors but not the order, so $r\in\{0,0.25,0.5,0.65,0.85,0.95,1\}$ spans every ST-MTM order sequence. Protocol orientation: one flip fixed by the first frame against the centroid $x$ coordinate; ``both adds the reversed sequence. At $r=0.95$ the recomputed orders reproduce the stored per-frame NROE of TMTM and ST-MTM exactly. Volumetric rows: the saved native outputs in both orientations; their threshold was not varied (--). Scripts: \texttt{figure\_drafts/stmtm\_threshold.py}, \texttt{figure\_drafts/volume\_orientation.py}.}
 \end{table}

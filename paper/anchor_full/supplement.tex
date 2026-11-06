@@ -396,6 +396,7 @@ For the planar sequences, the saved common-model runs also solve two objectives 
 \end{figure}
 
 \section{One Tracked Feature Across Six Budgets}\label{sec:supp_overview}
+Vortex is a 90-frame volumetric diagnostic outside the benchmark aggregates. It shows that aggregate gains are not pointwise gains: raising $\varepsilon$ from 20\% to 30\% more than halves the pooled displacement (8.79\% to 4.27\% of $L$), while 30.91\% of the 12{,}446 feature--frame observations move farther from their references, 24.72\% by at least 0.5 percentage points of $L$ (\texttt{code/results/local\_redistribution20261030}).
 \begin{figure}[H]
 \centering\includegraphics[width=\linewidth]{figures/fig_dataset_overview_extended.pdf}
 \caption{Snapshots, exact-layout strips and budget responses for Storms, Wildfires, PM$_{2.5}$, Tangaroa and Vortex. Each row shows the same tracked extremum at the window start (A1), snapshot time (A2) and window end (A3), across $\varepsilon=0,2,5,10,20,30\%$. Circles indicate mapped positions and diamonds spatial references; gold boxes select the snapshot profile column. Black dashed curves show the reference trajectory. Volume snapshots include their actual domain boxes; Tangaroa is non-cubic. Within each row all budgets share a colour scale. Tangaroa and Vortex use their volume-rendering RGB transfer functions; PM$_{2.5}$ uses a fixed [12,80] display range for the selected window.}\label{fig:supp_overview}

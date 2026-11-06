@@ -44,3 +44,20 @@
 - 本机（用户 Mac）新 clone：`~/Research/RG-MTM`，`origin` = `ydvislab/RG-MTM`，`upstream` = `lelewang1109/RG-MTM`（push 已禁用）。
 - `~/Desktop/RG-MTM` 是合作者公开仓库的 clone（`origin` 指向公开仓库），**不要在那里提交 paper/ 或 notes/**。
 - 本机有 `tectonic`（`/opt/homebrew/bin/tectonic`），可直接编译：`cd paper/anchor_full && tectonic -X compile main.tex`。
+
+## 七、执行记录（11/6，分支 `paper/v8-narrative`）
+
+- 摘要、引言、贡献重写；`\onlineid{1037}`。
+- 第 4 节换序：4.1 模型 → 4.2 下界 → 4.3 参考 → 4.4 构造；构造段落写明中点顺序（定理 1）是初始候选。
+- 新增图：合作者的方法框架图 `figures/anchor_framework.pdf`（取自 upstream `a092db8`，宽 0.80\linewidth），放在 4.4。算法 1 保留。
+- 按实验支撑检查（`2026-11-06-evidence-audit.md`）改写第 5–7 节：
+  - 摘要、引言、结论的头条证据从"距下界 0.03 个百分点"改为"ε=0 时所选叶序在 606/614 个平面帧上达到宽度下界"；
+  - 5.2 写出逐帧达到下界的计数（平面 606/614，ε=10% 时 596；Cylinder 81/102，Tangaroa 27/201）；
+  - 5.3 运动误差改为"四组明显更低，三组相差 1–4 个事件"；"The price of a spatial axis…"改为 "Anchoring costs pairwise-distance fidelity."；
+  - 5.4 机制改为"冲突子树合并得浅还是深"（定理 3）；Vortex 段移到附录 S15；
+  - 5.5 OLR 改为"在合并树图中，只有锚定图……"；Storms 小标题改为 "an exact map along the west--east axis"；
+  - 讨论小标题 "Stable is not faithful." 改为 "Stability and motion."；局限段补"ST-MTM 只用一个重排阈值"。
+- 为放下框架图，删去相关工作、讨论、局限中与正文重复的句子。
+- 编译：正文在第 9 页结束，参考文献占第 10–11 页，共 11 页（9+2）；附录 16 页。`paper/anchor_full_overleaf.zip` 已更新（39 个文件），解压后从零编译通过。
+- PDF：`paper/anchor_full/AnchorMTM_draft_v8_en.pdf`、`AnchorMTM_supplement_v3.pdf`。
+- **未做**：中文版 `main_zh.tex` 未同步；ST-MTM 阈值 r 的补充实验待用户决定。

@@ -41,3 +41,42 @@
 | ST-MTM 叶序依赖时间重排阈值 r，只用了统一的 r=0.95（原文 Storms 0.65、Wildfires 0.85） | 审稿人可质疑 31–95% 中 ST-MTM 部分对参数敏感 | 在 Storms、OLR、PM2.5 上跑 r ∈ {0.65, 0.85, 0.95} 和"只用 OLO"，报告 NROE 的可避免比例范围；放附录 S10，正文一句 | 约半天（需先装 `.venv`、确认 ERA5 文件） |
 | Θ0 敏感性（β0、宽度比例 s、权重）没做 | 局限已写；PacificVis 一般可接受 | 不补；若时间允许，在 Storms 上扫 s 和 β0 两个参数 | 半天 |
 | 没有用户研究 | 所有"可读"表述只能是几何代理 | 不补；正文避免"读者能读出"这类断言 | — |
+
+## 补跑结果（11/6 下午）
+
+环境：`~/Desktop/RG-MTM/.venv`（numpy 2.0.2、scipy 1.13.1，与 `code/pyproject.toml` 一致），`PYTHONPATH` 指向本仓库 `code/`。ERA5 输入从 `~/Desktop/RG-MTM/data/real/ERA5_MSLP/` 软链接进来（`.nc` 已被 `.gitignore` 忽略）。
+
+### 1. ST-MTM 阈值 r 与地图朝向（`figure_drafts/stmtm_threshold.py` → `figdata/stmtm_threshold20261106/`）
+
+- **核验**：输入场哈希与 `framework20261025` 一致；r=0.95 时 ST-MTM 与 TMTM 的逐帧 NROE 与 `final_performance.json` 完全一致（误差 < 1e-9）。
+- **关键认识**：ST-MTM 的叶序只取决于 r（权重、λ、K 只移动锚点），所以 r∈{0,0.25,0.5,0.65,0.85,0.95,1} 覆盖了 ST-MTM 全部可能的叶序序列。r=1 即每帧都用 OLO。
+- **朝向**：协议对 TMTM/ST-MTM 做一次全局翻转，依据是第一帧锚点与质心 **x 坐标**的相关性（`era5.py` 第 258–265 行），而不是与参考方向 q 的相关性。NROE 对朝向敏感。
+
+| 序列 | ν\* | ST-MTM r=0.95 NROE / 不被迫比例 | 所有 r | 所有 r + 两种朝向 | TMTM 协议 / 反向 |
+|---|---:|---|---|---|---|
+| Storms | 3.77 | 16.28 / 77% | 76–82% | 73–82% | 80% / 79% |
+| OLR | 0.89 | 17.21 / 95% | 95–97% | 83–97% | 95% / 96% |
+| PM2.5 | 0.97 | 11.60 / 92% | 92% | 80–92% | 92% / 78% |
+| Ring | 2.66 | 10.39 / 74% | 55–75% | 37–75% | 63% / 73% |
+
+- 结论：Storms、OLR、PM2.5 上"大部分不是树造成的"对任何 r 和朝向都成立（73–97%）；Ring 上 ST-MTM 在最有利朝向下降到 37–41%（不到一半）。
+- 数值本身变化更大：PM2.5 反向朝向时 TMTM 12.87%→4.44%、ST-MTM 11.60%→5.21%（仍是 ν\*=0.97% 的 4–5 倍）。
+- **按参考方向定朝向**（同样只用第一帧，但对照 q 而不是质心 x）：OLR、PM2.5 需要翻转，Storms、Ring 不变。此时 TMTM 63–96%、ST-MTM 74–95%（四个平面序列）。
+- **未覆盖**：Wildfires（输入 `wildfire.json` 不在本机，需从 Zenodo 下载）；Tangaroa、Cylinder（走 `stmtm_completion` 流程，未重跑）。
+
+### 2. Θ0 敏感性（`figure_drafts/theta_sensitivity.py` → `figdata/theta_sensitivity20261106/`）
+
+- τ 和下界只经由宽度比例 s、间隔 g、锚点松弛 ρ 依赖 Θ0；QP 权重和 β0 只在选定叶序内移动锚点。逐一改变 s（×0.5、×2）、g（0、×2）、ρ（0、1），ε=0 与 10%。
+- 核验：默认设置与 `order_width20261027` 的 frames_at_lower 完全一致。
+- 平面：ε=0 时 578–608/614 帧达到下界（最低是 s×2，94%）；ε=10% 时 564–598/614。没有容量失败。
+- 体数据：Tangaroa 19–51/201（随 g 变化），Cylinder 79–81/102。
+
+### 3. 已写入
+
+- 附录 S10：三张新表 `supp_bound_attainment`、`supp_theta`、`supp_stmtm_threshold` 及对应段落（`make_supplement.py` 新函数生成）。
+- 正文 5.2（Θ0 一句）、5.3（r 与朝向一句）、局限（删去"未研究敏感性"，改为"认证对 Θ0 不敏感，位移随宽度变化"）。
+
+### 4. 待用户决定
+
+- **朝向口径**：是否把 TMTM/ST-MTM 的全局朝向改为"按第一帧与参考方向 q 对齐"。这是协议改动（`CLAUDE.md`：先讨论）。影响：只改 NROE（ME、TD、SNS、TW 与朝向无关）；平面上 OLR、PM2.5 的柱子变化（PM2.5 TMTM 12.87→4.44），31–95% 变为约 31–96%；体数据需另算。
+- **Wildfires**：是否从 Zenodo 下载 `wildfire.json` 补跑。

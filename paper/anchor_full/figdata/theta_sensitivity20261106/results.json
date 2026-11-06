@@ -1,0 +1,1311 @@
+{
+ "Storms": {
+  "dataset": "Storms",
+  "frames": 118,
+  "defaults": {
+   "width_scale": 0.0059841722110875965,
+   "gap": 0.35883251361241797,
+   "rho": 0.5,
+   "canvas": 86.11980326698031
+  },
+  "variants": {
+   "default": {
+    "parameters": {
+     "width_scale": 0.0059841722110875965,
+     "gap": 0.35883251361241797,
+     "rho": 0.5
+    },
+    "results": {
+     "0": {
+      "frames_at_lower": 116,
+      "evaluated": 118,
+      "capacity_failures": 0,
+      "tau_mean": 0.043256747310278044,
+      "lower_mean": 0.04224355034013754,
+      "seconds": 0.07782270899042487
+     },
+     "0.1": {
+      "frames_at_lower": 110,
+      "evaluated": 118,
+      "capacity_failures": 0,
+      "tau_mean": 0.01889245342799419,
+      "lower_mean": 0.014935646145971338,
+      "seconds": 0.1233383750077337
+     }
+    }
+   },
+   "s x0.5": {
+    "parameters": {
+     "width_scale": 0.0029920861055437982,
+     "gap": 0.35883251361241797,
+     "rho": 0.5
+    },
+    "results": {
+     "0": {
+      "frames_at_lower": 116,
+      "evaluated": 118,
+      "capacity_failures": 0,
+      "tau_mean": 0.040569987330455956,
+      "lower_mean": 0.040135204015642675,
+      "seconds": 0.07376124989241362
+     },
+     "0.1": {
+      "frames_at_lower": 110,
+      "evaluated": 118,
+      "capacity_failures": 0,
+      "tau_mean": 0.01648575325118359,
+      "lower_mean": 0.013250121317019517,
+      "seconds": 0.12068941700272262
+     }
+    }
+   },
+   "s x2": {
+    "parameters": {
+     "width_scale": 0.011968344422175193,
+     "gap": 0.35883251361241797,
+     "rho": 0.5
+    },
+    "results": {
+     "0": {
+      "frames_at_lower": 108,
+      "evaluated": 118,
+      "capacity_failures": 0,
+      "tau_mean": 0.055184829610570925,
+      "lower_mean": 0.04929819428297918,
+      "seconds": 0.07735529099591076
+     },
+     "0.1": {
+      "frames_at_lower": 105,
+      "evaluated": 118,
+      "capacity_failures": 0,
+      "tau_mean": 0.028176126643618092,
+      "lower_mean": 0.02157538395916118,
+      "seconds": 0.12423858419060707
+     }
+    }
+   },
+   "g = 0": {
+    "parameters": {
+     "width_scale": 0.0059841722110875965,
+     "gap": 0.0,
+     "rho": 0.5
+    },
+    "results": {
+     "0": {
+      "frames_at_lower": 116,
+      "evaluated": 118,
+      "capacity_failures": 0,
+      "tau_mean": 0.042364561807215685,
+      "lower_mean": 0.04138667557153847,
+      "seconds": 0.07494829082861543
+     },
+     "0.1": {
+      "frames_at_lower": 110,
+      "evaluated": 118,
+      "capacity_failures": 0,
+      "tau_mean": 0.018318064535101323,
+      "lower_mean": 0.014474226177257417,
+      "seconds": 0.11903212498873472
+     }
+    }
+   },
+   "g x2": {
+    "parameters": {
+     "width_scale": 0.0059841722110875965,
+     "gap": 0.7176650272248359,
+     "rho": 0.5
+    },
+    "results": {
+     "0": {
+      "frames_at_lower": 116,
+      "evaluated": 118,
+      "capacity_failures": 0,
+      "tau_mean": 0.04416257394447288,
+      "lower_mean": 0.04311406623986909,
+      "seconds": 0.0790337910875678
+     },
+     "0.1": {
+      "frames_at_lower": 110,
+      "evaluated": 118,
+      "capacity_failures": 0,
+      "tau_mean": 0.01948048345201953,
+      "lower_mean": 0.015453054701070125,
+      "seconds": 0.118635541992262
+     }
+    }
+   },
+   "rho = 0": {
+    "parameters": {
+     "width_scale": 0.0059841722110875965,
+     "gap": 0.35883251361241797,
+     "rho": 0.0
+    },
+    "results": {
+     "0": {
+      "frames_at_lower": 115,
+      "evaluated": 118,
+      "capacity_failures": 0,
+      "tau_mean": 0.04763537175350912,
+      "lower_mean": 0.04677541064595991,
+      "seconds": 0.0801498331129551
+     },
+     "0.1": {
+      "frames_at_lower": 110,
+      "evaluated": 118,
+      "capacity_failures": 0,
+      "tau_mean": 0.02304113736923753,
+      "lower_mean": 0.019014620432339237,
+      "seconds": 0.12146275001578033
+     }
+    }
+   },
+   "rho = 1": {
+    "parameters": {
+     "width_scale": 0.0059841722110875965,
+     "gap": 0.35883251361241797,
+     "rho": 1.0
+    },
+    "results": {
+     "0": {
+      "frames_at_lower": 115,
+      "evaluated": 118,
+      "capacity_failures": 0,
+      "tau_mean": 0.039651802801728364,
+      "lower_mean": 0.03844640277273547,
+      "seconds": 0.07486812490969896
+     },
+     "0.1": {
+      "frames_at_lower": 109,
+      "evaluated": 118,
+      "capacity_failures": 0,
+      "tau_mean": 0.015946743972264504,
+      "lower_mean": 0.01208906954087844,
+      "seconds": 0.12080187490209937
+     }
+    }
+   }
+  }
+ },
+ "OLR": {
+  "dataset": "OLR",
+  "frames": 60,
+  "defaults": {
+   "width_scale": 0.011952951378153874,
+   "gap": 0.4793005789964296,
+   "rho": 0.5,
+   "canvas": 115.0321389591431
+  },
+  "variants": {
+   "default": {
+    "parameters": {
+     "width_scale": 0.011952951378153874,
+     "gap": 0.4793005789964296,
+     "rho": 0.5
+    },
+    "results": {
+     "0": {
+      "frames_at_lower": 60,
+      "evaluated": 60,
+      "capacity_failures": 0,
+      "tau_mean": 0.009602715269585543,
+      "lower_mean": 0.009602715269585541,
+      "seconds": 0.048142499988898635
+     },
+     "0.1": {
+      "frames_at_lower": 59,
+      "evaluated": 60,
+      "capacity_failures": 0,
+      "tau_mean": 0.0033197619589936454,
+      "lower_mean": 0.0015102623083618344,
+      "seconds": 0.09208233398385346
+     }
+    }
+   },
+   "s x0.5": {
+    "parameters": {
+     "width_scale": 0.005976475689076937,
+     "gap": 0.4793005789964296,
+     "rho": 0.5
+    },
+    "results": {
+     "0": {
+      "frames_at_lower": 60,
+      "evaluated": 60,
+      "capacity_failures": 0,
+      "tau_mean": 0.009330021962060535,
+      "lower_mean": 0.009330021962060535,
+      "seconds": 0.04747787490487099
+     },
+     "0.1": {
+      "frames_at_lower": 59,
+      "evaluated": 60,
+      "capacity_failures": 0,
+      "tau_mean": 0.0031867673881061506,
+      "lower_mean": 0.0013857277541340655,
+      "seconds": 0.09034391678869724
+     }
+    }
+   },
+   "s x2": {
+    "parameters": {
+     "width_scale": 0.02390590275630775,
+     "gap": 0.4793005789964296,
+     "rho": 0.5
+    },
+    "results": {
+     "0": {
+      "frames_at_lower": 60,
+      "evaluated": 60,
+      "capacity_failures": 0,
+      "tau_mean": 0.010422741396577355,
+      "lower_mean": 0.010422741396577355,
+      "seconds": 0.049333666916936636
+     },
+     "0.1": {
+      "frames_at_lower": 59,
+      "evaluated": 60,
+      "capacity_failures": 0,
+      "tau_mean": 0.003860390612710433,
+      "lower_mean": 0.002033970928759173,
+      "seconds": 0.09180412511341274
+     }
+    }
+   },
+   "g = 0": {
+    "parameters": {
+     "width_scale": 0.011952951378153874,
+     "gap": 0.0,
+     "rho": 0.5
+    },
+    "results": {
+     "0": {
+      "frames_at_lower": 60,
+      "evaluated": 60,
+      "capacity_failures": 0,
+      "tau_mean": 0.009290215269585542,
+      "lower_mean": 0.00929021526958554,
+      "seconds": 0.04836433404125273
+     },
+     "0.1": {
+      "frames_at_lower": 59,
+      "evaluated": 60,
+      "capacity_failures": 0,
+      "tau_mean": 0.0031808730701047565,
+      "lower_mean": 0.0013713734194729455,
+      "seconds": 0.09302316699177027
+     }
+    }
+   },
+   "g x2": {
+    "parameters": {
+     "width_scale": 0.011952951378153874,
+     "gap": 0.9586011579928592,
+     "rho": 0.5
+    },
+    "results": {
+     "0": {
+      "frames_at_lower": 60,
+      "evaluated": 60,
+      "capacity_failures": 0,
+      "tau_mean": 0.009915215269585543,
+      "lower_mean": 0.009915215269585543,
+      "seconds": 0.049663125071674585
+     },
+     "0.1": {
+      "frames_at_lower": 59,
+      "evaluated": 60,
+      "capacity_failures": 0,
+      "tau_mean": 0.0034586508478825343,
+      "lower_mean": 0.0016491511972507233,
+      "seconds": 0.09086399991065264
+     }
+    }
+   },
+   "rho = 0": {
+    "parameters": {
+     "width_scale": 0.011952951378153874,
+     "gap": 0.4793005789964296,
+     "rho": 0.0
+    },
+    "results": {
+     "0": {
+      "frames_at_lower": 60,
+      "evaluated": 60,
+      "capacity_failures": 0,
+      "tau_mean": 0.010422741396577355,
+      "lower_mean": 0.010422741396577357,
+      "seconds": 0.05146633298136294
+     },
+     "0.1": {
+      "frames_at_lower": 59,
+      "evaluated": 60,
+      "capacity_failures": 0,
+      "tau_mean": 0.0038603906127104336,
+      "lower_mean": 0.0020339709287591737,
+      "seconds": 0.093547125114128
+     }
+    }
+   },
+   "rho = 1": {
+    "parameters": {
+     "width_scale": 0.011952951378153874,
+     "gap": 0.4793005789964296,
+     "rho": 1.0
+    },
+    "results": {
+     "0": {
+      "frames_at_lower": 60,
+      "evaluated": 60,
+      "capacity_failures": 0,
+      "tau_mean": 0.00911145380493721,
+      "lower_mean": 0.00911145380493721,
+      "seconds": 0.04953754087910056
+     },
+     "0.1": {
+      "frames_at_lower": 59,
+      "evaluated": 60,
+      "capacity_failures": 0,
+      "tau_mean": 0.003107897967620337,
+      "lower_mean": 0.0013153183503079762,
+      "seconds": 0.09154150006361306
+     }
+    }
+   }
+  }
+ },
+ "Wildfires": {
+  "dataset": "Wildfires",
+  "frames": 30,
+  "defaults": {
+   "width_scale": 0.005795031146917154,
+   "gap": 0.6954037376300585,
+   "rho": 0.5,
+   "canvas": 166.89689703121402
+  },
+  "variants": {
+   "default": {
+    "parameters": {
+     "width_scale": 0.005795031146917154,
+     "gap": 0.6954037376300585,
+     "rho": 0.5
+    },
+    "results": {
+     "0": {
+      "frames_at_lower": 25,
+      "evaluated": 30,
+      "capacity_failures": 0,
+      "tau_mean": 0.06177727354503641,
+      "lower_mean": 0.061340058465380216,
+      "seconds": 0.046319790882989764
+     },
+     "0.1": {
+      "frames_at_lower": 24,
+      "evaluated": 30,
+      "capacity_failures": 0,
+      "tau_mean": 0.0123134667048372,
+      "lower_mean": 0.003589733156072498,
+      "seconds": 0.12015416589565575
+     }
+    }
+   },
+   "s x0.5": {
+    "parameters": {
+     "width_scale": 0.002897515573458577,
+     "gap": 0.6954037376300585,
+     "rho": 0.5
+    },
+    "results": {
+     "0": {
+      "frames_at_lower": 26,
+      "evaluated": 30,
+      "capacity_failures": 0,
+      "tau_mean": 0.06064626710356712,
+      "lower_mean": 0.060350117039754424,
+      "seconds": 0.04526375001296401
+     },
+     "0.1": {
+      "frames_at_lower": 24,
+      "evaluated": 30,
+      "capacity_failures": 0,
+      "tau_mean": 0.011912593320008514,
+      "lower_mean": 0.003366145838984695,
+      "seconds": 0.11532962485216558
+     }
+    }
+   },
+   "s x2": {
+    "parameters": {
+     "width_scale": 0.011590062293834308,
+     "gap": 0.6954037376300585,
+     "rho": 0.5
+    },
+    "results": {
+     "0": {
+      "frames_at_lower": 26,
+      "evaluated": 30,
+      "capacity_failures": 0,
+      "tau_mean": 0.06409636037594245,
+      "lower_mean": 0.06333563885400975,
+      "seconds": 0.04548370908014476
+     },
+     "0.1": {
+      "frames_at_lower": 23,
+      "evaluated": 30,
+      "capacity_failures": 0,
+      "tau_mean": 0.013316880020867044,
+      "lower_mean": 0.004264501016605713,
+      "seconds": 0.11689312499947846
+     }
+    }
+   },
+   "g = 0": {
+    "parameters": {
+     "width_scale": 0.005795031146917154,
+     "gap": 0.0,
+     "rho": 0.5
+    },
+    "results": {
+     "0": {
+      "frames_at_lower": 25,
+      "evaluated": 30,
+      "capacity_failures": 0,
+      "tau_mean": 0.059872316008873924,
+      "lower_mean": 0.05971890036930906,
+      "seconds": 0.04556341702118516
+     },
+     "0.1": {
+      "frames_at_lower": 24,
+      "evaluated": 30,
+      "capacity_failures": 0,
+      "tau_mean": 0.011290007283043734,
+      "lower_mean": 0.0029610792468840737,
+      "seconds": 0.11365554202347994
+     }
+    }
+   },
+   "g x2": {
+    "parameters": {
+     "width_scale": 0.005795031146917154,
+     "gap": 1.390807475260117,
+     "rho": 0.5
+    },
+    "results": {
+     "0": {
+      "frames_at_lower": 25,
+      "evaluated": 30,
+      "capacity_failures": 0,
+      "tau_mean": 0.06372171798948087,
+      "lower_mean": 0.06300672513204687,
+      "seconds": 0.046260666102170944
+     },
+     "0.1": {
+      "frames_at_lower": 22,
+      "evaluated": 30,
+      "capacity_failures": 0,
+      "tau_mean": 0.013519726648077875,
+      "lower_mean": 0.004450004039945713,
+      "seconds": 0.12386287492699921
+     }
+    }
+   },
+   "rho = 0": {
+    "parameters": {
+     "width_scale": 0.005795031146917154,
+     "gap": 0.6954037376300585,
+     "rho": 0.0
+    },
+    "results": {
+     "0": {
+      "frames_at_lower": 25,
+      "evaluated": 30,
+      "capacity_failures": 0,
+      "tau_mean": 0.06363857658991595,
+      "lower_mean": 0.06324612062484307,
+      "seconds": 0.048415583092719316
+     },
+     "0.1": {
+      "frames_at_lower": 24,
+      "evaluated": 30,
+      "capacity_failures": 0,
+      "tau_mean": 0.013051792828593955,
+      "lower_mean": 0.004264501016605709,
+      "seconds": 0.12228470807895064
+     }
+    }
+   },
+   "rho = 1": {
+    "parameters": {
+     "width_scale": 0.005795031146917154,
+     "gap": 0.6954037376300585,
+     "rho": 1.0
+    },
+    "results": {
+     "0": {
+      "frames_at_lower": 24,
+      "evaluated": 30,
+      "capacity_failures": 0,
+      "tau_mean": 0.0600443955573821,
+      "lower_mean": 0.05953921120860403,
+      "seconds": 0.046450332971289754
+     },
+     "0.1": {
+      "frames_at_lower": 24,
+      "evaluated": 30,
+      "capacity_failures": 0,
+      "tau_mean": 0.011806574537488975,
+      "lower_mean": 0.003282232276068896,
+      "seconds": 0.12062895903363824
+     }
+    }
+   }
+  }
+ },
+ "PM2.5": {
+  "dataset": "PM2.5",
+  "frames": 366,
+  "defaults": {
+   "width_scale": 0.008013955703166258,
+   "gap": 0.4808232585758823,
+   "rho": 0.5,
+   "canvas": 115.39758205821175
+  },
+  "variants": {
+   "default": {
+    "parameters": {
+     "width_scale": 0.008013955703166258,
+     "gap": 0.4808232585758823,
+     "rho": 0.5
+    },
+    "results": {
+     "0": {
+      "frames_at_lower": 365,
+      "evaluated": 366,
+      "capacity_failures": 0,
+      "tau_mean": 0.012815565941285693,
+      "lower_mean": 0.012776744513394684,
+      "seconds": 0.14613574999384582
+     },
+     "0.1": {
+      "frames_at_lower": 363,
+      "evaluated": 366,
+      "capacity_failures": 0,
+      "tau_mean": 0.001208456336030294,
+      "lower_mean": 0.0011120857483765197,
+      "seconds": 0.19476320780813694
+     }
+    }
+   },
+   "s x0.5": {
+    "parameters": {
+     "width_scale": 0.004006977851583129,
+     "gap": 0.4808232585758823,
+     "rho": 0.5
+    },
+    "results": {
+     "0": {
+      "frames_at_lower": 366,
+      "evaluated": 366,
+      "capacity_failures": 0,
+      "tau_mean": 0.01108902804227816,
+      "lower_mean": 0.01108902804227816,
+      "seconds": 0.14267379115335643
+     },
+     "0.1": {
+      "frames_at_lower": 365,
+      "evaluated": 366,
+      "capacity_failures": 0,
+      "tau_mean": 0.00027539373847746237,
+      "lower_mean": 0.0002496520564582434,
+      "seconds": 0.19039220781996846
+     }
+    }
+   },
+   "s x2": {
+    "parameters": {
+     "width_scale": 0.016027911406332515,
+     "gap": 0.4808232585758823,
+     "rho": 0.5
+    },
+    "results": {
+     "0": {
+      "frames_at_lower": 344,
+      "evaluated": 366,
+      "capacity_failures": 0,
+      "tau_mean": 0.02756523352920639,
+      "lower_mean": 0.0245479447601036,
+      "seconds": 0.14930029213428497
+     },
+     "0.1": {
+      "frames_at_lower": 340,
+      "evaluated": 366,
+      "capacity_failures": 0,
+      "tau_mean": 0.015147733464983128,
+      "lower_mean": 0.011646618085930465,
+      "seconds": 0.19371058396063745
+     }
+    }
+   },
+   "g = 0": {
+    "parameters": {
+     "width_scale": 0.008013955703166258,
+     "gap": 0.0,
+     "rho": 0.5
+    },
+    "results": {
+     "0": {
+      "frames_at_lower": 365,
+      "evaluated": 366,
+      "capacity_failures": 0,
+      "tau_mean": 0.012508335398081584,
+      "lower_mean": 0.012480898305345408,
+      "seconds": 0.14523291680961847
+     },
+     "0.1": {
+      "frames_at_lower": 363,
+      "evaluated": 366,
+      "capacity_failures": 0,
+      "tau_mean": 0.0010947594904582461,
+      "lower_mean": 0.001021157573114126,
+      "seconds": 0.19291241699829698
+     }
+    }
+   },
+   "g x2": {
+    "parameters": {
+     "width_scale": 0.008013955703166258,
+     "gap": 0.9616465171517646,
+     "rho": 0.5
+    },
+    "results": {
+     "0": {
+      "frames_at_lower": 365,
+      "evaluated": 366,
+      "capacity_failures": 0,
+      "tau_mean": 0.01313347211545013,
+      "lower_mean": 0.0130832663524043,
+      "seconds": 0.14657479198649526
+     },
+     "0.1": {
+      "frames_at_lower": 363,
+      "evaluated": 366,
+      "capacity_failures": 0,
+      "tau_mean": 0.0013382992556599175,
+      "lower_mean": 0.0012191599976964895,
+      "seconds": 0.19225895800627768
+     }
+    }
+   },
+   "rho = 0": {
+    "parameters": {
+     "width_scale": 0.008013955703166258,
+     "gap": 0.4808232585758823,
+     "rho": 0.0
+    },
+    "results": {
+     "0": {
+      "frames_at_lower": 365,
+      "evaluated": 366,
+      "capacity_failures": 0,
+      "tau_mean": 0.021244172970045817,
+      "lower_mean": 0.021219135493250708,
+      "seconds": 0.14535816619172692
+     },
+     "0.1": {
+      "frames_at_lower": 364,
+      "evaluated": 366,
+      "capacity_failures": 0,
+      "tau_mean": 0.008149749756160004,
+      "lower_mean": 0.00811557967501292,
+      "seconds": 0.19009983306750655
+     }
+    }
+   },
+   "rho = 1": {
+    "parameters": {
+     "width_scale": 0.008013955703166258,
+     "gap": 0.4808232585758823,
+     "rho": 1.0
+    },
+    "results": {
+     "0": {
+      "frames_at_lower": 365,
+      "evaluated": 366,
+      "capacity_failures": 0,
+      "tau_mean": 0.009976481185968493,
+      "lower_mean": 0.009940504656491855,
+      "seconds": 0.14291633409447968
+     },
+     "0.1": {
+      "frames_at_lower": 363,
+      "evaluated": 366,
+      "capacity_failures": 0,
+      "tau_mean": 8.777390681210676e-05,
+      "lower_mean": 1.71853952564415e-06,
+      "seconds": 0.19739579199813306
+     }
+    }
+   }
+  }
+ },
+ "Ring": {
+  "dataset": "Ring",
+  "frames": 40,
+  "defaults": {
+   "width_scale": 0.003347069537795523,
+   "gap": 1.2300480551398545,
+   "rho": 0.5,
+   "canvas": 295.2115332335651
+  },
+  "variants": {
+   "default": {
+    "parameters": {
+     "width_scale": 0.003347069537795523,
+     "gap": 1.2300480551398545,
+     "rho": 0.5
+    },
+    "results": {
+     "0": {
+      "frames_at_lower": 40,
+      "evaluated": 40,
+      "capacity_failures": 0,
+      "tau_mean": 0.028756085619104133,
+      "lower_mean": 0.028756085619104126,
+      "seconds": 0.02943095820955932
+     },
+     "0.1": {
+      "frames_at_lower": 40,
+      "evaluated": 40,
+      "capacity_failures": 0,
+      "tau_mean": 0.0011160273338926849,
+      "lower_mean": 0.0011160273338926946,
+      "seconds": 0.06721037509851158
+     }
+    }
+   },
+   "s x0.5": {
+    "parameters": {
+     "width_scale": 0.0016735347688977614,
+     "gap": 1.2300480551398545,
+     "rho": 0.5
+    },
+    "results": {
+     "0": {
+      "frames_at_lower": 40,
+      "evaluated": 40,
+      "capacity_failures": 0,
+      "tau_mean": 0.02828340454643947,
+      "lower_mean": 0.02828340454643947,
+      "seconds": 0.02994375000707805
+     },
+     "0.1": {
+      "frames_at_lower": 40,
+      "evaluated": 40,
+      "capacity_failures": 0,
+      "tau_mean": 0.0008768691706273786,
+      "lower_mean": 0.0008768691706273833,
+      "seconds": 0.06867158296518028
+     }
+    }
+   },
+   "s x2": {
+    "parameters": {
+     "width_scale": 0.006694139075591046,
+     "gap": 1.2300480551398545,
+     "rho": 0.5
+    },
+    "results": {
+     "0": {
+      "frames_at_lower": 40,
+      "evaluated": 40,
+      "capacity_failures": 0,
+      "tau_mean": 0.04317372061823856,
+      "lower_mean": 0.043173720618238556,
+      "seconds": 0.03152745892293751
+     },
+     "0.1": {
+      "frames_at_lower": 37,
+      "evaluated": 40,
+      "capacity_failures": 0,
+      "tau_mean": 0.015191554316390157,
+      "lower_mean": 0.01507597200618963,
+      "seconds": 0.06974708312191069
+     }
+    }
+   },
+   "g = 0": {
+    "parameters": {
+     "width_scale": 0.003347069537795523,
+     "gap": 0.0,
+     "rho": 0.5
+    },
+    "results": {
+     "0": {
+      "frames_at_lower": 40,
+      "evaluated": 40,
+      "capacity_failures": 0,
+      "tau_mean": 0.02740383396820818,
+      "lower_mean": 0.02740383396820818,
+      "seconds": 0.031040417030453682
+     },
+     "0.1": {
+      "frames_at_lower": 40,
+      "evaluated": 40,
+      "capacity_failures": 0,
+      "tau_mean": 0.0010118606672260182,
+      "lower_mean": 0.0010118606672260288,
+      "seconds": 0.06956737488508224
+     }
+    }
+   },
+   "g x2": {
+    "parameters": {
+     "width_scale": 0.003347069537795523,
+     "gap": 2.460096110279709,
+     "rho": 0.5
+    },
+    "results": {
+     "0": {
+      "frames_at_lower": 40,
+      "evaluated": 40,
+      "capacity_failures": 0,
+      "tau_mean": 0.030301249436044453,
+      "lower_mean": 0.030301249436044453,
+      "seconds": 0.03150858310982585
+     },
+     "0.1": {
+      "frames_at_lower": 35,
+      "evaluated": 40,
+      "capacity_failures": 0,
+      "tau_mean": 0.0015534435319657142,
+      "lower_mean": 0.0014034259471841668,
+      "seconds": 0.07035858300514519
+     }
+    }
+   },
+   "rho = 0": {
+    "parameters": {
+     "width_scale": 0.003347069537795523,
+     "gap": 1.2300480551398545,
+     "rho": 0.0
+    },
+    "results": {
+     "0": {
+      "frames_at_lower": 40,
+      "evaluated": 40,
+      "capacity_failures": 0,
+      "tau_mean": 0.04303257115751191,
+      "lower_mean": 0.04303257115751192,
+      "seconds": 0.03123791702091694
+     },
+     "0.1": {
+      "frames_at_lower": 40,
+      "evaluated": 40,
+      "capacity_failures": 0,
+      "tau_mean": 0.015075972006189615,
+      "lower_mean": 0.015075972006189639,
+      "seconds": 0.07024545897729695
+     }
+    }
+   },
+   "rho = 1": {
+    "parameters": {
+     "width_scale": 0.003347069537795523,
+     "gap": 1.2300480551398545,
+     "rho": 1.0
+    },
+    "results": {
+     "0": {
+      "frames_at_lower": 40,
+      "evaluated": 40,
+      "capacity_failures": 0,
+      "tau_mean": 0.02793497592522658,
+      "lower_mean": 0.02793497592522658,
+      "seconds": 0.03143179090693593
+     },
+     "0.1": {
+      "frames_at_lower": 40,
+      "evaluated": 40,
+      "capacity_failures": 0,
+      "tau_mean": 0.0006377110073620723,
+      "lower_mean": 0.000637711007362073,
+      "seconds": 0.06682370905764401
+     }
+    }
+   }
+  }
+ },
+ "Tangaroa": {
+  "dataset": "Tangaroa",
+  "frames": 201,
+  "defaults": {
+   "width_scale": 2.8792963388880333,
+   "gap": 0.002929477658262225,
+   "rho": 0.5,
+   "canvas": 0.703074637982934
+  },
+  "variants": {
+   "default": {
+    "parameters": {
+     "width_scale": 2.8792963388880333,
+     "gap": 0.002929477658262225,
+     "rho": 0.5
+    },
+    "results": {
+     "0": {
+      "frames_at_lower": 27,
+      "evaluated": 201,
+      "capacity_failures": 0,
+      "tau_mean": 0.1036809658802847,
+      "lower_mean": 0.09538464099856743,
+      "seconds": 3.0579525830689818
+     },
+     "0.1": {
+      "frames_at_lower": 24,
+      "evaluated": 201,
+      "capacity_failures": 0,
+      "tau_mean": 0.05332859225615408,
+      "lower_mean": 0.04045529843836667,
+      "seconds": 22.040327500086278
+     }
+    }
+   },
+   "s x0.5": {
+    "parameters": {
+     "width_scale": 1.4396481694440166,
+     "gap": 0.002929477658262225,
+     "rho": 0.5
+    },
+    "results": {
+     "0": {
+      "frames_at_lower": 27,
+      "evaluated": 201,
+      "capacity_failures": 0,
+      "tau_mean": 0.10355590409476309,
+      "lower_mean": 0.09533220757360039,
+      "seconds": 3.141376458108425
+     },
+     "0.1": {
+      "frames_at_lower": 24,
+      "evaluated": 201,
+      "capacity_failures": 0,
+      "tau_mean": 0.05325671222193808,
+      "lower_mean": 0.040403957822771806,
+      "seconds": 22.02444600011222
+     }
+    }
+   },
+   "s x2": {
+    "parameters": {
+     "width_scale": 5.7585926777760665,
+     "gap": 0.002929477658262225,
+     "rho": 0.5
+    },
+    "results": {
+     "0": {
+      "frames_at_lower": 26,
+      "evaluated": 201,
+      "capacity_failures": 0,
+      "tau_mean": 0.10391575199344152,
+      "lower_mean": 0.09550117080802191,
+      "seconds": 3.1807537919376045
+     },
+     "0.1": {
+      "frames_at_lower": 24,
+      "evaluated": 201,
+      "capacity_failures": 0,
+      "tau_mean": 0.0534944446702602,
+      "lower_mean": 0.04056199560247706,
+      "seconds": 22.567283999873325
+     }
+    }
+   },
+   "g = 0": {
+    "parameters": {
+     "width_scale": 2.8792963388880333,
+     "gap": 0.0,
+     "rho": 0.5
+    },
+    "results": {
+     "0": {
+      "frames_at_lower": 51,
+      "evaluated": 201,
+      "capacity_failures": 0,
+      "tau_mean": 0.09255630745639948,
+      "lower_mean": 0.0925251901987526,
+      "seconds": 2.989190958207473
+     },
+     "0.1": {
+      "frames_at_lower": 39,
+      "evaluated": 201,
+      "capacity_failures": 0,
+      "tau_mean": 0.04537713594107512,
+      "lower_mean": 0.0382613116272525,
+      "seconds": 23.485499624861404
+     }
+    }
+   },
+   "g x2": {
+    "parameters": {
+     "width_scale": 2.8792963388880333,
+     "gap": 0.00585895531652445,
+     "rho": 0.5
+    },
+    "results": {
+     "0": {
+      "frames_at_lower": 19,
+      "evaluated": 201,
+      "capacity_failures": 0,
+      "tau_mean": 0.12343383408848932,
+      "lower_mean": 0.10558123371887786,
+      "seconds": 3.227554375072941
+     },
+     "0.1": {
+      "frames_at_lower": 10,
+      "evaluated": 201,
+      "capacity_failures": 0,
+      "tau_mean": 0.07504321040179142,
+      "lower_mean": 0.04472438064908423,
+      "seconds": 22.94600904197432
+     }
+    }
+   },
+   "rho = 0": {
+    "parameters": {
+     "width_scale": 2.8792963388880333,
+     "gap": 0.002929477658262225,
+     "rho": 0.0
+    },
+    "results": {
+     "0": {
+      "frames_at_lower": 27,
+      "evaluated": 201,
+      "capacity_failures": 0,
+      "tau_mean": 0.10375087478133592,
+      "lower_mean": 0.09547815787893245,
+      "seconds": 3.1679842909798026
+     },
+     "0.1": {
+      "frames_at_lower": 24,
+      "evaluated": 201,
+      "capacity_failures": 0,
+      "tau_mean": 0.05341488800835925,
+      "lower_mean": 0.04056138234929851,
+      "seconds": 22.39648895803839
+     }
+    }
+   },
+   "rho = 1": {
+    "parameters": {
+     "width_scale": 2.8792963388880333,
+     "gap": 0.002929477658262225,
+     "rho": 1.0
+    },
+    "results": {
+     "0": {
+      "frames_at_lower": 27,
+      "evaluated": 201,
+      "capacity_failures": 0,
+      "tau_mean": 0.10355443751053381,
+      "lower_mean": 0.09529400047246461,
+      "seconds": 3.175927083939314
+     },
+     "0.1": {
+      "frames_at_lower": 25,
+      "evaluated": 201,
+      "capacity_failures": 0,
+      "tau_mean": 0.05322997126520904,
+      "lower_mean": 0.040351974784308395,
+      "seconds": 22.669122375082225
+     }
+    }
+   }
+  }
+ },
+ "Cylinder": {
+  "dataset": "Cylinder",
+  "frames": 102,
+  "defaults": {
+   "width_scale": 2.7066770085967293e-05,
+   "gap": 0.07483420593368237,
+   "rho": 0.5,
+   "canvas": 22.45026178010471
+  },
+  "variants": {
+   "default": {
+    "parameters": {
+     "width_scale": 2.7066770085967293e-05,
+     "gap": 0.07483420593368237,
+     "rho": 0.5
+    },
+    "results": {
+     "0": {
+      "frames_at_lower": 81,
+      "evaluated": 102,
+      "capacity_failures": 0,
+      "tau_mean": 0.0846590678630368,
+      "lower_mean": 0.0835241148401257,
+      "seconds": 1.177063792012632
+     },
+     "0.1": {
+      "frames_at_lower": 74,
+      "evaluated": 102,
+      "capacity_failures": 0,
+      "tau_mean": 0.004443934886440904,
+      "lower_mean": 0.0035362985314271525,
+      "seconds": 10.59396787500009
+     }
+    }
+   },
+   "s x0.5": {
+    "parameters": {
+     "width_scale": 1.3533385042983646e-05,
+     "gap": 0.07483420593368237,
+     "rho": 0.5
+    },
+    "results": {
+     "0": {
+      "frames_at_lower": 81,
+      "evaluated": 102,
+      "capacity_failures": 0,
+      "tau_mean": 0.08401838904090375,
+      "lower_mean": 0.08308605662326908,
+      "seconds": 1.1369719579815865
+     },
+     "0.1": {
+      "frames_at_lower": 73,
+      "evaluated": 102,
+      "capacity_failures": 0,
+      "tau_mean": 0.0037457396963883035,
+      "lower_mean": 0.002709825336897602,
+      "seconds": 10.479632917093113
+     }
+    }
+   },
+   "s x2": {
+    "parameters": {
+     "width_scale": 5.4133540171934585e-05,
+     "gap": 0.07483420593368237,
+     "rho": 0.5
+    },
+    "results": {
+     "0": {
+      "frames_at_lower": 81,
+      "evaluated": 102,
+      "capacity_failures": 0,
+      "tau_mean": 0.08607460654950783,
+      "lower_mean": 0.08453843725753268,
+      "seconds": 1.1884950001258403
+     },
+     "0.1": {
+      "frames_at_lower": 76,
+      "evaluated": 102,
+      "capacity_failures": 0,
+      "tau_mean": 0.006233116555137356,
+      "lower_mean": 0.005543256161266563,
+      "seconds": 10.586271583102643
+     }
+    }
+   },
+   "g = 0": {
+    "parameters": {
+     "width_scale": 2.7066770085967293e-05,
+     "gap": 0.0,
+     "rho": 0.5
+    },
+    "results": {
+     "0": {
+      "frames_at_lower": 81,
+      "evaluated": 102,
+      "capacity_failures": 0,
+      "tau_mean": 0.08130250489461478,
+      "lower_mean": 0.08092376483281073,
+      "seconds": 1.1797225421760231
+     },
+     "0.1": {
+      "frames_at_lower": 90,
+      "evaluated": 102,
+      "capacity_failures": 0,
+      "tau_mean": 0.0013705074003902548,
+      "lower_mean": 0.001350815994768291,
+      "seconds": 9.034124833997339
+     }
+    }
+   },
+   "g x2": {
+    "parameters": {
+     "width_scale": 2.7066770085967293e-05,
+     "gap": 0.14966841186736474,
+     "rho": 0.5
+    },
+    "results": {
+     "0": {
+      "frames_at_lower": 79,
+      "evaluated": 102,
+      "capacity_failures": 0,
+      "tau_mean": 0.08867086649105567,
+      "lower_mean": 0.0864411529965629,
+      "seconds": 1.2095576249994338
+     },
+     "0.1": {
+      "frames_at_lower": 73,
+      "evaluated": 102,
+      "capacity_failures": 0,
+      "tau_mean": 0.009485573473720501,
+      "lower_mean": 0.006732077626636566,
+      "seconds": 11.093164207879454
+     }
+    }
+   },
+   "rho = 0": {
+    "parameters": {
+     "width_scale": 2.7066770085967293e-05,
+     "gap": 0.07483420593368237,
+     "rho": 0.0
+    },
+    "results": {
+     "0": {
+      "frames_at_lower": 81,
+      "evaluated": 102,
+      "capacity_failures": 0,
+      "tau_mean": 0.08547658288143806,
+      "lower_mean": 0.084346690265454,
+      "seconds": 1.1607892089523375
+     },
+     "0.1": {
+      "frames_at_lower": 74,
+      "evaluated": 102,
+      "capacity_failures": 0,
+      "tau_mean": 0.005319986936826627,
+      "lower_mean": 0.0045372827945224185,
+      "seconds": 10.780708167003468
+     }
+    }
+   },
+   "rho = 1": {
+    "parameters": {
+     "width_scale": 2.7066770085967293e-05,
+     "gap": 0.07483420593368237,
+     "rho": 1.0
+    },
+    "results": {
+     "0": {
+      "frames_at_lower": 81,
+      "evaluated": 102,
+      "capacity_failures": 0,
+      "tau_mean": 0.08400421990150801,
+      "lower_mean": 0.08286443399647436,
+      "seconds": 1.1822766659315675
+     },
+     "0.1": {
+      "frames_at_lower": 72,
+      "evaluated": 102,
+      "capacity_failures": 0,
+      "tau_mean": 0.003811043297887384,
+      "lower_mean": 0.0027147969113277713,
+      "seconds": 10.972001584013924
+     }
+    }
+   }
+  }
+ }
+}

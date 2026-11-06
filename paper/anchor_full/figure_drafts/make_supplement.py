@@ -221,5 +221,66 @@ def fig_storms():
           'mean', round(100 * n10.mean(), 2), 'marked barriers', sum(len(m) for m in S['marks_10']))
 
 
+def table_bound_attainment():
+    """S10: frames on which the selected order's interval cost tau equals the width-aware lower bound (code/results/order_width20261027)."""
+    eps = ('0', '0.02', '0.05', '0.1'); rows = []; tot = {'planar': [0] * 5, 'volumetric': [0] * 5}
+    for n in NAMES:
+        W = load(CODE / f'order_width20261027/{FILE[n]}.json'); M = W['methods']; frames = W['frames']
+        at = [M[f'width order + cap, eps={e}']['frames_at_lower'] for e in eps]
+        m0 = M['width order + cap, eps=0']
+        rows.append([TEX[n], str(frames)] + [str(a) for a in at] + [f2(100 * m0['order_tau_mean']), f2(100 * m0['width_lower_mean'])])
+        key = 'volumetric' if n in ('Tangaroa', 'Cylinder') else 'planar'
+        tot[key] = [t + v for t, v in zip(tot[key], [frames] + at)]
+    rows.append([r'\midrule Planar', str(tot['planar'][0])] + [str(v) for v in tot['planar'][1:]] + ['', ''])
+    rows.append(['Volumetric', str(tot['volumetric'][0])] + [str(v) for v in tot['volumetric'][1:]] + ['', ''])
+    note = (r'A frame counts when the interval cost $\tau$ of the selected order is within $10^{-9}L$ of the lower bound used by the search, the larger of the width-aware bound of the flattened tree and $C_{w,\eta}$ (Theorem~\ref{thm:chain}) at $\eta=(\varepsilon_0+\varepsilon)\Delta_F$. '
+            r'The bound holds for every order whose merge error is at most $\eta$, so on a counted frame no admissible order has a smaller worst displacement in the interval model. '
+            r'The displayed worst displacement adds at most the slack $\beta_0$ of the position cap. Source: \texttt{code/results/order\_width20261027}.')
+    table('supp_bound_attainment.tex', r'Frames on which the selected leaf order attains the width-aware lower bound, at budgets $\varepsilon=0,2,5,10\%$, with the mean interval cost $\tau$ and mean bound at $\varepsilon=0$ (percent of $L$).',
+          'tab:supp_bound_attainment', r'Sequence & Frames & $0$ & $2\%$ & $5\%$ & $10\%$ & $\tau$ & Bound', rows, 'lrrrrrrr', note=note)
+    for r in rows: print('attain', r)
+
+
+def table_stmtm_threshold():
+    """S10: ST-MTM over its reordering threshold r and both global orientations; TMTM in both orientations (stmtm_threshold.py)."""
+    R = load(RES / 'stmtm_threshold20261106/results.json'); rows = []
+    rng = lambda xs: f'{100 * min(xs):.0f}--{100 * max(xs):.0f}'
+    for n in ('Storms', 'Wildfires', 'OLR', 'PM2.5', 'Ring'):
+        if n not in R: rows.append([TEX[n]] + ['--'] * 7); continue
+        d = R[n]; th = d['thresholds']; p = th['0.95']; tm = d['tmtm']
+        rows.append([TEX[n], f2(100 * d['nu_mean']), f2(100 * p['NROE_mean']), f'{100 * p["not_forced_share"]:.0f}',
+                     rng([v['not_forced_share'] for v in th.values()]),
+                     rng([v[k] for v in th.values() for k in ('not_forced_share', 'not_forced_share_reversed')]),
+                     f'{100 * tm["not_forced_share"]:.0f}', f'{100 * tm["not_forced_share_reversed"]:.0f}'])
+    note = (r'Share not forced by the tree: $(\mathrm{NROE}-\nu^*)/\mathrm{NROE}$ of the sequence means. ST-MTM keeps the temporally concordant order of a frame unless the OLO cost is at most $r$ times its cost; '
+            r'weights, $\lambda$ and $K$ move anchors but not the order, so $r\in\{0,0.25,0.5,0.65,0.85,0.95,1\}$ spans every ST-MTM order sequence. '
+            r'Protocol orientation: one flip fixed by the first frame against the centroid $x$ coordinate; ``both'' adds the reversed sequence. '
+            r'At $r=0.95$ the recomputed orders reproduce the stored per-frame NROE of TMTM and ST-MTM exactly. '
+            r'Wildfires was not rerun because its input is not on the machine used for this run. Script: \texttt{figure\_drafts/stmtm\_threshold.py}.')
+    table('supp_stmtm_threshold.tex', r'Robustness of the share of order error not forced by the tree (percent). ST-MTM at the protocol threshold $r=0.95$, over all thresholds, and over all thresholds in both global orientations; TMTM in the protocol and reversed orientation.',
+          'tab:supp_stmtm_threshold', r'Sequence & $\nu^*$ & \multicolumn{2}{c}{ST-MTM, $r{=}0.95$} & all $r$ & all $r$, both & \multicolumn{2}{c}{TMTM}\\ & & NROE & share & share & share & prot. & rev.',
+          rows, 'lrrrrrrr', note=note)
+    for r in rows: print('threshold', r)
+
+
+def table_theta():
+    """S10: certified frames under one-at-a-time changes of s, g and rho (theta_sensitivity.py)."""
+    T = load(RES / 'theta_sensitivity20261106/results.json'); planar = ('Storms', 'Wildfires', 'OLR', 'PM2.5', 'Ring')
+    labels = list(T['Storms']['variants']); rows = []
+    for lab in labels:
+        cnt = lambda ns, e: sum(T[n]['variants'][lab]['results'][e]['frames_at_lower'] for n in ns)
+        tot = sum(T[n]['frames'] for n in planar)
+        tau = np.mean([T[n]['variants'][lab]['results']['0']['tau_mean'] for n in planar])
+        name = {'default': 'default', 's x0.5': r'$s\times0.5$', 's x2': r'$s\times2$', 'g = 0': r'$g=0$', 'g x2': r'$g\times2$', 'rho = 0': r'$\rho=0$', 'rho = 1': r'$\rho=1$'}[lab]
+        rows.append([name, f'{cnt(planar, "0")}/{tot}', f'{cnt(planar, "0.1")}/{tot}', f2(100 * tau),
+                     f'{cnt(("Tangaroa",), "0")}/{T["Tangaroa"]["frames"]}', f'{cnt(("Cylinder",), "0")}/{T["Cylinder"]["frames"]}'])
+    note = (r'One parameter changed at a time from each sequence\textquoteright s default; $\tau$ and the bound depend on $\Theta_0$ only through the width scale $s$, the gap $g$ and the anchor slack $\rho$. '
+            r'No variant exceeded the canvas capacity. The default row reproduces Table~\ref{tab:supp_bound_attainment}. Script: \texttt{figure\_drafts/theta\_sensitivity.py}.')
+    table('supp_theta.tex', r'Sensitivity of the certified orders to $\Theta_0$: frames whose selected order attains the width-aware lower bound, and the planar mean of $\tau$ at $\varepsilon=0$ (percent of $L$).',
+          'tab:supp_theta', r'Variant & Planar $\varepsilon{=}0$ & Planar $\varepsilon{=}10\%$ & mean $\tau$ & Tangaroa & Cylinder', rows, 'lrrrrr', note=note)
+    for r in rows: print('theta', r)
+
+
 if __name__ == '__main__':
-    tables_values(values()); same_model_and_jumps(); table_ties(); tables_olr(); table_space_filling(); fig_storms()
+    tables_values(values()); same_model_and_jumps(); table_ties(); tables_olr(); table_space_filling(); table_bound_attainment()
+    table_stmtm_threshold(); table_theta(); fig_storms()

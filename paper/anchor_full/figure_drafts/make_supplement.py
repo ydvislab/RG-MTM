@@ -255,7 +255,7 @@ def table_stmtm_threshold():
             allr = f'{100 * min(per_r):.0f}--{100 * max(per_r):.0f}'
         else:
             nu = VO[n]['nu_strict_mean']; allr = '--'
-        rows.append([TEX[n], f2(100 * nu), f2(nb['TMTM']['best']), f'{100 * sh(nb["TMTM"]["best"] / 100, nu):.0f}',
+        rows.append([TEX[n], f2(100 * nu), f2(nb['OLO']['best']), f'{100 * sh(nb["OLO"]["best"] / 100, nu):.0f}', f2(nb['TMTM']['best']), f'{100 * sh(nb["TMTM"]["best"] / 100, nu):.0f}',
                      f2(nb['ST-MTM']['best']), f'{100 * sh(nb["ST-MTM"]["best"] / 100, nu):.0f}', allr,
                      f'{nb["TMTM"]["protocol"]:.1f} / {nb["ST-MTM"]["protocol"]:.1f}'])
     note = (r'Share not forced by the tree: $(\mathrm{NROE}-\nu^*)/\mathrm{NROE}$ of the sequence means, each map in the global mirror that agrees better with the reference. '
@@ -263,10 +263,13 @@ def table_stmtm_threshold():
             r'so $r\in\{0,0.25,0.5,0.65,0.85,0.95,1\}$ spans every ST-MTM order sequence (``all $r$'': range over $r$, favourable mirror for each). '
             r'Last column: NROE with the earlier orientation rule, one flip from the first frame against the centroid $x$ coordinate. '
             r'At $r=0.95$ the recomputed orders reproduce the stored per-frame NROE exactly; volumetric rows use the saved native outputs, whose threshold was not varied (--). '
-            r'Scripts: \texttt{figure\_drafts/stmtm\_threshold.py}, \texttt{volume\_orientation.py}, \texttt{best\_mirror.py}.')
-    table('supp_stmtm_threshold.tex', r'Order error of TMTM and ST-MTM ($r=0.95$) in their favourable mirror, the share not forced by the tree, and its range over all ST-MTM thresholds (percent).',
-          'tab:supp_stmtm_threshold', r'Sequence & $\nu^*$ & \multicolumn{2}{c}{TMTM} & \multicolumn{3}{c}{ST-MTM} & earlier rule\\ & & NROE & share & NROE & share & all $r$ & TMTM / ST-MTM',
-          rows, 'lrrrrrrr', note=note)
+            r'OLO: the optimal leaf order of each tree~\cite{BarJoseph:2001:OLO} for the centroid-distance cost, mirrored to agree with the previous frame, which is ST-MTM at $r=1$; '
+            r'on 5 of 614 planar, 51 of 201 Tangaroa and 10 of 102 Cylinder frames the rule keeps the temporally concordant order, which costs no more than the SciPy OLO there. '
+            r'Volumetric OLO trees are rebuilt from the saved hierarchies; the same code reproduces the stored ST-MTM order of every volumetric frame at $r=0.95$. '
+            r'Scripts: \texttt{figure\_drafts/stmtm\_threshold.py}, \texttt{volume\_orientation.py}, \texttt{olo\_volume.py}, \texttt{best\_mirror.py}.')
+    table('supp_stmtm_threshold.tex', r'Order error of OLO, TMTM and ST-MTM ($r=0.95$) in their favourable mirror, the share not forced by the tree, and its range over all ST-MTM thresholds (percent).',
+          'tab:supp_stmtm_threshold', r'Sequence & $\nu^*$ & \multicolumn{2}{c}{OLO} & \multicolumn{2}{c}{TMTM} & \multicolumn{3}{c}{ST-MTM} & earlier rule\\ & & NROE & share & NROE & share & NROE & share & all $r$ & TMTM / ST-MTM',
+          rows, 'lrrrrrrrrr', note=note)
     for r in rows: print('threshold', r)
 
 def table_theta():

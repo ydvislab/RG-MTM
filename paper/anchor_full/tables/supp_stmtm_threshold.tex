@@ -1,15 +1,15 @@
 \begin{table}[H]
 \centering\small\setlength{\tabcolsep}{3.2pt}
-\caption{Order error of TMTM and ST-MTM ($r=0.95$) in their favourable mirror, the share not forced by the tree, and its range over all ST-MTM thresholds (percent).}\label{tab:supp_stmtm_threshold}
-\begin{tabular}{lrrrrrrr}\toprule
-Sequence & $\nu^*$ & \multicolumn{2}{c}{TMTM} & \multicolumn{3}{c}{ST-MTM} & earlier rule\\ & & NROE & share & NROE & share & all $r$ & TMTM / ST-MTM\\\midrule
-Storms & 3.77 & 18.31 & 79 & 16.28 & 77 & 73--77 & 19.2 / 16.3\\
-Wildfires & 5.80 & 19.65 & 70 & 18.72 & 69 & 53--70 & 29.3 / 24.0\\
-OLR & 0.89 & 19.31 & 95 & 16.59 & 95 & 83--95 & 19.3 / 17.2\\
-PM$_{2.5}$ & 0.97 & 4.44 & 78 & 5.21 & 81 & 80--81 & 12.9 / 11.6\\
-Ring & 2.66 & 7.18 & 63 & 4.47 & 41 & 37--61 & 7.2 / 10.4\\
-Tangaroa & 9.24 & 19.50 & 53 & 15.80 & 41 & -- & 20.1 / 21.3\\
-Cylinder & 12.24 & 26.62 & 54 & 17.77 & 31 & -- & 26.6 / 17.8\\
+\caption{Order error of OLO, TMTM and ST-MTM ($r=0.95$) in their favourable mirror, the share not forced by the tree, and its range over all ST-MTM thresholds (percent).}\label{tab:supp_stmtm_threshold}
+\begin{tabular}{lrrrrrrrrr}\toprule
+Sequence & $\nu^*$ & \multicolumn{2}{c}{OLO} & \multicolumn{2}{c}{TMTM} & \multicolumn{3}{c}{ST-MTM} & earlier rule\\ & & NROE & share & NROE & share & NROE & share & all $r$ & TMTM / ST-MTM\\\midrule
+Storms & 3.77 & 15.60 & 76 & 18.31 & 79 & 16.28 & 77 & 73--77 & 19.2 / 16.3\\
+Wildfires & 5.80 & 19.06 & 70 & 19.65 & 70 & 18.72 & 69 & 53--70 & 29.3 / 24.0\\
+OLR & 0.89 & 16.27 & 95 & 19.31 & 95 & 16.59 & 95 & 83--95 & 19.3 / 17.2\\
+PM$_{2.5}$ & 0.97 & 5.17 & 81 & 4.44 & 78 & 5.21 & 81 & 80--81 & 12.9 / 11.6\\
+Ring & 2.66 & 4.23 & 37 & 7.18 & 63 & 4.47 & 41 & 37--61 & 7.2 / 10.4\\
+Tangaroa & 9.24 & 15.44 & 40 & 19.50 & 53 & 15.80 & 41 & -- & 20.1 / 21.3\\
+Cylinder & 12.24 & 18.03 & 32 & 26.62 & 54 & 17.77 & 31 & -- & 26.6 / 17.8\\
 \bottomrule\end{tabular}
-\par\smallskip\parbox{\linewidth}{\footnotesize Share not forced by the tree: $(\mathrm{NROE}-\nu^*)/\mathrm{NROE}$ of the sequence means, each map in the global mirror that agrees better with the reference. ST-MTM keeps the temporally concordant order of a frame unless the OLO cost is at most $r$ times its cost; weights, $\lambda$ and $K$ move anchors but not the order, so $r\in\{0,0.25,0.5,0.65,0.85,0.95,1\}$ spans every ST-MTM order sequence (``all $r$: range over $r$, favourable mirror for each). Last column: NROE with the earlier orientation rule, one flip from the first frame against the centroid $x$ coordinate. At $r=0.95$ the recomputed orders reproduce the stored per-frame NROE exactly; volumetric rows use the saved native outputs, whose threshold was not varied (--). Scripts: \texttt{figure\_drafts/stmtm\_threshold.py}, \texttt{volume\_orientation.py}, \texttt{best\_mirror.py}.}
+\par\smallskip\parbox{\linewidth}{\footnotesize Share not forced by the tree: $(\mathrm{NROE}-\nu^*)/\mathrm{NROE}$ of the sequence means, each map in the global mirror that agrees better with the reference. ST-MTM keeps the temporally concordant order of a frame unless the OLO cost is at most $r$ times its cost; weights, $\lambda$ and $K$ move anchors but not the order, so $r\in\{0,0.25,0.5,0.65,0.85,0.95,1\}$ spans every ST-MTM order sequence (``all $r$: range over $r$, favourable mirror for each). Last column: NROE with the earlier orientation rule, one flip from the first frame against the centroid $x$ coordinate. At $r=0.95$ the recomputed orders reproduce the stored per-frame NROE exactly; volumetric rows use the saved native outputs, whose threshold was not varied (--). OLO: the optimal leaf order of each tree~\cite{BarJoseph:2001:OLO} for the centroid-distance cost, mirrored to agree with the previous frame, which is ST-MTM at $r=1$; on 5 of 614 planar, 51 of 201 Tangaroa and 10 of 102 Cylinder frames the rule keeps the temporally concordant order, which costs no more than the SciPy OLO there. Volumetric OLO trees are rebuilt from the saved hierarchies; the same code reproduces the stored ST-MTM order of every volumetric frame at $r=0.95$. Scripts: \texttt{figure\_drafts/stmtm\_threshold.py}, \texttt{volume\_orientation.py}, \texttt{olo\_volume.py}, \texttt{best\_mirror.py}.}
 \end{table}

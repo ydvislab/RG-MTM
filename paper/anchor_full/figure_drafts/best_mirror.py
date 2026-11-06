@@ -10,6 +10,8 @@ choice because the reference defines its axis.
       planar: figdata/stmtm_threshold20261106/results.json (r = 0.95 = protocol, TMTM), recomputed from the same
               pipeline and checked against code/results/final_performance.json;
       volumetric: figdata/stmtm_threshold20261106/volume_orientation.json (checked against saved frame metrics).
+  OLO (optimal leaf ordering, ST-MTM's reordering rule at r = 1): mirror with the lower mean NROE
+      planar: results.json thresholds['1']; volumetric: figdata/stmtm_threshold20261106/olo_volume.json.
   same-model layouts (TMTM-style, ST-MTM-style; code/results/unified20261025):
                                  canvas mirror x' = 2 o + L - x with the lower mean displacement E_pool
   space-filling curves (figdata/space_filling20261105, per orientation): orientation with the lowest mean NROE
@@ -28,14 +30,17 @@ load = lambda p: json.loads(Path(p).read_text())
 
 
 def native():
-    """{sequence: {'TMTM'|'ST-MTM': dict(protocol, reversed, best (percent NROE), mirrored)}}."""
-    T = load(RES / 'stmtm_threshold20261106/results.json'); V = load(RES / 'stmtm_threshold20261106/volume_orientation.json'); out = {}
+    """{sequence: {'TMTM'|'ST-MTM'|'OLO': dict(protocol, reversed, best (percent NROE), mirrored)}}."""
+    T = load(RES / 'stmtm_threshold20261106/results.json'); V = load(RES / 'stmtm_threshold20261106/volume_orientation.json')
+    O = load(RES / 'stmtm_threshold20261106/olo_volume.json'); out = {}
     for n in NAMES:
         if n in PLANAR:
             pairs = {'TMTM': (T[n]['tmtm']['NROE_mean'], T[n]['tmtm']['NROE_mean_reversed']),
-                     'ST-MTM': (T[n]['thresholds']['0.95']['NROE_mean'], T[n]['thresholds']['0.95']['NROE_mean_reversed'])}
+                     'ST-MTM': (T[n]['thresholds']['0.95']['NROE_mean'], T[n]['thresholds']['0.95']['NROE_mean_reversed']),
+                     'OLO': (T[n]['thresholds']['1']['NROE_mean'], T[n]['thresholds']['1']['NROE_mean_reversed'])}
         else:
             m = V[n]['methods']; pairs = {k: (m[k]['NROE_mean'], m[k]['NROE_mean_reversed']) for k in ('TMTM', 'ST-MTM')}
+            pairs['OLO'] = (O[n]['NROE_mean'], O[n]['NROE_mean_reversed'])
         out[n] = {k: dict(protocol=100 * a, reversed=100 * b, best=100 * min(a, b), mirrored=bool(b < a)) for k, (a, b) in pairs.items()}
     return out
 

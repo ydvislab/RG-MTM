@@ -1,0 +1,15 @@
+\begin{table}[H]
+\centering\small\setlength{\tabcolsep}{3.2pt}
+\caption{Sensitivity of the certified orders to $\Theta_0$: frames whose selected order attains the width-aware lower bound, and the planar mean of $\tau$ at $\varepsilon=0$ (percent of $L$).}\label{tab:supp_theta}
+\begin{tabular}{lrrrrr}\toprule
+Variant & Planar $\varepsilon{=}0$ & Planar $\varepsilon{=}10\%$ & mean $\tau$ & Tangaroa & Cylinder\\\midrule
+default & 606/614 & 596/614 & 3.12 & 27/201 & 81/102\\
+$s\times0.5$ & 608/614 & 598/614 & 3.00 & 27/201 & 81/102\\
+$s\times2$ & 578/614 & 564/614 & 4.01 & 26/201 & 81/102\\
+$g=0$ & 606/614 & 596/614 & 3.03 & 51/201 & 81/102\\
+$g\times2$ & 606/614 & 589/614 & 3.22 & 19/201 & 79/102\\
+$\rho=0$ & 605/614 & 597/614 & 3.72 & 27/201 & 81/102\\
+$\rho=1$ & 604/614 & 595/614 & 2.93 & 27/201 & 81/102\\
+\bottomrule\end{tabular}
+\par\smallskip\parbox{\linewidth}{\footnotesize One parameter changed at a time from each sequence\textquoteright s default; $\tau$ and the bound depend on $\Theta_0$ only through the width scale $s$, the gap $g$ and the anchor slack $\rho$. No variant exceeded the canvas capacity. The default row reproduces Table~\ref{tab:supp_bound_attainment}. Script: \texttt{figure\_drafts/theta\_sensitivity.py}.}
+\end{table}

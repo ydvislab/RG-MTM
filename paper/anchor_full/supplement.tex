@@ -364,6 +364,15 @@ TMTM and ST-MTM are evaluated on their native outputs; AnchorMTM at $\varepsilon
 \input{tables/supp_values_temporal}
 \input{tables/supp_values_geometry}
 
+\paragraph{Certified orders.} The width-aware search of Algorithm~1 of the paper keeps the lower bound it is measured against. Table~\ref{tab:supp_bound_attainment} counts the frames on which the selected order reaches it. On 606 of the 614 planar frames in Exact Mode, and on at least 596 at every tested budget, no admissible order has a smaller worst displacement. Volumetric trees reach the bound less often, mainly on Tangaroa, where the remaining gap does not separate slack in the bound from a suboptimal search.
+\input{tables/supp_bound_attainment}
+
+\paragraph{Configuration.} The order search and its bound depend on $\Theta_0$ only through the width scale $s$, the gap $g$ and the anchor slack $\rho$; the QP weights and the cap slack $\beta_0$ move anchors within the selected order. Halving or doubling $s$, removing or doubling $g$, and setting $\rho$ to 0 or 1 leaves the selected order at the bound on 578--608 of the 614 planar frames (Table~\ref{tab:supp_theta}). On Tangaroa the count follows the gap, from 19 to 51 of 201 frames.
+\input{tables/supp_theta}
+
+\paragraph{ST-MTM threshold and orientation.} ST-MTM keeps the temporally concordant order of a frame unless optimal leaf ordering lowers the adjacency cost to at most $r$ times that of the concordant order. Its weights, $\lambda$ and $K$ move anchors but do not change the order, so the threshold $r\in[0,1]$ spans every ST-MTM order sequence. NROE also depends on the global orientation of a native map, which the protocol fixes once from the first frame against the centroid $x$ coordinate. Table~\ref{tab:supp_stmtm_threshold} recomputes the share of order error not forced by the tree for every threshold and both orientations. It stays at 73--97\% on Storms, OLR and PM$_{2.5}$ for both methods; on Ring it ranges from 37\% to 75\% for ST-MTM and from 63\% to 73\% for TMTM. The order error itself moves more: on PM$_{2.5}$ the reversed orientation lowers TMTM from 12.87\% to 4.44\% and ST-MTM from 11.60\% to 5.21\%, still four to five times $\nu^*=0.97\%$.
+\input{tables/supp_stmtm_threshold}
+
 \paragraph{Space-filling curves.} Hilbert and Morton curves linearize the domain rather than the tree~\cite{Dafner:2000:CSFC,Weissenboeck:2019:DVL}. We order the extrema of every frame by the curve index of their grid cells, on the same inputs as all other maps, and measure the induced order (Table~\ref{tab:supp_space_filling}). Their order error is close to that of TMTM and ST-MTM, and the least merge error of any profile in that order, $\delta^*$ of Proposition~\ref{prop:barriers}, reaches 19--39\% of the scalar range in the worst frame. Their SNS and TW are worse than ST-MTM's on every sequence.
 \input{tables/supp_space_filling}
 

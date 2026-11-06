@@ -1,0 +1,17 @@
+\begin{table}[H]
+\centering\small\setlength{\tabcolsep}{3.2pt}
+\caption{Frames on which the selected leaf order attains the width-aware lower bound, at budgets $\varepsilon=0,2,5,10\%$, with the mean interval cost $\tau$ and mean bound at $\varepsilon=0$ (percent of $L$).}\label{tab:supp_bound_attainment}
+\begin{tabular}{lrrrrrrr}\toprule
+Sequence & Frames & $0$ & $2\%$ & $5\%$ & $10\%$ & $\tau$ & Bound\\\midrule
+Storms & 118 & 116 & 116 & 110 & 110 & 4.33 & 4.22\\
+Wildfires & 30 & 25 & 27 & 24 & 24 & 6.18 & 6.13\\
+OLR & 60 & 60 & 60 & 60 & 59 & 0.96 & 0.96\\
+PM$_{2.5}$ & 366 & 365 & 361 & 363 & 363 & 1.28 & 1.28\\
+Ring & 40 & 40 & 40 & 40 & 40 & 2.88 & 2.88\\
+Tangaroa & 201 & 27 & 24 & 30 & 24 & 10.37 & 9.54\\
+Cylinder & 102 & 81 & 77 & 76 & 74 & 8.47 & 8.35\\
+\midrule Planar & 614 & 606 & 604 & 597 & 596 &  & \\
+Volumetric & 303 & 108 & 101 & 106 & 98 &  & \\
+\bottomrule\end{tabular}
+\par\smallskip\parbox{\linewidth}{\footnotesize A frame counts when the interval cost $\tau$ of the selected order is within $10^{-9}L$ of the lower bound used by the search, the larger of the width-aware bound of the flattened tree and $C_{w,\eta}$ (Theorem~\ref{thm:chain}) at $\eta=(\varepsilon_0+\varepsilon)\Delta_F$. The bound holds for every order whose merge error is at most $\eta$, so on a counted frame no admissible order has a smaller worst displacement in the interval model. The displayed worst displacement adds at most the slack $\beta_0$ of the position cap. Source: \texttt{code/results/order\_width20261027}.}
+\end{table}

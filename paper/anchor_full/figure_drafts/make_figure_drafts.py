@@ -223,27 +223,28 @@ def fig_compare_v2():
         ax.bar(xo, ex, w * .92, bottom=nu, color=M[m]['c'], lw=0, alpha=1 if m != 'Exact' else .9)
         if m != 'Exact':
             frac[m] = 100 * ex / tot
-            for xi, t, fr in zip(xo, tot, frac[m]): ax.text(xi, t + .5, f'{fr:.0f}', ha='center', fontsize=5.2, rotation=90, va='bottom')
+            for xi, t, fr in zip(xo, tot, frac[m]): ax.text(xi, t + .4, f'{fr:.0f}', ha='center', fontsize=5.8, rotation=90, va='bottom')
     ax.axvline(4.5, color='#999', lw=.6); ax.text(4.4, 34, 'planar', ha='right', va='top', fontsize=5.6, color='#666'); ax.text(4.6, 34, 'volumetric', va='top', fontsize=5.6, color='#666')
-    ax.set_xticks(x); ax.set_xticklabels([LABEL[n] for n in NAMES], fontsize=5.7)
-    ax.set_ylabel('Order error NROE (%)', fontsize=6.3); ax.set_ylim(0, 36); ax.tick_params(labelsize=6, length=2)
+    ax.set_xticks(x); ax.set_xticklabels([LABEL[n] for n in NAMES], fontsize=6.2, rotation=25, ha='right', rotation_mode='anchor')
+    ax.set_ylabel('Order error NROE (%)', fontsize=6.3); ax.set_ylim(0, 37); ax.tick_params(labelsize=6.2, length=2)
     ax.yaxis.grid(True, color=GRID, lw=.5); ax.set_axisbelow(True)
     h = [Rectangle((0, 0), 1, 1, color=FORCED)] + [Rectangle((0, 0), 1, 1, color=M[m]['c']) for m in ('OLO', 'TMTM', 'ST-MTM', 'Exact')]
     ax.legend(h, [r'forced by hierarchy ($\nu^*$, Thm. 1; $c_0$ for $\varepsilon=0$)', 'avoidable: OLO', 'avoidable: TMTM', 'avoidable: ST-MTM', r'avoidable: AnchorMTM $\varepsilon=0$'],
-              fontsize=6, loc='upper center', ncol=2, handlelength=1, columnspacing=.8, bbox_to_anchor=(.5, -.1))
-    ax.set_title('(a) Order error: forced by the hierarchy vs avoidable (labels: % avoidable)', pad=3, fontsize=6.3, fontweight='normal')
+              fontsize=6, loc='upper center', ncol=2, handlelength=1, columnspacing=.8, bbox_to_anchor=(.5, -.14))
+    ax.set_title('(a) Order error: forced by the hierarchy vs avoidable (labels: % avoidable)', pad=3, fontsize=6.6, fontweight='normal')
     print('avoidable % OLO', np.round(frac['OLO'], 1), 'TMTM', np.round(frac['TMTM'], 1), 'ST-MTM', np.round(frac['ST-MTM'], 1))
     print('exact minus c0', {n: round(V[n]['Exact']['NROE'] - V[n]['nu'], 3) for n in NAMES})
     small = [('NMLE', 'Worst merge error (%)', g[0, 1]), ('ME', 'Motion error (%)', g[0, 2]),
              ('SNS', r'Distance stress SNS $\downarrow$', g[1, 1]), ('TW', r'Trustworthiness TW $\uparrow$', g[1, 2])]
     for j, (key, title, cell) in enumerate(small):
         title = '(' + 'bcde'[j] + ') ' + title
-        ax = fig.add_subplot(cell); off = np.linspace(-.3, .3, 5)
+        ax = fig.add_subplot(cell); off = np.linspace(-.32, .32, 5)
         for k, m in enumerate(['TMTM', 'ST-MTM', 'Projection', 'Exact', 'Budgeted']):
             ax.plot(x + off[k], [V[n][m][key] for n in NAMES], **mstyle(m, 2.6))
         ax.axvline(4.5, color='#999', lw=.5); ax.set_xticks(x)
-        ax.set_xticklabels([LABEL[n] for n in NAMES], fontsize=5.6, rotation=90)
-        ax.set_title(title, fontsize=6.3, pad=2, fontweight='normal'); ax.tick_params(labelsize=5.8, length=2)
+        ax.set_xticklabels([LABEL[n] for n in NAMES], fontsize=6, rotation=90)
+        ax.set_title(title, fontsize=6.6, pad=2, fontweight='normal'); ax.tick_params(labelsize=6, length=2)
+        for xv in x[:-1] + .5: ax.axvline(xv, color=GRID, lw=.4, zorder=0)
         ax.yaxis.grid(True, color=GRID, lw=.5); ax.set_axisbelow(True)
     hs = [Line2D([], [], **mstyle(m, 3.2)) for m in ['TMTM', 'ST-MTM', 'Projection', 'Exact', 'Budgeted']]
     fig.legend(hs, [MLAB[m] for m in ['TMTM', 'ST-MTM', 'Projection', 'Exact', 'Budgeted']], ncol=5, fontsize=6.2,
@@ -278,11 +279,11 @@ def fig_frontier_v2():
             if k in ('eps=0', 'eps=0.02', 'eps=0.1'): ax.annotate('%g' % (100 * float(k[4:])), (xi, yi), xytext=(2, 2.5), textcoords='offset points', fontsize=5.8)
         ax.plot([x[-1], 100 * P['NMLE_max']], [yw[-1], 100 * P['E_inf']], ':', lw=.8, color=M['Exact']['c'])
         ax.plot(100 * P['NMLE_max'], 100 * P['E_inf'], **mstyle('Projection', 4))
-        top = max(yw + [100 * P['E_inf']]) * 1.35
+        top = max(yw + [100 * P['E_inf']]) * (2.0 if n in UNIFIED else 1.3)   # room for the grey box above the curves
         B = baseline_displacement(n)
         if B:
-            txt = 'same model, $\\varepsilon=0$:\n' + '\n'.join(f"{m}-style: {B[m]['E_inf']:.0f}% / {B[m]['E_pool']:.0f}%" for m in ('TMTM', 'ST-MTM'))
-            ax.text(.97, .97, txt, transform=ax.transAxes, ha='right', va='top', fontsize=5.5, linespacing=1.15,
+            txt = 'same model, worst / mean:\n' + '\n'.join(f"{m}-style {B[m]['E_inf']:.0f}% / {B[m]['E_pool']:.0f}%" for m in ('TMTM', 'ST-MTM'))
+            ax.text(.97, .98, txt, transform=ax.transAxes, ha='right', va='top', fontsize=5.6, linespacing=1.15,
                     bbox=dict(boxstyle='round,pad=.25', fc='#F4F5F7', ec='none'))
             ax.annotate('', (0, top), (0, top * .86), arrowprops=dict(arrowstyle='-|>', lw=.8, color=M['TMTM']['c']), annotation_clip=False)
             print('frontier baseline', n, {m: {k: round(v, 2) for k, v in B[m].items()} for m in B})

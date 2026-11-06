@@ -119,3 +119,41 @@
 - **产出**：
   - PDF：`AnchorMTM_draft_v11_en.pdf`（正文到第 9 页，共 11 页）、`AnchorMTM_supplement_v6.pdf`（18 页）、`AnchorMTM_draft_v11_zh.pdf`（17 页，已同步）；
   - Overleaf 包 42 个文件，从零编译通过。
+
+## 十、图的美化与三维结果图（11/6，v12）
+
+用户选择 "Polish and add volumetric"。
+
+- **新图 8（Tangaroa，单栏）**：`figures/fig_tangaroa_positions.pdf`。
+  - 画法：TMTM 原生、ST-MTM 原生、精确模式三栏，每个特征按它在轴上的位置画点，颜色表示 (x−q)/L。
+  - 数据：
+    - 精确模式和 ε=10%：`figure_drafts/volume_positions.py` 重跑 frontier 流程，E_pool、E_inf、NMLE_max 与 `frontier20261027/tangaroa.json` 一致（误差 < 1e-6）。
+    - 原生地图：TMTM 锚点除以（raster−1），ST-MTM 用 positions_unit，再映射到画布 [o, o+L]，取平均位移较低的镜像。
+  - 结果：
+
+    | 方法 | 平均位移 | NPE |
+    |---|---:|---:|
+    | TMTM | 8.8% | 31% |
+    | ST-MTM | 13.4% | 34% |
+    | 精确模式 | 5.0% | 11% |
+    | ε=10% | 3.0% | 6% |
+
+  - 注意：原生地图的宽度和画布与我们的不同，位移是"缩放到画布后"的读法，图注已写明。正文其他处对原生地图仍只用 NROE。
+  - 本机没有 Tangaroa 的原始弧样本，所以画的是特征位置，不是填充后的标量剖面。
+  - 正文 5.5 新增一段 "Tangaroa: one axis through a volumetric flow"。
+- **美化**：
+  - 图 5：横轴标签旋转，柱顶数字放大，(b)–(e) 加序列分隔线，字号统一到 6pt 以上。
+  - 图 6：灰框只说明一次"worst / mean"，纵轴留出空间，灰框不再压住曲线。
+  - 图 7：列标题只留方法名，允许量和上限移到图注。
+  - 图 3（框架图）没有改：它是外部绘制的 PDF，没有源文件；放大到整栏宽需要再删约 10 行正文。
+- **为守住 9 页而压缩或删去的内容**：
+  - 5.2 敏感性句；
+  - 5.5 Storms 的中位数和峰值句，以及 744 帧说明（只留一句）；
+  - 5.6 宽度感知段（删去 ε=2% 的 14.55%）、运行时间段（合并为一句）、z 轴说明；
+  - 讨论的"下界的用途""稳定与运动""预算改变了什么"三段压缩；
+  - 删去"Using AnchorMTM"段和结论里的"下一步"；
+  - 局限一段合并句子。
+  - 中文版做了相同的实质删改。
+- **产出**：
+  - `AnchorMTM_draft_v12_en.pdf`（正文到第 9 页，共 11 页）、`AnchorMTM_draft_v12_zh.pdf`；附录仍为 v6。
+  - Overleaf 包 43 个文件；投稿包 `paper/AnchorMTM_1037_submission_v12.zip`（48 个文件），从零编译通过。

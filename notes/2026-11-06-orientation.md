@@ -70,3 +70,9 @@
 - 正文：5.1 写明规则；5.3 小标题改为 "The tree forces only part of the order error of TMTM and ST-MTM"，TMTM 53–95%（每组），ST-MTM 69–95%（四个真实平面序列）、31–41%（Ring 与两组体数据）；Storms 例子 18.3%；曲线改为"最优朝向下 NROE 0.3–12.6%，有时低于 ν\*，但最坏帧合并误差 8–40%"；5.5 OLR 的 ST-MTM-style 平均位移 42.7%→19.3%；贡献 3 改为 31–95%；图 4–6 图注注明朝向。摘要、引言、结论的 31–95% 不变。
 - 为放下新句子，删去 5.6 的复杂度句和软件版本、Cylinder 宽度感知句、讨论中的重复句。正文第 9 页结束，全文 11 页；附录 18 页；Overleaf 包 42 个文件从零编译通过。
 - PDF：`AnchorMTM_draft_v10_en.pdf`、`AnchorMTM_supplement_v5.pdf`。
+
+## 八、中文版同步（11/6）
+
+- `paper/anchor_full/main_zh.tex` 按英文 v10 逐段重译：摘要与引言（606/614 帧、31--95%）、第 4 节新顺序（模型 → 下界 → 参考 → 构造，含框架图）、第 5--7 节全部改写内容（最有利朝向规则、53--95% / 69--95% / 31--41% 分组表述、曲线 0.3--12.6%、OLR 19.3%、Θ0 敏感性 578--608、局限中的配置一句）。
+- 旧中文稿中英文已删去的内容（Vortex 段、复杂度与软件版本句等）一并删去。
+- 编译：`tectonic -X compile main_zh.tex`，17 页，无未定义引用。PDF：`AnchorMTM_draft_v10_zh.pdf`。

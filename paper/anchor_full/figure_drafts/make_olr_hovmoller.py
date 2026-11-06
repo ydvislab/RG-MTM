@@ -178,8 +178,8 @@ def paper_figure():
         im = ax.imshow(img, origin='lower', aspect='auto', cmap='RdBu_r', vmin=vmin, vmax=vmax, extent=[-.5, T - .5, 0, 1],
                        interpolation='nearest', rasterized=True)
         for tt, qq in enumerate(qs): ax.plot([tt] * len(qq), qq, 'o', ms=1.1, mfc='k', mec='white', mew=.2)
-        ax.set_title(f'{name}\n{par}', fontsize=6.2, pad=2.5, fontweight='normal', linespacing=1.15)
-        ax.text(.03, .025, note, transform=ax.transAxes, ha='left', va='bottom', fontsize=5.6,
+        ax.set_title(name, fontsize=6.8, pad=2.5, fontweight='normal')   # allowance and cap are given in the caption
+        ax.text(.03, .025, note, transform=ax.transAxes, ha='left', va='bottom', fontsize=6,
                 bbox=dict(boxstyle='round,pad=.15', fc='white', ec='none', alpha=.88))
         ax.set_xticks([0, T - 1]); ax.set_xticklabels(['1 Jun', '30 Jul'], fontsize=5.8)
         for lab_, ha_ in zip(ax.get_xticklabels(), ('left', 'right')): lab_.set_ha(ha_)

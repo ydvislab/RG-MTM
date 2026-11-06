@@ -28,10 +28,10 @@ UNIFIED = {'Storms': 'era5', 'Wildfires': 'wildfire', 'OLR': 'olr', 'PM2.5': 'pm
 LABEL = {n: (r'PM$_{2.5}$' if n == 'PM2.5' else n) for n in NAMES}
 
 # One palette for the whole paper: methods keep their colour and shape in every figure.
-M = {'TMTM': dict(c='#7B8790', mk='s', fill=True), 'ST-MTM': dict(c='#CC79A7', mk='D', fill=True),
+M = {'OLO': dict(c='#C9B68C', mk='^', fill=True), 'TMTM': dict(c='#7B8790', mk='s', fill=True), 'ST-MTM': dict(c='#CC79A7', mk='D', fill=True),
      'Exact': dict(c='#0072B2', mk='o', fill=True), 'Budgeted': dict(c='#009E73', mk='o', fill=False),
      'Projection': dict(c='#000000', mk='*', fill=True)}
-MLAB = {'TMTM': 'TMTM', 'ST-MTM': 'ST-MTM', 'Exact': r'AnchorMTM, $\varepsilon=0$', 'Budgeted': r'AnchorMTM, $\varepsilon=10\%$',
+MLAB = {'OLO': 'OLO', 'TMTM': 'TMTM', 'ST-MTM': 'ST-MTM', 'Exact': r'AnchorMTM, $\varepsilon=0$', 'Budgeted': r'AnchorMTM, $\varepsilon=10\%$',
         'Projection': 'Projection'}
 LEAF = {'A': '#D55E00', 'B': '#E69F00', 'C': '#5E3C99', 'D': '#B2ABD2'}   # subtree X warm, subtree Y purple
 GRID = '#E3E7EA'; FORCED = '#2B2B2B'
@@ -203,6 +203,7 @@ def compare_values():
                                       ME=100 * int(r['motion_errors']) / int(r['N_clear']), SNS=float(r['SNS']), TW=float(r['TW1']))
         for m, k in [('Projection', 'projection'), ('Exact', 'eps=0'), ('Budgeted', 'eps=0.1')]:
             d[m] = dict(NROE=100 * F[k]['NROE'], NMLE=100 * F[k]['NMLE_max'], ME=me(Qs[k]), SNS=Qs[k]['SNS'], TW=Qs[k]['TW1'])
+        d['OLO'] = dict(NROE=NATIVE[n]['OLO']['best'])   # order only: OLO is evaluated by NROE alone
         d['nu'] = 100 * BUDGET[n]['budget_sweep'][0]['lower_mean']   # c0: bound at Exact Mode's numerical allowance eps0 (S16)
         d['nu_strict'] = 100 * BUDGET[n]['nu_tie_sensitivity']['0']   # nu*: strict exact-topology bound (Theorem 1)
         out[n] = d
@@ -212,26 +213,26 @@ def compare_values():
 def fig_compare_v2():
     V = compare_values(); fig = plt.figure(figsize=(7.0, 2.35))
     g = fig.add_gridspec(2, 3, width_ratios=[2.25, 1, 1], hspace=1.0, wspace=.3)
-    ax = fig.add_subplot(g[:, 0]); x = np.arange(len(NAMES)); w = .26
+    ax = fig.add_subplot(g[:, 0]); x = np.arange(len(NAMES)); w = .21
     frac = {}
-    for j, m in enumerate(['TMTM', 'ST-MTM', 'Exact']):
-        xo = x + (j - 1) * w; tot = np.array([V[n][m]['NROE'] for n in NAMES])
+    for j, m in enumerate(['OLO', 'TMTM', 'ST-MTM', 'Exact']):
+        xo = x + (j - 1.5) * w; tot = np.array([V[n][m]['NROE'] for n in NAMES])
         nu = np.array([V[n]['nu' if m == 'Exact' else 'nu_strict'] for n in NAMES])   # strict maps: nu*; Exact Mode: c0
         ex = np.clip(tot - nu, 0, None)
         ax.bar(xo, nu, w * .92, color=FORCED, lw=0)
         ax.bar(xo, ex, w * .92, bottom=nu, color=M[m]['c'], lw=0, alpha=1 if m != 'Exact' else .9)
         if m != 'Exact':
             frac[m] = 100 * ex / tot
-            for xi, t, fr in zip(xo, tot, frac[m]): ax.text(xi, t + .5, f'{fr:.0f}', ha='center', fontsize=5.6, rotation=90, va='bottom')
+            for xi, t, fr in zip(xo, tot, frac[m]): ax.text(xi, t + .5, f'{fr:.0f}', ha='center', fontsize=5.2, rotation=90, va='bottom')
     ax.axvline(4.5, color='#999', lw=.6); ax.text(4.4, 34, 'planar', ha='right', va='top', fontsize=5.6, color='#666'); ax.text(4.6, 34, 'volumetric', va='top', fontsize=5.6, color='#666')
     ax.set_xticks(x); ax.set_xticklabels([LABEL[n] for n in NAMES], fontsize=5.7)
     ax.set_ylabel('Order error NROE (%)', fontsize=6.3); ax.set_ylim(0, 36); ax.tick_params(labelsize=6, length=2)
     ax.yaxis.grid(True, color=GRID, lw=.5); ax.set_axisbelow(True)
-    h = [Rectangle((0, 0), 1, 1, color=FORCED)] + [Rectangle((0, 0), 1, 1, color=M[m]['c']) for m in ('TMTM', 'ST-MTM', 'Exact')]
-    ax.legend(h, [r'forced by hierarchy ($\nu^*$, Thm. 1; $c_0$ for $\varepsilon=0$)', 'avoidable: TMTM', 'avoidable: ST-MTM', r'avoidable: AnchorMTM $\varepsilon=0$'],
+    h = [Rectangle((0, 0), 1, 1, color=FORCED)] + [Rectangle((0, 0), 1, 1, color=M[m]['c']) for m in ('OLO', 'TMTM', 'ST-MTM', 'Exact')]
+    ax.legend(h, [r'forced by hierarchy ($\nu^*$, Thm. 1; $c_0$ for $\varepsilon=0$)', 'avoidable: OLO', 'avoidable: TMTM', 'avoidable: ST-MTM', r'avoidable: AnchorMTM $\varepsilon=0$'],
               fontsize=6, loc='upper center', ncol=2, handlelength=1, columnspacing=.8, bbox_to_anchor=(.5, -.1))
     ax.set_title('(a) Order error: forced by the hierarchy vs avoidable (labels: % avoidable)', pad=3, fontsize=6.3, fontweight='normal')
-    print('avoidable % TMTM', np.round(frac['TMTM'], 1), 'ST-MTM', np.round(frac['ST-MTM'], 1))
+    print('avoidable % OLO', np.round(frac['OLO'], 1), 'TMTM', np.round(frac['TMTM'], 1), 'ST-MTM', np.round(frac['ST-MTM'], 1))
     print('exact minus c0', {n: round(V[n]['Exact']['NROE'] - V[n]['nu'], 3) for n in NAMES})
     small = [('NMLE', 'Worst merge error (%)', g[0, 1]), ('ME', 'Motion error (%)', g[0, 2]),
              ('SNS', r'Distance stress SNS $\downarrow$', g[1, 1]), ('TW', r'Trustworthiness TW $\uparrow$', g[1, 2])]

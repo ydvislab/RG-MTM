@@ -76,3 +76,46 @@
 - `paper/anchor_full/main_zh.tex` 按英文 v10 逐段重译：摘要与引言（606/614 帧、31--95%）、第 4 节新顺序（模型 → 下界 → 参考 → 构造，含框架图）、第 5--7 节全部改写内容（最有利朝向规则、53--95% / 69--95% / 31--41% 分组表述、曲线 0.3--12.6%、OLR 19.3%、Θ0 敏感性 578--608、局限中的配置一句）。
 - 旧中文稿中英文已删去的内容（Vortex 段、复杂度与软件版本句等）一并删去。
 - 编译：`tectonic -X compile main_zh.tex`，17 页，无未定义引用。PDF：`AnchorMTM_draft_v10_zh.pdf`。
+
+## 九、加入 OLO 并按两类方法重组对比（11/6，v11）
+
+用户担心只和 TMTM、ST-MTM 比"有针对性"，决定："Add OLO and reframe"。
+
+- **OLO 基线**：Bar-Joseph 2001 的最优叶序，代价是支撑质心的相邻距离，每帧取与前一帧一致的镜像。它就是 ST-MTM 在 r=1 时的排序。少数帧上时间一致叶序的代价不高于 SciPy 的 OLO，此时保留该叶序：平面 5/614，Tangaroa 51/201，Cylinder 10/102。OLO 没有锚点，只比较 NROE。
+  - 平面数据：`stmtm_threshold20261106/results.json`，取 `thresholds['1']`。
+  - 体数据：新脚本 `figure_drafts/olo_volume.py`，输出 `figdata/stmtm_threshold20261106/olo_volume.json`。
+    - 本机没有 Tangaroa 的原始 TTK 树，所以从 features.json 保存的 hierarchy 重建二叉树，按 Adapter 的右链方式细化。
+    - 核验：同一代码在 r=0.95 时逐帧复现保存的 ST-MTM 叶序，Tangaroa 201/201，Cylinder 102/102。
+    - 解释器：`~/Desktop/RG-MTM/.venv/bin/python`。
+- **OLO 结果**：取最有利镜像，括号内为不是树迫使的比例。
+
+  | 序列 | NROE |
+  |---|---|
+  | Storms | 15.60（76%） |
+  | Wildfires | 19.06（70%） |
+  | OLR | 16.27（95%） |
+  | PM2.5 | 5.17（81%） |
+  | Ring | 4.23（37%） |
+  | Tangaroa | 15.44（40%） |
+  | Cylinder | 18.03（32%） |
+
+  与 ST-MTM 很接近（两者叶序相差很小）。
+- **合起来的结论**：
+  - 四个真实平面序列上，三种保层次排序均为 69--95%；
+  - Ring 和体数据上，TMTM 为 53--63%，OLO 和 ST-MTM 为 31--41%；
+  - 摘要和结论中的 31--95% 不变，主语改为"三种保层次排序（OLO、TMTM、ST-MTM）"。
+- **正文改动**：
+  - 摘要、引言、贡献和结论的主语改为三种排序；引言加一句"下界也能衡量已有的排序"。
+  - 相关工作加入 Temporal Treemaps 和 Nested Tracking Graphs（按少交叉排列嵌套特征带，坐标无物理方向），并说明把 OLO 当作通用排序规则来评估。
+  - 5.1 对比方法分为两类："保层次的排序"（OLO、TMTM、ST-MTM）和"位置优先的显示"（投影、曲线、Hovmöller）。
+  - 5.3 小标题改为 "...of hierarchy-preserving orderings"，按两类数据分组陈述，加一句"未被树迫使的误差是这些排序规则共有的"。
+  - 图 4a 加 OLO 柱，图注同步修改；附录表 S6（`supp_stmtm_threshold`）加 OLO 两列。
+- **为保持正文 9 页而删去的内容**：
+  - 5.3 的 Storms 18.3%/3.8% 例句；
+  - "与中点初始化相符"；
+  - 运行时间句合并为 94--137 s；
+  - 讨论中的 Hovmöller 互补句；
+  - 结论的下一步缩短。
+- **产出**：
+  - PDF：`AnchorMTM_draft_v11_en.pdf`（正文到第 9 页，共 11 页）、`AnchorMTM_supplement_v6.pdf`（18 页）、`AnchorMTM_draft_v11_zh.pdf`（17 页，已同步）；
+  - Overleaf 包 42 个文件，从零编译通过。

@@ -1,0 +1,30 @@
+{
+  "body_pages": 9,
+  "total_pages": 10,
+  "snapshots": [
+    0,
+    10,
+    20,
+    30,
+    39
+  ],
+  "guidance": [
+    0,
+    0.1,
+    0.25,
+    0.5,
+    1
+  ],
+  "all_ours_continuous_and_rendered_checks_passed": true,
+  "github_previous_release": "e082eb2",
+  "progressive_guidance": true,
+  "our_group_dashed": true,
+  "native_ppt_count": 8,
+  "all_ppts_single_slide": true,
+  "figure_outer_white_margins_trimmed": [
+    3,
+    4,
+    5,
+    8
+  ]
+}

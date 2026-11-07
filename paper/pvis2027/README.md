@@ -1,21 +1,82 @@
-# AnchorMTM — current paper
+# 最新整理版（2026-11-07）
 
-Only the current manuscript, companion supplement, two figures, and their editable PowerPoint sources are retained here.
+[论文和8张图对应PPT](最新论文与配图PPT_20261107/说明.md) · [完整打包下载](最新论文与配图PPT_20261107.zip)。正文9页、总10页；图7为联合位置引导与拓扑预算渐进设置，补充TMTM/ST-MTM与五张源场快照；图3/4/5/8已裁去图外白边。主表未改变。
 
-- [Main paper (PDF)](drafts/method_anchor_figures_updated_en.pdf) · [LaTeX](drafts/method_anchor_figures_updated_en.tex)
-- [Supplement (PDF)](drafts/method_anchor_single_parameter_supplement.pdf) · [LaTeX](drafts/method_anchor_single_parameter_supplement.tex)
-- Figure 1: [PDF](figures/anchor_storms_overview.pdf) · [editable PPTX](figures/editable/Storms_feature_support_improved.pptx)
-- Figure 2: [vector PDF](figures/anchor_leaf_correspondence.pdf) · [PNG](figures/anchor_leaf_correspondence.png) · [editable PPTX](figures/editable/AnchorMTM_cross_frame_solid_editable.pptx)
+# 最新图6同步（2026-11-07）
 
-The first figure uses the current editable central-Storms sequence figure: five snapshots (frames 363, 385, 408, 430, 452), one matched extremum (stored Track 260), mapped profiles at the saved 5% budget, twelve colored intermediate profiles with dashed borders, and the complete 744-frame map. Date labels come from the original saved timestamps. The matching identity endpoints do not establish physical storm genesis or dissipation. The source is `output/storms_central_lifecycle_real_20261102/ppt/Storms_central_lifecycle_editable.pptx`; scientific data come from `output/storms_hourly_anomaly_fine_20261030/coherent/maps.npz` (`eps_0.05`). The correspondence figure retains the updated supports and compact full-column layout. The main paper has 7 pages; the companion supplement has 8 pages. Experiments, Discussion, and Conclusion remain placeholders.
+论文图6现采用用户手动改进后的当前PPT直接导出，图面保持原样，仅裁去外围白边。正文9页、共10页。源PPT未改动，校验与导出留档位于figures/source/fig6_user_final_20261107/。
 
-## Build
+# 最新图6结构（2026-11-07）
 
-Run from `drafts/`, using a TeX installation with `algorithm2e` and the standard AMS, graphics, font, and hyperlink packages:
+上排保留0/2/5/10/20%五张原参数图，无折线图；下排为同一744帧输入重算的TMTM、ST-MTM实际结果，统一355–460时间窗口与蓝橙色标；⑧⑨标实际替换/补充的布局模块。正文9页、总10页。完整图源和基线配置见figures/source/storms_structure_20261107/。
 
-```sh
-tectonic -X compile method_anchor_figures_updated_en.tex
-tectonic -X compile method_anchor_single_parameter_supplement.tex
-```
+# 本轮最终修正
 
-The bundled `vgtc.cls`, bibliography style, and `../refs.bib` are required. Generated compiler caches and logs are excluded. This cleanup changes no method implementation or experimental results. Historical paper files remain available in Git history.
+首图逐字节还原；图6恢复原蓝橙色；图7压紧；图8 XYZ按对应三维轴边投影定位；参数说明表置前并自动编号为表1，比较表为表2。首图原样，其他新图字体约9 pt。正文9页，含参考文献10页。验证见figures/source/corrections_20261106/。
+
+# 最新版本
+
+2026-11-06：所有配图字号略缩小（约4.5%），Ring保留单面板细黑框、无总外框，Cylinder高度压缩为3.1英寸。正文9页，含参考文献10页；正文保持模板字号，收紧行距和浮动间距。
+
+# AnchorMTM — 当前论文与大纲
+
+- [正文 PDF](最新论文与三张PPT/AnchorMTM_最新论文.pdf) · [LaTeX](drafts/method_anchor_figures_updated_en.tex)
+- [完整中文大纲（重点修订第五节）](OUTLINE_zh.md)
+- [当前八张正文配图](figures/FIGURE_INDEX.md)
+- [补充材料](drafts/method_anchor_single_parameter_supplement.pdf)
+
+## 最新修订：Ring紧凑对照（2026-11-06）
+
+图7更新为单栏四图对照：左列AnchorMTM 0%居中/20%靠上，右列使用用户附件Hilbert/Morton图面，下排三张快照。按最新要求去除所有黑框，字体统一Times New Roman 11 pt。图注区分布局坐标、曲线序号与截图色标来源；主表不变。正文第8页，含参考文献共10页。原流程图保持不变。
+
+源码与复核见[本轮记录](figures/source/ring_compact_comparison_20261106/README.md)。以下为此前修订记录，Ring布局以上文为准。
+
+## 最新修订（2026-11-06，Ring与字号）
+
+Ring只保留20%预算、位置引导开启的一张结果图，下排第0、20、39帧原始场快照。采用用户参考图对应的固定方向−128.7°，真实重算并通过连续和栅格检查，不作显示平移。该指定方向配置与主表自动方向−58.3°不同，正文已明确说明。图7位于第8页，论文正文9页、含参考文献共10页。
+
+原流程图（现图2）已按用户最新要求逐字节恢复，内容和布局不变。图3缩至0.85栏宽。其余正文配图主要字体为Times New Roman，实际印刷字号约10.5–11 pt，大于正文8.97 pt；数学上标按排版比例缩小。字号调整使用原生图形和文字源，保留原数据。修改记录、备份与复算脚本见[readability_20261106](figures/source/readability_20261106/README.md)。
+
+以下为此前修订记录，图号与具体配置可能已更新；当前配置以上文和图件索引为准。
+
+## 此前修订（2026-11-06）
+
+暂撤原图2（既有流程示意）并删除正文引用，源资产保留。实验结果增加Ring单栏图（现图7）：主表Balanced 1%时序结果，下排第0、20、39帧原始场快照；正文增加对应案例说明。图号及交叉引用已重新编译，论文仍为10页，Ring位于第8页。当前图号以[图件索引](figures/FIGURE_INDEX.md)为准。
+
+以下为此前修订记录（图号可能已顺延）。
+
+## 此前修订（2026-11-06）
+
+图6只保留原第二行的事件地图与局部放大，保留五个预算列标题。正文暂撤原图7、8预算诊断曲线，源文件保留；原图9 Cylinder变体自动顺延为图7。图6两行原始资产与PPT仍保留，正文使用独立的anchor_storms_budget_maps.pdf。
+
+第五节调整为：数据与评估协议、参考定位与空间质量、拓扑有效性与放松效果、Storms案例、参数与计算成本、三维探索案例。正文删除被撤曲线的引用与密集趋势叙述，保持四数据集主表和所有测量值不变。完整写作逻辑与证据边界见中文大纲。
+
+从仓库根目录运行 `python3 paper/pvis2027/build_main.py` 编译正文。历史章节生成器 `section5_revision_20261105/source/update.py` 尚未迁移本轮结构，不应直接运行覆盖当前正文。
+
+正式四数据集结果见[比例p实验](experiments_ratio_p_20261104/REPORT_zh.md)。Gaussian、Ring、Wildfires、Storms的Balanced预算分别为1%、1%、5%、10%。完整原始数据和大型中间数组仍保留在本地。
+
+## 最新排版（2026-11-06）
+
+使用 IEEE VGTC Conference review 模式，保留模板字体、双栏尺寸、页边距及原图细节。正文9页，含参考文献共10页。图4–6沿用原图构图，已将浅灰背景清理为纯白并覆盖原PNG、配图PDF和PPT内嵌图片，不采用近似重绘版本。清理仅作用于近白色区域，使用平滑过渡保留渐变边缘，文字、深色线条及饱和颜色保持原像素。
+
+| 页码 | 图表与对应内容 |
+|---|---|
+| 1 | 图1：Storms概览与研究动机 |
+| 2 | 图2：既有TMTM / ST-MTM流程与相关工作 |
+| 3 | 图3：AnchorMTM完整流程框架；本页无其他图 |
+| 4 | 图4：运动方向与固定空间参考 |
+| 5 | 图5：参考顺序与拓扑连续块冲突 |
+| 6 | 图6：选择性拓扑放松与理论分析 |
+| 7 | 表1、2：四数据集比较、参数与运行时间 |
+| 8 | 图7：Storms预算案例 |
+| 9 | 图8：Cylinder三维探索案例 |
+| 10 | 参考文献 |
+
+正文每页均至少包含一张图或表。图2、3保留已有可编辑PPT；图4–6的原生形状重建暂不纳入本版，以确保原图一致。
+
+后续PPT更新：图4–6的PPT已替换为619个原生可编辑对象组成的三页版本，见[重建说明](figures/source/open_mechanisms_native_20261106/README.md)。本次只更换PPT，正文PDF配图继续保留已批准的原始图面；原生重绘的平滑纹理及字体渲染与栅格原图存在细微差异。
+
+[图件索引](figures/FIGURE_INDEX.md)列出当前编号及对应资产。格式依据：[PacificVis 2027 submission guidelines](https://pacificvis2027.github.io/contribute/paper-submission-guidelines/)。
+
+
+最新同步：三图说明文字统一为Times New Roman正体、32 px；数学标签保留斜体。第二图AB/CD根节点等高，第三图圈出放松节点。正式PPT共632个原生对象，正文图4–6现使用该PPT经办公软件渲染的3072×2048截图，替代上一版图面。

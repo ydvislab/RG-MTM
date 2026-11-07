@@ -53,3 +53,4 @@
 - 已改正其中的错误表述（证书互不占优、Exact Mode 定义、NPE 百分比、跨来源 SNS 排名）。对比、核对和待定事项见 `2026-11-07-pvis2027-base-review.md`。
 - 11/7 晚 v14：按建议补下界实验（新 5.5 节、Cylinder 中心树移到附录）、主表发表值不参与排名、摘要引言按 v12 重写；图 7 待定。见 `2026-11-07-pvis2027-base-review.md` 第六节。
 - 11/7 晚 v15：图 7 选 C，面板标出 α，图注与 5.6 节同步。
+- 11/7 晚：中文版同步到 v15（`paper/pvis2027/drafts/method_anchor_figures_updated_zh.src.tex` → `make_zh.py` → `..._zh.tex`，PDF `paper/AnchorMTM_1037_v15_zh.pdf`）；大白话版 `2026-11-07-paper-plain-zh.md`。用户要求暂不推送，后台推送已停（origin 上留有临时分支 `tmp-upstream-sync`，推送完成后删除）。

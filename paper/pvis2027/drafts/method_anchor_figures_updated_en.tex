@@ -38,7 +38,7 @@
 \newcommand{\pos}[1]{\left[#1\right]^+}
 \title{AnchorMTM: Spatially Anchored Merge Tree Maps\\for Time-Varying Scalar Fields}
 \author{Anonymous Authors}
-\onlineid{0}
+\onlineid{1037}
 \vgtccategory{Research}
 \vgtcinsertpkg
 \hypersetup{pdftitle={AnchorMTM: Spatially Anchored Merge Tree Maps for Time-Varying Scalar Fields},pdfauthor={Anonymous Authors}}
@@ -141,7 +141,7 @@ We track merge-tree leaf extrema $p_i^t$ using their leaf-arc supports $S_i^t$. 
 \begin{equation}\label{eq:overlap}
  O_{ij}^t=|S_i^t\cap S_j^{t+1}|.
 \end{equation}
-Hungarian assignment maximizes total intersection count over one-to-one pairs, discarding zero-overlap pairs. The objective is not intersection over union (IoU). The assigned links define the identity states described below.
+Hungarian assignment maximizes total intersection count over one-to-one pairs, discarding zero-overlap pairs. The assigned links define the identity states described below.
 
 \emph{Continuation} inherits a Track ID; \emph{birth/death} starts an unmatched current identity or ends an unmatched previous track. For \emph{non-bijective correspondence}, including potential one-to-many, many-to-one and ambiguous relations, only the assigned one-to-one links are retained. These identity states neither identify physical split/merge events nor form a branching lineage. For a current leaf $i$, $\mu_t(i)$ denotes its valid predecessor. The layout receives precomputed tracks aligned to leaf rows; upstream support and confidence conventions are detailed in Supplementary Material.
 
@@ -169,7 +169,7 @@ Figure~\ref{fig:direction-open} illustrates the shared reference. For the select
 \begin{equation}\label{eq:reference}
  q_i^t=\langle a^*,p_i^t\rangle-o\in[0,L].
 \end{equation}
-Direction, origin and scale remain fixed across frames and all budgets for the same prepared sequence. Implementation arrays store raw projections on $[o,o+L]$; translating both references and layout coordinates by $-o$ gives the paper convention. The origin is subtracted once, not again by the solver. Distinct extrema can share projected coordinates while retaining separate identities. Anchoring minimizes constrained deviation rather than requiring $x_i^t=q_i^t$.
+Direction, origin and scale remain fixed across frames and all budgets for the same prepared sequence. Distinct extrema can share projected coordinates while retaining separate identities. Anchoring minimizes constrained deviation rather than requiring $x_i^t=q_i^t$.
 
 Relative geometry uses distances $d_{ij}^t$ between leaf-support centroids. These differ from extremum references because a changing support can move its centroid while the extremum stays fixed. The automatic-reference adapter supplies extrema explicitly; the low-level solver also accepts precomputed references and otherwise defaults to centroid projection. Widths $W_i^t=s\,m_i^t$ convert positive support measures with a fixed scale $s$, without per-frame normalization.
 
@@ -201,7 +201,7 @@ For distinct labels, let $V_{ij}^{\psi}$ be the maximum profile value between th
  \eta&=(\varepsilon_0+\varepsilon)\Delta_F.
 \end{aligned}
 \end{equation}
-Here $\Delta_F>0$ is the sequence-wide scalar range, $\varepsilon_0$ is a fixed numerical allowance, and $\varepsilon\ge0$ is the sole primary user control. The implementation defaults to $\varepsilon_0=10^{-7}$. There is no 20\% cap: 100\% is neither a mathematical upper bound nor necessarily unrestricted topology. NMLE reports the achieved normalized error $\dtop/\Delta_F$. Exact topology means zero labelled error on the declared tree. A nonzero tie allowance is accounted for in $\eta$.
+Here $\Delta_F>0$ is the sequence-wide scalar range, $\varepsilon_0$ is a fixed numerical allowance, and $\varepsilon\ge0$ is the sole primary user control. The implementation defaults to $\varepsilon_0=10^{-7}$. NMLE reports the achieved normalized error $\dtop/\Delta_F$. Exact topology means zero labelled error on the declared tree. A nonzero tie allowance is accounted for in $\eta$.
 
 All remaining settings belong to a fixed configuration $\Theta_0$: position slack $\beta_0$, the four objective weights, width scale, gap, anchor slack and output resolution. For a prepared sequence, the default interface is $M_t^\varepsilon=\operatorname{AnchorMTM}(T_t,q_t,W_t,V_t,\mu_t;\varepsilon,\Theta_0)$. Advanced settings may be supplied once, but only $\varepsilon$ varies in a budget sweep. Supplementary Material specifies the fixed scale rules and implementation tolerances.
 
@@ -247,7 +247,7 @@ $\eta\leftarrow(\varepsilon_0+\varepsilon)\Delta_F$\;
 \end{algorithm}
 
 \subsubsection{Topology-Budgeted Leaf Ordering}
-\emph{Exact Mode} sets $\eta=0$ and requires zero labelled merge error on the supplied tree. \emph{Budgeted Mode} permits $\eta>0$. Setting only the additional budget $\varepsilon=0$ while retaining $\varepsilon_0>0$ gives a numerical allowance, not zero labelled error. Both modes share the same interval model and placement objective.
+\emph{Exact Mode} sets $\varepsilon=0$, leaving only the numerical allowance $\eta=\varepsilon_0\Delta_F$, which merges saddles tied to within $\varepsilon_0\Delta_F$; strict exact topology is $\eta=0$. \emph{Budgeted Mode} permits $\varepsilon>0$. Both modes share the same interval model and placement objective.
 
 Candidate generation includes the exact tree, threshold flattenings, and a conflict-driven selective flattening. Midpoint orders initialize these structures. Width-aware block insertion refines the four best initial structures, together with the exact tree, while retaining the point-model budget order as a candidate. Moves improve the lexicographic score consisting of $\tau$ and a squared packing-residual term, and must pass $\delta^*(\pi)\le\eta$. Visited initial and trial orders are retained in the deduplicated pool, including the strict-tree initialization and retained point candidate. Final budget filtering and lexicographic selection use the exact fixed-order costs; refinement does not certify a global optimum over permutations. 
 
@@ -296,7 +296,7 @@ A common direction, origin, extent, and pixel conversion are used for all frames
 \begin{equation}\label{eq:map}
  I^\varepsilon(t,u)=\psi_t^\varepsilon(u),\qquad 0\le u\le L.
 \end{equation}
-There is no per-frame recentering. Resampling does not retain every source sample, and corrected interior values need not remain in the original scalar range. Strict-extremum clearance and raster rounding can change the achieved error. Raster-capacity and nonfinite-value errors stop reconstruction; the existing optimal-filling analysis records measured budget deviations and topology diagnostics without automatic repair or a universal rejection gate. Full-tree interpretation additionally requires checking label coverage. A recorded profile is therefore not unconditionally certified by $\delta^*\le\eta$. Records distinguish the requested budget, position certificates, attained $\tau$, continuous $\delta^*$, and actual rendered errors. 
+There is no per-frame recentering. Resampling does not retain every source sample, and corrected interior values need not remain in the original scalar range. Strict-extremum clearance and raster rounding can change the achieved error. Full-tree interpretation additionally requires checking label coverage. A recorded profile is therefore not unconditionally certified by $\delta^*\le\eta$. Records distinguish the requested budget, position certificates, attained $\tau$, continuous $\delta^*$, and actual rendered errors. 
 
 \begin{figure}[t]
 \centering
@@ -381,7 +381,7 @@ In a profile with $\dtop\le\eta$, no leaf outside $\mathcal{D}(A_\eta(u))$ can l
 \end{equation}
 with the second inequality applying to the interval model.
 \end{theorem}
-The separation principle excludes interleaving for each eligible pair; the two possible orientations then yield $\kappa$ and $\omega$. Thus $C_\eta$ bounds normalized reference-order error, while $C_{w,\eta}$ includes finite-width and boundary costs in coordinate units. Accumulated ancestor gaps make these certificates at least as strong as those obtained by flattening every parent gap at most $2\eta$.
+The separation principle excludes interleaving for each eligible pair; the two possible orientations then yield $\kappa$ and $\omega$. Thus $C_\eta$ bounds normalized reference-order error, while $C_{w,\eta}$ includes finite-width and boundary costs in coordinate units. Flattening every parent gap of at most $2\eta$ gives a second valid certificate; neither dominates, since flattening also separates single-leaf pairs that $\mathcal{P}_\eta$ omits, and we report the larger.
 
 The allowance concerns the displayed hierarchy; the source field and feature identities stay fixed. A larger feasible set need not improve every feature or every heuristic result. These bounds are reported as benchmarks for unavoidable error; ranking and continuous acceptance use the exact fixed-order evaluations in Section~\ref{sec:construction}. Continuous feasibility does not certify the full rendered raster.
 
@@ -399,7 +399,7 @@ Within each local dataset, methods share source trees, identities and geometry i
 \begin{equation}\label{eq:experimental-npe}
 \mathrm{NPE}=\frac{1}{T}\sum_t\frac{\max_i|x_i^t-q_i^t|}{L_{world}}.
 \end{equation}
-TMTM/ST-MTM SNS/TW are quoted from ST-MTM Table~1 (Temporal mode); their NPE is measured with local adapters and shared references. Table~\ref{tab:quantitative-final} distinguishes these sources. Local TW coverage is 64/64, 1/40, 4/32 and 11/744; author coverage is unspecified.
+TMTM/ST-MTM SNS/TW are quoted from ST-MTM Table~1 (Temporal mode); their NPE is measured with local adapters and shared references, each mirrored once if its first multi-leaf frame correlates negatively with the reference. Table~\ref{tab:quantitative-final} distinguishes these sources. Local TW coverage is 64/64, 1/40, 4/32 and 11/744; author coverage is unspecified.
 
 Hilbert and Morton provide sample-domain baselines~\cite{Franke:2021:1DP}. Their grid orientation is fixed ($x$ columns, $y$ rows), with no rotation, reflection or reversal search. Curves use power-of-two padding, discard out-of-domain samples, and map each extremum's full-grid rank to the common canvas at the original raster length. They impose neither merge-tree topology nor finite-width constraints.
 
@@ -434,7 +434,7 @@ Terms are min--max normalized over legal candidates; constant terms contribute z
 
 \subsection{Reference Positioning and Spatial Quality}
 
-Balanced has lower SNS than the published ST-MTM values on all four inputs, but ST-MTM reports higher TW. The reconstruction and coverage differences prevent identical-input superiority claims; Wildfires Exact's TW of 0.9136 is also too close to the published two-decimal 0.91 to establish an advantage.
+ST-MTM reports higher TW than AnchorMTM on all four inputs. Its published SNS values are higher than our local ones, but they come from the authors' inputs and frame coverage, so we do not rank SNS or TW across these sources; Wildfires Exact's TW of 0.9136 is also too close to the published two-decimal 0.91 to establish an advantage.
 
 Against fixed Hilbert and Morton curves, Balanced improves SNS and TW on Gaussian, Wildfires and Storms. Ring is an exception: Hilbert achieves SNS 0.1252 and TW 0.9048, versus Balanced's 0.1334 and 0.8571; its TW evidence covers only one eligible frame. Balanced has lower NPE than both curves and both merge-tree adapters on every input. Reductions relative to the ST-MTM adapter are 92.3\%, 84.0\%, 96.3\% and 96.9\%. This supports alignment to the specified reference, not general visualization quality: traversal coordinates need not represent a physical projection, and relative geometry does not determine an absolute origin.
 
@@ -445,7 +445,7 @@ Table~\ref{tab:volume-comparison} follows the planar table's metric order and Ex
 \subsection{Topology Validity and the Effect of Relaxation}
 Exact has zero fixed-leaf merge-matrix error. Balanced attains maximum NMLE of 0, 0.982\%, 4.421\% and 9.985\%, within its allowances; all eight runs pass continuous and raster checks without collapsed anchors. Checks include diagonal extrema, not every augmented internal label. Ring requires checked joint integer rounding in 26 Exact and 21 Balanced frames, retaining its 196 positions and continuous order.
 
-Balanced reduces NPE relative to Exact by 17.0\% on Ring, 11.0\% on Wildfires and 65.0\% on Storms. Gaussian is unchanged despite its positive 1\% budget. SNS improves on Ring and Storms but rises from 0.0426 to 0.0447 on Wildfires. Budget relaxation therefore does not improve every metric.
+Balanced reduces NPE relative to Exact by 16.2\% on Ring, 11.6\% on Wildfires and 64.9\% on Storms. Gaussian is unchanged despite its positive 1\% budget. SNS improves on Ring and Storms but rises from 0.0426 to 0.0447 on Wildfires. Budget relaxation therefore does not improve every metric.
 
 These Exact--Balanced comparisons measure the effect of the selected allowances, rather than a component ablation. A positive allowance need not change the selected order or improve reference positioning. The budget constrains merge-level error; it is not a direct bound on spatial displacement.
 
@@ -478,7 +478,7 @@ The empirical comparison has three limitations. First, author-processed fields a
 
 The experiments also do not establish perceptual readability, physical-motion judgment accuracy, repeated-run speedups or generalization to unseen datasets. These require separate studies. Keeping source provenance, coverage, failed candidates and attained topology errors alongside the numerical scores is necessary when extending this evaluation.
 \section{Conclusion}
-AnchorMTM connects merge-tree maps to a shared spatial reference through topology-budgeted ordering, constrained anchor placement and checked scalar-profile reconstruction. Position bounds explain conflicts caused by topology and finite widths, while Exact and Balanced expose the resulting position--topology choices in one framework. On four local inputs, the measured layouts improve absolute reference positioning over the baseline adapters; comparison with published SNS values is favorable, while neighborhood preservation remains a limitation. The archived configurations and validity checks make these preliminary findings reproducible within the stated input and evaluation scope.
+AnchorMTM connects merge-tree maps to a shared spatial reference through topology-budgeted ordering, constrained anchor placement and checked scalar-profile reconstruction. Position bounds explain conflicts caused by topology and finite widths, while Exact and Balanced expose the resulting position--topology choices in one framework. On four local inputs, the layouts improve absolute reference positioning over same-input baseline adapters, while ST-MTM's published neighborhood preservation remains higher. The archived configurations and validity checks make these preliminary findings reproducible within the stated input and evaluation scope.
 % Flush pending floats without forcing an otherwise empty bibliography page.
 \FloatBarrier
 \begingroup

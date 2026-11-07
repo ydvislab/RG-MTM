@@ -36,22 +36,22 @@
 
 ### 两句话版
 
-> 现有的合并树图能看出特征怎样嵌套，却看不出它们在哪里、往哪走。我们把图的纵轴固定为一个空间方向，让每个特征尽量靠近它沿该方向的真实位置；保持合并树时偏离不可避免，我们算出它的下限，并给出一个方法：以严格保持合并树为起点，把偏离压到这个下限附近，再只在能减少偏离的地方、用不超过 ε 的合并误差换取更小的偏离。
+> TMTM 和 ST-MTM 都严格保持合并树：TMTM 按树的遍历排列空间样本，ST-MTM 进一步让特征之间的距离接近真实距离；但两者的轴都没有固定的原点和方向，所以特征在轴上的位置不对应固定的空间坐标，所有特征一起移动时图上也看不出来。我们把轴固定为一个空间方向，让每个特征尽量靠近它沿该方向的位置；保持合并树时偏离不可避免，我们算出它的下限，并以严格的合并树为起点，只在能减少偏离的地方用不超过 ε 的合并误差放松。
 
-> Temporal merge tree maps show how features nest, but not where they are or where they move. We fix the map's vertical axis to a spatial direction and place each feature as close to its location along it as the merge tree allows; we prove how close that is, and AnchorMTM starts from the exact tree, comes close to this bound, and relaxes the tree only where a merge error of at most ε reduces the displacement.
+> TMTM and ST-MTM both keep the merge tree exactly; TMTM orders the samples by a tree traversal, and ST-MTM also fits the distances between features, but neither axis has a fixed origin or direction, so a position on it is not a spatial coordinate and a common motion of all features is invisible. We fix the axis to a spatial direction and place each feature as close to its location along it as the merge tree allows; we prove how close that is, and AnchorMTM starts from the exact tree and relaxes it only where a merge error of at most ε reduces the displacement.
 
 ### 问答链（全文的骨架）
 
 | 步 | 读者此时的问题 | 回答 | 位置 |
 |---|---|---|---|
 | 1 | 分析风暴、火点这类时变场时想看什么？ | 一张图里同时看到：有哪些特征、怎样嵌套；它们在哪里、往哪走 | 引言 P1 |
-| 2 | 现有方法缺什么？ | 合并树图把每帧的树画成一条剖面、按时间排开，嵌套看得很清楚；但剖面上的位置是为排版服务的，不对应任何空间方向。向东移动的风暴在图上可以是一条平线 | 引言 P2，图 1 |
-| 3 | 我们怎么做？ | 把这条轴固定为一个空间方向（由特征运动估计，或由用户指定），每个特征画在尽量靠近它投影位置的地方。高度近似位置，轨迹走向反映沿该方向的运动。位置是近似的，但每帧最坏偏离有上限（τ+β0）并随图报告：四个数据上平均为全域的 0.9–4.7%（精确模式），TMTM、ST-MTM 为 11–58% | 引言 P3，第 3 节 |
+| 2 | 现有方法缺什么？ | 两者都严格保持合并树。TMTM 的轴是按树遍历排列的空间样本，子树左右顺序按跨帧重叠贪心选择（原文自述对空间分布"blind"）；ST-MTM 用受层次约束的最优叶序和距离 stress，让特征间距离接近质心距离。但距离不随整体平移、镜像而变，轴没有固定原点和方向：特征的位置不是空间坐标，整体移动看不出来 | 引言 P2，图 1 |
+| 3 | 我们怎么做？ | 把这条轴固定为一个空间方向（由特征运动估计，或由用户指定），每个特征画在尽量靠近它投影位置的地方。高度近似位置，轨迹走向反映沿该方向的运动。位置是近似的，但每帧最坏偏离有上限（τ+β0）并随图报告：四个数据上平均为全域的 0.9–4.7%（精确模式）。TMTM、ST-MTM 不以绝对位置为目标，按同一参考量出来离空间轴 11–58%，这是两种轴的差别，不是它们的错误 | 引言 P3，第 3 节 |
 | 4 | 为什么不能直接这样画？ | 合并树要求同一子树的特征挨在一起，否则合并层次会画错；按空间排序时，不同子树的特征可能交错。例：A、B 同属一棵子树，C、D 属于另一棵，从西到东却是 A、C、B、D。要保持层次，就必须把 B 或 C 挪离真实位置 | 引言 P3，图 2(a–c)，第 3 节 |
 | 5 | 那偏离是谁造成的？ | 读者看到一个特征偏离了位置，需要知道这是树逼出来的，还是算法做得不好。我们证明：只看树和投影位置，就能算出保持层次时最坏偏离的下限（考虑特征宽度后也能算）。它不依赖任何画法，所以画图前就能算，也能用来检查别人的图 | 引言 P4，第 4 节 |
 | 6 | 我们的方法离这个下限多远？ | 精确模式严格保持合并树（实测合并矩阵误差 0），从达到点模型下限的中点叶序出发，再处理宽度和时间连贯。在 614 个真实平面帧中，有 606 帧恰好达到下限 | 第 5 节，6.3 |
 | 7 | 下限本身太大怎么办？ | 以严格的合并树为起点放松：精确树始终是候选；只释放造成偏离的那对兄弟子树（或压平高度差不超过 2ε 的父子间隙）；每个放松后的叶序都按原始合并树计算误差，超过 ε 的淘汰，剩下的选偏离最小的。所以放松只在能减少偏离时发生，显示的合并高度偏离原树不超过 ε（实测 0、0.98%、4.42%、9.99%） | 图 2(d)，4.3，5.1，6.4 |
-| 8 | 实际效果如何？代价是什么？ | 在 ST-MTM 的四个平面数据上，位置误差比 TMTM、ST-MTM 低 73–96%（ε=0）；在早期七序列基准上，它们的顺序误差有 31–95% 不是树逼出来的。代价：ST-MTM 保持邻域关系更好，因为它优化的是相对距离，我们优化的是绝对位置 | 6.2，6.3，第 7 节 |
+| 8 | 实际效果如何？代价是什么？ | 在 ST-MTM 的四个平面数据上，我们的锚点比 TMTM、ST-MTM 的更靠近空间参考，偏离低 73–96%（ε=0）；在早期七序列基准上，它们的顺序误差有 31–95% 不是树逼出来的。代价：ST-MTM 保持邻域关系更好，因为它优化的是相对距离，我们优化的是绝对位置 | 6.2，6.3，第 7 节 |
 
 与第一稿相比：
 
@@ -175,3 +175,44 @@ English:
    - 所有候选都按原始合并矩阵计算 δ\*，超过 ε 的淘汰，按 (τ, NROE) 选最小。
    - 这不是"先画严格的图再修改"，而是逐帧在同一组候选里选；概念上可以讲成"以严格拓扑为起点，按需、有上限地放松"。
    - 放松不会让所选叶序的 τ 比精确树更差（精确树在候选中）。但最终 QP 有 β0 余量和其他目标项，所以不是每个指标都改善：Gaussian 不变，Wildfires 的 SNS 上升。
+
+## 十、11/8 用户追问：TMTM、ST-MTM 的轴真的没有空间含义吗？（主线第四稿）
+
+用户："TMTM、ST-MTM：纵轴没有空间含义吗？他们的核心概念也是保证了拓扑正确吧？你有没有看到这两篇论文？"
+
+前一稿说"纵轴没有空间含义"不对，已改。核对依据：
+
+**TMTM**（本机 `references/pdf/koepp22.pdf`，11/8 重新读原文）
+- 拓扑：原文摘要说线性化后的函数 "has the same merge tree as the original data"，严格保持。
+- 轴：标为 "linearized space"，是对空间域按合并树做的线性化。每个输出位置对应一个原始样本，可以反查回原位置。
+- 顺序：每个内部结点选左右子树的遍历顺序，按相邻帧子树重叠贪心优化，目的是时间连贯。
+- 原文自述的局限：
+  - 任何空间降维都会限制特征的空间运动，"This is also the case for our linearization"；
+  - "our method is blind to the different spatial distribution of the data"（图 12 a 与 d）。
+
+**ST-MTM**（预印本 SSRN 6604235；**本机没有 PDF**，provenance 里只有哈希。依据合作者按 §4.1–4.2 的复现 `code/src/rgmtm/baselines/stmtm.py`，以及 9 月按原文写的逐节对照 `RA-MTM/docs/solver.md`）
+- 拓扑：受层次约束的最优叶序（OLO），子树保持连续，严格保持合并树。
+- 几何：
+  - OLO 减小相邻特征质心距离；
+  - Eq. (1) 距离感知投影：锚点间距离拟合质心间距离，并锚定上一帧显示位置；
+  - Eq. (2) 按大小分配区间；
+  - 指标 SNS、TW 衡量相对距离与邻域。
+- 轴有**相对**空间含义（谁离谁近），但没有固定原点和方向：
+  - 距离矩阵在整体平移、镜像下不变，所以特征一起移动时距离项看不到；
+  - 东西方向也不固定，基线 NPE 因此需要镜像。
+
+**更正后的区别**：三者都保持合并树（我们是在精确模式下）。区别在轴上的位置表示什么：
+
+| 方法 | 位置表示什么 |
+|---|---|
+| TMTM | 树遍历中的位置（嵌套、大小、寿命） |
+| ST-MTM | 特征之间的相对距离 |
+| AnchorMTM | 沿固定方向、固定原点的绝对位置 |
+
+所以创新点是**从相对空间到绝对空间**，再加上可控的拓扑放松。不是"给轴加上空间含义"，这一点 ST-MTM 已经做了一部分。
+
+**v15 正文本来就是对的**：引言写的是 "Neither gives its display axis a fixed spatial meaning: TMTM orders leaves for the tree and for temporal alignment, and pairwise distances fix relative positions but no origin or direction."，重构时保留这个说法。
+
+**NPE 的口径**：TMTM、ST-MTM 不以绝对位置为目标，按我们的参考量出来的偏离只说明它们的轴不是空间轴，不能写成它们的错误。
+
+**待办**：如需逐句核对 ST-MTM 原文，需要下载 SSRN 预印本（先征得用户同意），或从用户其他机器拷贝。

@@ -28,27 +28,47 @@
    - "从图里能读出什么"只有最后两段很短的案例。
    - 可视化论文的价值首先要在图上让人看见。
 
-## 二、全文只讲一件事
+## 二、主线（11/8 第二稿，替换第一稿）
 
-> **A merge tree map can show where features are, not only how they nest, if its vertical axis is a fixed spatial direction. The hierarchy prevents doing this exactly; we compute how much position the hierarchy costs before any map is drawn, build maps that pay little more than that cost, and let one control, a declared merge-error budget, buy position back.**
+用户 11/8："感觉你的主线说的不是很流畅……大概意思是对的，但是讲的不通顺，需要把主线说清楚之后再改。"
 
-大白话：让合并树图的纵轴变成真实的空间方向，这样就能从图上读出位置和运动；树结构让这件事不能完全做到，但代价可以事先算出来；我们的方法只付这个代价，想更准就用一个公开声明的拓扑误差 ε 去换。
+第一稿的问题：几句话之间没有因果衔接。"树结构让这件事不能完全做到"没有说为什么；"代价可以事先算出来"没有说算它有什么用；ε 和锚定、下界并列出现，看不出它是在回答哪个问题。第二稿改为一条问答链：每一步都是上一步自然引出的问题。
 
-四部分的逻辑链：
+### 两句话版
 
-| 问题 | 回答 | 位置 |
-|---|---|---|
-| 想要什么（What） | 纵轴 = 空间方向：高度读位置，斜率读运动 | 第 3 节 设计 |
-| 为什么难（Why hard） | 子树必须连续，投影顺序会交错 | 第 3 节 冲突图 |
-| 难到什么程度（How much） | 三个下界：只由树和参考位置决定，画图前可算 | 第 4 节 |
-| 怎么做（How） | AnchorMTM：从达到下界的顺序出发，用 ε 换位置 | 第 5 节 |
-| 做到了吗（Does it work） | 能读、接近下界、ε 换得值 | 第 6 节 |
+> 现有的合并树图能看出特征怎样嵌套，却看不出它们在哪里、往哪走。我们把图的纵轴固定为一个真实的空间方向，让位置和运动可以直接读出；层次和空间顺序会冲突，我们算出这种冲突至少造成多大的位置偏离，并给出一个方法：保持层次时达到这个最小偏离，需要时再用有上限的层次误差换取更准的位置。
 
-### 贡献改写（三条，各对应一节）
+> Temporal merge tree maps show how features nest, but not where they are or where they move. We fix the map's vertical axis to a spatial direction so that location and motion can be read directly; because the hierarchy conflicts with spatial order, we bound the displacement this conflict forces, and AnchorMTM meets this bound under exact topology or trades a bounded merge error for better positions.
 
-1. **Spatially anchored merge tree maps**, a design in which the vertical axis of a temporal merge tree map is one fixed spatial direction, so a feature's height reads as its projected location and its slope as its projected velocity, with a single declared control ε for the merge-level error the map may accept (Section 3).
-2. **The position price of topology**: three lower bounds on the displacement that exact topology, finite feature widths and a bounded merge error force on any such map; they need only the tree and the projected positions, so they can be evaluated before a map is drawn and used to separate forced from chosen error in existing maps (Section 4).
-3. **AnchorMTM**, a construction that starts from the bound-attaining order and trades merge error for position under ε, and an evaluation showing that it meets the bound on 606 of 614 real planar frames and places features 73–96% closer to their references than TMTM and ST-MTM (Sections 5–6).
+### 问答链（全文的骨架）
+
+| 步 | 读者此时的问题 | 回答 | 位置 |
+|---|---|---|---|
+| 1 | 分析风暴、火点这类时变场时想看什么？ | 一张图里同时看到：有哪些特征、怎样嵌套；它们在哪里、往哪走 | 引言 P1 |
+| 2 | 现有方法缺什么？ | 合并树图把每帧的树画成一条剖面、按时间排开，嵌套看得很清楚；但剖面上的位置是为排版服务的，不对应任何空间方向。向东移动的风暴在图上可以是一条平线 | 引言 P2，图 1 |
+| 3 | 我们怎么做？ | 把这条轴固定为一个空间方向（由特征运动估计，或由用户指定），每个特征画在它的投影位置上。图上的高度就是位置，轨迹的斜率就是速度 | 引言 P3，第 3 节 |
+| 4 | 为什么不能直接这样画？ | 合并树要求同一子树的特征挨在一起，否则合并层次会画错；按空间排序时，不同子树的特征可能交错。例：A、B 同属一棵子树，C、D 属于另一棵，从西到东却是 A、C、B、D。要保持层次，就必须把 B 或 C 挪离真实位置 | 引言 P3，图 2(a–c)，第 3 节 |
+| 5 | 那偏离是谁造成的？ | 读者看到一个特征偏离了位置，需要知道这是树逼出来的，还是算法做得不好。我们证明：只看树和投影位置，就能算出保持层次时最坏偏离的下限（考虑特征宽度后也能算）。它不依赖任何画法，所以画图前就能算，也能用来检查别人的图 | 引言 P4，第 4 节 |
+| 6 | 我们的方法离这个下限多远？ | AnchorMTM 从达到下限的叶序出发，再处理宽度和时间连贯。在 614 个真实平面帧中，有 606 帧恰好达到下限 | 第 5 节，6.3 |
+| 7 | 下限本身太大怎么办？ | 允许合并高度有至多 ε 的误差，部分子树就可以交错，位置更准。哪些子树能交错、偏离能降到多少，同样能算（2ε 规则）。ε 是用户唯一要设的参数，画出的图保证合并误差不超过它 | 图 2(d)，4.3，5.1，6.4 |
+| 8 | 实际效果如何？代价是什么？ | 在 ST-MTM 的四个平面数据上，位置误差比 TMTM、ST-MTM 低 73–96%（ε=0）；在早期七序列基准上，它们的顺序误差有 31–95% 不是树逼出来的。代价：ST-MTM 保持邻域关系更好，因为它优化的是相对距离，我们优化的是绝对位置 | 6.2，6.3，第 7 节 |
+
+与第一稿相比：
+
+1. 加了第 5 步"偏离是谁造成的"。这一步说明了为什么要证明下界，第一稿缺这一环。
+2. ε 从和锚定、下界并列，改为第 7 步：在下界之后，作为"下限太大怎么办"的回答出现。
+
+### 贡献（按问答链的顺序）
+
+1. **一种新的图**：合并树图的纵轴是固定的空间方向，特征的高度就是它沿该方向的位置，轨迹的斜率就是速度（第 3 节）。
+2. **偏离的下界**：保持层次、或允许 ε 合并误差时，特征至少要偏离多远。下界只依赖树和投影位置，能把树逼出的偏离与布局造成的偏离分开（第 4 节）。
+3. **AnchorMTM 及其验证**：保持层次时达到下界（606/614 帧），用 ε 换取位置；与 TMTM、ST-MTM 比较（第 5–6 节）。
+
+English:
+
+1. A spatially anchored merge tree map, whose vertical axis is one fixed spatial direction, so that a feature's height reads as its location along that direction and the slope of its track as its speed (Section 3).
+2. Lower bounds on how far features must leave their locations when the map keeps the merge tree exactly or within a merge-error budget ε; they depend only on the tree and the projected locations, so they separate displacement forced by the hierarchy from displacement caused by the layout (Section 4).
+3. AnchorMTM, which attains the exact-topology bound on 606 of 614 real planar frames and trades merge error for position through ε, and an evaluation against TMTM and ST-MTM (Sections 5–6).
 
 ## 三、新的章节结构（正文 9 页）
 
@@ -108,13 +128,13 @@
 3. 正文符号精简：保留 q、x、ε、δ\*、τ、ν\*、B_w、C_η、NPE、SNS、TW；A(S)、B(S)、ω、E∂、P0、Pη、Θ0、β0、ε0 移到附录。定理 2 用文字加一个式子陈述。
 4. 负面结果放在正面结果之后，并给出原因。例如："ST-MTM's higher TW reflects a different goal: it preserves neighborhoods, we preserve positions."
 
-## 六、引言骨架（英文主题句）
+## 六、引言骨架（英文主题句，按第二部分问答链 1–8）
 
-- **P1 任务**：Analysts who follow storms or fires through a time-varying field ask three questions at once: which features exist and how they nest, where they are, and how they move.
-- **P2 缺口**：Temporal merge tree maps answer the first question but not the other two: their vertical axis is a layout coordinate chosen for the tree, so a storm that travels east can stay level on the map (Fig. 1). Hovmöller diagrams keep a physical axis but average away the hierarchy.
-- **P3 想法与障碍**：We fix the vertical axis to one spatial direction, so height reads as projected location and slope as projected velocity. The merge tree resists: it keeps every subtree in one block, while the projections of sibling subtrees can interleave (Fig. 2).
-- **P4 关键洞见**：This conflict has a computable price. From the tree and the projected positions alone, we derive the smallest displacement any exact-topology map must accept, and how far a declared merge-error budget ε lowers it.
-- **P5 方法与结果**：AnchorMTM builds maps that pay little more than this price …（数字沿用 v15）。
+- **P1（步 1）**：Analysts who follow storms or fires through a time-varying field want one picture of which features exist, how they nest, where they are and where they move.
+- **P2（步 2）**：Temporal merge tree maps show the nesting well, but their vertical axis serves the layout and has no spatial meaning, so a storm that travels east can appear as a level band (Fig. 1). Hovmöller diagrams keep a spatial axis but average the hierarchy away.
+- **P3（步 3–4）**：We fix the vertical axis to one spatial direction, so a feature's height is its location and the slope of its track is its speed. The merge tree resists: features of one subtree must stay together, yet along the direction they can interleave with another subtree (Fig. 2), so some features must leave their locations.
+- **P4（步 5–7）**：A reader who sees a displaced feature needs to know whether the hierarchy forced it. We show that the tree and the projected locations alone determine the smallest worst displacement of any exact-topology map, and how far a merge-error budget ε lowers it.
+- **P5（步 6、8）**：AnchorMTM meets this bound on 606 of 614 real planar frames … ST-MTM preserves neighborhoods better（数字沿用 v15）。
 - **贡献三条**（见第二部分）。
 
 ## 七、风险与时间

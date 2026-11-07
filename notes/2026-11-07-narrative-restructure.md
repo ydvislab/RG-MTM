@@ -36,9 +36,9 @@
 
 ### 两句话版
 
-> 现有的合并树图能看出特征怎样嵌套，却看不出它们在哪里、往哪走。我们把图的纵轴固定为一个真实的空间方向，让位置和运动可以直接读出；层次和空间顺序会冲突，我们算出这种冲突至少造成多大的位置偏离，并给出一个方法：保持层次时达到这个最小偏离，需要时再用有上限的层次误差换取更准的位置。
+> 现有的合并树图能看出特征怎样嵌套，却看不出它们在哪里、往哪走。我们把图的纵轴固定为一个空间方向，让每个特征尽量靠近它沿该方向的真实位置；保持合并树时偏离不可避免，我们算出它的下限，并给出一个方法：以严格保持合并树为起点，把偏离压到这个下限附近，再只在能减少偏离的地方、用不超过 ε 的合并误差换取更小的偏离。
 
-> Temporal merge tree maps show how features nest, but not where they are or where they move. We fix the map's vertical axis to a spatial direction so that location and motion can be read directly; because the hierarchy conflicts with spatial order, we bound the displacement this conflict forces, and AnchorMTM meets this bound under exact topology or trades a bounded merge error for better positions.
+> Temporal merge tree maps show how features nest, but not where they are or where they move. We fix the map's vertical axis to a spatial direction and place each feature as close to its location along it as the merge tree allows; we prove how close that is, and AnchorMTM starts from the exact tree, comes close to this bound, and relaxes the tree only where a merge error of at most ε reduces the displacement.
 
 ### 问答链（全文的骨架）
 
@@ -46,11 +46,11 @@
 |---|---|---|---|
 | 1 | 分析风暴、火点这类时变场时想看什么？ | 一张图里同时看到：有哪些特征、怎样嵌套；它们在哪里、往哪走 | 引言 P1 |
 | 2 | 现有方法缺什么？ | 合并树图把每帧的树画成一条剖面、按时间排开，嵌套看得很清楚；但剖面上的位置是为排版服务的，不对应任何空间方向。向东移动的风暴在图上可以是一条平线 | 引言 P2，图 1 |
-| 3 | 我们怎么做？ | 把这条轴固定为一个空间方向（由特征运动估计，或由用户指定），每个特征画在它的投影位置上。图上的高度就是位置，轨迹的斜率就是速度 | 引言 P3，第 3 节 |
+| 3 | 我们怎么做？ | 把这条轴固定为一个空间方向（由特征运动估计，或由用户指定），每个特征画在尽量靠近它投影位置的地方。高度近似位置，轨迹走向反映沿该方向的运动。位置是近似的，但每帧最坏偏离有上限（τ+β0）并随图报告：四个数据上平均为全域的 0.9–4.7%（精确模式），TMTM、ST-MTM 为 11–58% | 引言 P3，第 3 节 |
 | 4 | 为什么不能直接这样画？ | 合并树要求同一子树的特征挨在一起，否则合并层次会画错；按空间排序时，不同子树的特征可能交错。例：A、B 同属一棵子树，C、D 属于另一棵，从西到东却是 A、C、B、D。要保持层次，就必须把 B 或 C 挪离真实位置 | 引言 P3，图 2(a–c)，第 3 节 |
 | 5 | 那偏离是谁造成的？ | 读者看到一个特征偏离了位置，需要知道这是树逼出来的，还是算法做得不好。我们证明：只看树和投影位置，就能算出保持层次时最坏偏离的下限（考虑特征宽度后也能算）。它不依赖任何画法，所以画图前就能算，也能用来检查别人的图 | 引言 P4，第 4 节 |
-| 6 | 我们的方法离这个下限多远？ | AnchorMTM 从达到下限的叶序出发，再处理宽度和时间连贯。在 614 个真实平面帧中，有 606 帧恰好达到下限 | 第 5 节，6.3 |
-| 7 | 下限本身太大怎么办？ | 允许合并高度有至多 ε 的误差，部分子树就可以交错，位置更准。哪些子树能交错、偏离能降到多少，同样能算（2ε 规则）。ε 是用户唯一要设的参数，画出的图保证合并误差不超过它 | 图 2(d)，4.3，5.1，6.4 |
+| 6 | 我们的方法离这个下限多远？ | 精确模式严格保持合并树（实测合并矩阵误差 0），从达到点模型下限的中点叶序出发，再处理宽度和时间连贯。在 614 个真实平面帧中，有 606 帧恰好达到下限 | 第 5 节，6.3 |
+| 7 | 下限本身太大怎么办？ | 以严格的合并树为起点放松：精确树始终是候选；只释放造成偏离的那对兄弟子树（或压平高度差不超过 2ε 的父子间隙）；每个放松后的叶序都按原始合并树计算误差，超过 ε 的淘汰，剩下的选偏离最小的。所以放松只在能减少偏离时发生，显示的合并高度偏离原树不超过 ε（实测 0、0.98%、4.42%、9.99%） | 图 2(d)，4.3，5.1，6.4 |
 | 8 | 实际效果如何？代价是什么？ | 在 ST-MTM 的四个平面数据上，位置误差比 TMTM、ST-MTM 低 73–96%（ε=0）；在早期七序列基准上，它们的顺序误差有 31–95% 不是树逼出来的。代价：ST-MTM 保持邻域关系更好，因为它优化的是相对距离，我们优化的是绝对位置 | 6.2，6.3，第 7 节 |
 
 与第一稿相比：
@@ -60,15 +60,15 @@
 
 ### 贡献（按问答链的顺序）
 
-1. **一种新的图**：合并树图的纵轴是固定的空间方向，特征的高度就是它沿该方向的位置，轨迹的斜率就是速度（第 3 节）。
+1. **一种新的图**：合并树图的纵轴是固定的空间方向，特征的高度近似它沿该方向的位置，最坏偏离有上限并随图报告（第 3 节）。
 2. **偏离的下界**：保持层次、或允许 ε 合并误差时，特征至少要偏离多远。下界只依赖树和投影位置，能把树逼出的偏离与布局造成的偏离分开（第 4 节）。
 3. **AnchorMTM 及其验证**：保持层次时达到下界（606/614 帧），用 ε 换取位置；与 TMTM、ST-MTM 比较（第 5–6 节）。
 
 English:
 
-1. A spatially anchored merge tree map, whose vertical axis is one fixed spatial direction, so that a feature's height reads as its location along that direction and the slope of its track as its speed (Section 3).
+1. A spatially anchored merge tree map, whose vertical axis is one fixed spatial direction, so that a feature's height approximates its location along that direction, with a per-frame worst deviation that is bounded and reported (Section 3).
 2. Lower bounds on how far features must leave their locations when the map keeps the merge tree exactly or within a merge-error budget ε; they depend only on the tree and the projected locations, so they separate displacement forced by the hierarchy from displacement caused by the layout (Section 4).
-3. AnchorMTM, which attains the exact-topology bound on 606 of 614 real planar frames and trades merge error for position through ε, and an evaluation against TMTM and ST-MTM (Sections 5–6).
+3. AnchorMTM, which keeps the merge tree exactly and attains the exact-topology bound on 606 of 614 real planar frames, and relaxes the tree only where a merge error of at most ε reduces displacement, with an evaluation against TMTM and ST-MTM (Sections 5–6).
 
 ## 三、新的章节结构（正文 9 页）
 
@@ -157,3 +157,21 @@ English:
 4. 按论点重排第 6 节，免责集中到 6.1 和第 7 节。
 5. 图：概念图替换三张机制图；图 6 去掉 "Improvement" 箭头；首页对比图。
 6. 页数检查、编译、附录同步、中文版同步。
+
+## 九、11/8 用户追问与修正（主线第三稿）
+
+用户："我们的方法能让位置和运动可以直接读出？不是有误差吗？我们的方法是不是也是近似值？我们的方法是不是严格遵循了拓扑结构再进行的放松？"
+
+1. **位置是近似的。** "直接读出"说过头了，改为"近似，误差有上限并随图报告"。依据：
+   - 放置有上限 ‖x−q‖∞ ≤ τ(π)+β0。
+   - 主表 NPE（每帧最坏偏离 / 全域长度，取平均）：精确模式 0.89%、4.71%、1.31%、3.99%；Balanced 0.89%、3.95%、1.16%、1.40%；TMTM 11.2–57.5%，ST-MTM 11.5–45.8%。
+   - 卖点从"能直接读出"改为：TMTM 的轴没有空间含义，位置误差无从谈起；我们的轴有固定含义，偏离有界、已知，并且接近树允许的最小值。
+2. **运动没有单独度量。** 合作者的主表里没有运动误差。早期基准（anchor_full）里有，结果是多数序列明显更低，但不是全部。正文只能说"轨迹走向反映沿该方向的运动"，不能说"斜率就是速度"。
+3. **放松以严格拓扑为起点。** 核对合作者代码 `code/src/rgmtm/order_certificate.py` 的 `budget_order`、`selective_order`，以及 `interval_order.py` 的 `width_order`：
+   - 精确树始终是候选，注释写明 "the exact tree, which always qualifies"。
+   - 阈值放松：把高度差 ≤2ε 的父子间隙压平。
+   - 选择性放松：从精确树出发，每次只释放造成最大偏离的那对兄弟子树，并要求满足 2ε 链条件。
+   - 宽度细化：保留的结构总包括精确树。
+   - 所有候选都按原始合并矩阵计算 δ\*，超过 ε 的淘汰，按 (τ, NROE) 选最小。
+   - 这不是"先画严格的图再修改"，而是逐帧在同一组候选里选；概念上可以讲成"以严格拓扑为起点，按需、有上限地放松"。
+   - 放松不会让所选叶序的 τ 比精确树更差（精确树在候选中）。但最终 QP 有 β0 余量和其他目标项，所以不是每个指标都改善：Gaussian 不变，Wildfires 的 SNS 上升。

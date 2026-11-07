@@ -65,3 +65,20 @@ PDF：`paper/AnchorMTM_1037_v13.pdf`。
 2. **主表的发表值**：(a) 保留但加标记、不参与加粗排名（建议）；(b) 删去 TMTM/ST-MTM 的 SNS/TW，只留本地 NPE；(c) 用本地适配器重算 SNS/TW（需重跑）。
 3. **摘要/引言**：按 v12 的写法重写，结果数字换成他实验的数字。
 4. **图 7 Ring**：保留现状；或改回固定完整引导、只变 ε（微信中间稿的做法，10% 与 20% 相同）；或在面板上标出 α。
+
+## 六、第二轮修改（11/7 晚，v14）
+
+用户："都按你的建议改，1 选做，2 选 a，对应内容重新选择。第四个我决定不好，给我讲讲优缺点。你先推进一下，我之后给合作者更新。"
+
+1. **下界的实验证据（新 5.5 节 "Accuracy of the Position Bounds"）**
+   - 受控四叶树：新图 8（`figures/anchor_controlled_bounds.pdf`，即 v12 的 `fig_controlled_v2`）。数据来自合作者 `code/results/controlled_conflict20261030`（4152 次独立 LP，与 24 个叶序穷举一致；d=0.24 时点 12%、区间 14%；预算到父间隙一半时冲突消失）。
+   - 真实帧：引用合作者 `code/results/order_width20261027`（早期七序列基准，同一默认配置）。ε=0 时 606/614 个平面帧 τ=B_w，ε=10% 时 596；Cylinder 81/102、Tangaroa 27/201。
+   - TMTM、ST-MTM 顺序误差中不是树造成的比例：53–95%、31–95%（更有利镜像；`figdata/orientation20261106`、`tables/supp_stmtm_threshold.tex`）。
+   - **没有在他的四组数据上重算**：这台机器上没有 TTK 原生程序（`rgmtm_ttk_volume`），也没有 Wildfires（wildfire.json）和 Storms（ERA5 1999 原始文件）的输入。所以正文明确写成"早期基准"，附录新 S9 节列出这些序列和逐项计数。
+   - 版面：5.8 Cylinder 中心树变体（双栏图 + 一节）移到附录 S10，正文只剩这一处删除。
+2. **主表发表值（选 a）**：TMTM/ST-MTM 的 SNS/TW 改为灰色、表头加 †，不参与加粗；加粗/下划线只在本地测量值中重新排名。结果：Gaussian/Wildfires/Storms 的 TW 最好值变为 AnchorMTM（表注说明只比较本地测量值，ST-MTM 发表的 TW 仍更高，正文 5.2 照写）。
+3. **摘要、引言、贡献、结论**：按 v12 的写法重写，数字换成他实验的数字（平面四组 NPE：Exact 低 73–96%，Balanced 低 77–98%，对同输入 TMTM/ST-MTM），并写明 ST-MTM 发表的 TW 更高。讨论开头加一段"下界的用途"。
+4. **附录同步**：Exact Mode 定义与正文一致；新增 S9（早期基准与下界达到率、不是树造成的比例两表）、S10（Cylinder 中心树变体，原文移入）。
+5. 正文仍在第 9 页结束（参考文献从第 9 页右栏开始，共 10 页）。附录 10 页。PDF：`paper/AnchorMTM_1037_v14.pdf`、`paper/AnchorMTM_1037_supplement_v14.pdf`。
+
+**仍待定**：图 7（Ring）三种处理方式，用户要先听优缺点再定。合作者尚未知道这些改动（用户之后同步）。

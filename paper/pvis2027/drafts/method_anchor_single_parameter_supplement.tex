@@ -4,6 +4,7 @@
 \usepackage[T1]{fontenc}
 \usepackage{mathptmx}
 \usepackage{amsmath,amssymb,amsthm}
+\usepackage{booktabs,graphicx}
 \usepackage[ruled,vlined]{algorithm2e}
 \usepackage[hidelinks]{hyperref}
 \SetKwInput{KwData}{Data}\SetKwInput{KwResult}{Result}
@@ -335,7 +336,59 @@ For each frame, reporting distinguishes the order certificate, a width-aware low
 
 
 \paragraph{Continuous and rendered acceptance.}
-Exact Mode denotes zero labelled error; a positive numerical tie allowance is explicitly distinct. The exact-tree structure is retained among refinement seeds, but capacity and numerical failures can still stop layout. The renderer reports invalid raster capacity and nonfinite values. Optimal filling may introduce strict-extremum clearance and records measured budget discrepancies and topology diagnostics. There is no uniform final budget/label-coverage rejection or repair gate. Applying the full labelled-tree interpretation requires checking that labels cover the rendered tree; a continuous barrier optimum alone does not establish this.
+Exact Mode sets $\varepsilon=0$ and keeps only the numerical allowance $\eta=\varepsilon_0\Delta_F$, which merges saddles tied to within $\varepsilon_0\Delta_F$; strict exact topology is $\eta=0$. The exact-tree structure is retained among refinement seeds, but capacity and numerical failures can still stop layout. The renderer reports invalid raster capacity and nonfinite values. Optimal filling may introduce strict-extremum clearance and records measured budget discrepancies and topology diagnostics. There is no uniform final budget/label-coverage rejection or repair gate. Applying the full labelled-tree interpretation requires checking that labels cover the rendered tree; a continuous barrier optimum alone does not establish this.
+
+
+\section{Bound Evaluation on an Earlier Benchmark}\label{sec:supp_bounds}
+Section~5.5 of the paper evaluates the bounds on the frames of an earlier benchmark, prepared with the same extractor, matching and reference estimator and with one default configuration $\Theta_0$ (Section~\ref{sec:placement}) on every sequence. Table~\ref{tab:supp_bounds} lists the sequences and, for four budgets, the frames on which the interval cost $\tau$ of the selected order equals the lower bound; for $\varepsilon>0$ the bound is the larger of the bounded-topology certificate and the flattening certificate (Section~\ref{sec:chain}). The 12-hourly Storms sequence and the 30-frame Wildfires sequence are prepared differently from the hourly Storms and 32-frame Wildfires inputs of the main comparison, and Ring follows the TMTM generator.
+
+\begin{table}[h]
+\centering\small
+\caption{Earlier benchmark and bound attainment: frames on which $\tau$ of the selected order equals the lower bound. Leaves: retained extrema per frame.}\label{tab:supp_bounds}
+\begin{tabular}{llrrlrrrr}\toprule
+Sequence & Scalar field & Frames & Leaves & Tree & $\varepsilon=0$ & 2\% & 5\% & 10\%\\\midrule
+Storms & ERA5 sea-level pressure, 2D & 118 & 1--8 & join & 116 & 116 & 110 & 110\\
+Wildfires & $\log(1+\mathrm{FRP})$, 2D & 30 & 6--11 & split & 25 & 27 & 24 & 24\\
+OLR & outgoing longwave radiation, 2D & 60 & 2--8 & join & 60 & 60 & 60 & 59\\
+PM$_{2.5}$ & PM$_{2.5}$ concentration, 2D & 366 & 1--7 & split & 365 & 361 & 363 & 363\\
+Ring & synthetic ring intensity, 2D & 40 & 1--7 & split & 40 & 40 & 40 & 40\\\midrule
+\multicolumn{2}{l}{Planar total} & 614 & & & 606 & 604 & 597 & 596\\\midrule
+Tangaroa & velocity magnitude, 3D & 201 & 18--93 & join & 27 & 24 & 30 & 24\\
+Cylinder & $Q$ criterion, 3D & 102 & 4--75 & split & 81 & 77 & 76 & 74\\\bottomrule
+\end{tabular}
+\end{table}
+
+Table~\ref{tab:supp_forced} splits the order error of TMTM and ST-MTM on the same frames. Both keep the merge tree exactly, so Theorem~\ref{thm:order} applies: midpoint ordering of the same tree attains $\nu^*$, and the share of the mean NROE above the mean $\nu^*$ is chosen by the order rule rather than forced by the hierarchy. TMTM is a port of its official implementation; ST-MTM follows its published description with temporal reordering threshold $0.95$ and meets the optimality conditions of its quadratic programs (relative KKT residuals below $10^{-6}$). Neither method fixes the direction of its axis, so each map is evaluated in the global mirror that agrees better with the reference. Over all temporal reordering thresholds from 0 to 1, each in its favourable mirror, the ST-MTM share stays within 53--95\% on the real planar sequences and within 37--61\% on Ring; shares are computed from unrounded means.
+
+\begin{table}[h]
+\centering\small
+\caption{Order error of exact-topology maps on the earlier benchmark (percent of the canvas, means over frames) and the share above the strict bound $\nu^*$.}\label{tab:supp_forced}
+\begin{tabular}{lrrrrr}\toprule
+Sequence & $\nu^*$ & TMTM NROE & share & ST-MTM NROE & share\\\midrule
+Storms & 3.77 & 18.31 & 79 & 16.28 & 77\\
+Wildfires & 5.80 & 19.65 & 70 & 18.72 & 69\\
+OLR & 0.89 & 19.31 & 95 & 16.59 & 95\\
+PM$_{2.5}$ & 0.97 & 4.44 & 78 & 5.21 & 81\\
+Ring & 2.66 & 7.18 & 63 & 4.47 & 41\\
+Tangaroa & 9.24 & 19.50 & 53 & 15.80 & 41\\
+Cylinder & 12.24 & 26.62 & 54 & 17.77 & 31\\\bottomrule
+\end{tabular}
+\end{table}
+
+\section{Exploratory Volumetric Case: Central-Tree Guidance}\label{sec:supp_centered}
+\begin{figure}[h]
+\centering
+\includegraphics[width=\textwidth]{../figures/anchor_cylinder_centered_blue.pdf}
+\caption{Cylinder central-tree variant: the full 102-frame map (a) and source $Q$ isosurfaces at three times (b--d), with a common camera and blue scalar scale. $Q=0.2$ is translucent and $Q=1$ marks the core; values above 1 saturate. The outlined component contains extremum S. Map position is not physical $X$; the padded locator and stages I--III are viewing guides, not exact support projections or transition estimates.}
+\label{fig:cylinder-centered}
+\end{figure}
+The central-tree example is a separate qualitative configuration, excluded from both quantitative tables of the paper. Cylinder comprises 102 volumes ($135\times64\times48$) of the $Q$-criterion with 2\% per-frame persistence. It tests how additional tree guidance changes the map's coordinate interpretation.
+
+The variant in Fig.~\ref{fig:cylinder-centered} uses the same 102 volumes, retained 2\% persistence trees and a 1\% merge allowance. Full-sample tree coordinates $g_i^t\in[-0.5,0.5]$ add $16\,\mathrm{mean}_i(x_i^t-g_i^t)^2$ to the placement objective; reference, geometry, temporal and eccentricity weights are 1, 1, 0.5 and 0.1. True-$X$ targets retain one fixed domain transform. This changes multiple weights and is not a single-factor ablation.
+
+Its fixed tree-compatible order needs a worst-case reference cap of 55.21\%; we explicitly allow 56.21\%, including 1\% slack. Monotone warping of the tree profile through the optimized intervals produces 32768-position rasters. All retained-pair checks yield NMLE$_{max}=0$, within 1\%, including half-pixel position rounding; this conservative order does not exploit budgeted reordering or introduce simulation frames.
+
+Central guidance exposes unfolding but sacrifices anchoring. Frame-balanced mean absolute $X$ error is 21.1\%, 25.5\% and 28.1\% for guidance weights 1, 4 and 16, versus 1.9\% for the Cartesian-reference configuration. This differs from NPE and pooled mean displacement. These outputs are not the Cartesian-reference configurations of the paper's volumetric table. Equal-$X$ features may differ in $Y,Z$; their layout separation does not encode depth.
 
 \bibliographystyle{abbrv-doi-narrow}
 \bibliography{../refs}

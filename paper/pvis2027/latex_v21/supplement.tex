@@ -1,4 +1,4 @@
-% Supplementary Material for paper 1037 (v20, 2026-11-08), companion to main.tex, in the same official VGTC conference template.
+% Supplementary Material for paper 1037 (v21, 2026-11-08), companion to main.tex, in the same official VGTC conference template.
 \documentclass{vgtc}                % same class and option as main.tex
 \usepackage[T1]{fontenc}
 \usepackage{mathptmx}
@@ -55,7 +55,7 @@ Jun~Liu$^{1,2,}$\thanks{Corresponding author. E-mail: To be added.}
 
 \hypersetup{pdftitle={Supplementary Material for AnchorMTM},pdfauthor={Lele Wang, Yu Dong, Yuxiang Meng, Guan Li, Zhe Wang, Guihua Shan, Jun Liu}}
 
-\abstract{This document supplements the paper ``AnchorMTM: Spatially Anchored Merge Tree Maps with Position Bounds.'' It gives the full definitions, proofs and implementation details for the bounds and AnchorMTM, per-frame distributions of AnchorMTM over the merge budget (Figs.~S1--S4), the evaluation of the bounds on an earlier benchmark (Figs.~S5 and S6), an exploratory volumetric case, and the Ring case study with all parameter settings and runtimes (Fig.~S8, Tables~S3 and S4).}
+\abstract{This document supplements the paper ``AnchorMTM: Spatially Anchored Merge Tree Maps with Position Bounds.'' It gives the full definitions, proofs and implementation details for the bounds and AnchorMTM, per-frame distributions of AnchorMTM over the merge budget (Figs.~S1--S4), the evaluation of the bounds on an earlier benchmark (Figs.~S5 and S6), an exploratory volumetric case, the Ring case study with all parameter settings and runtimes (Fig.~S8, Tables~S3 and S4), and the construction algorithm with two schematics (Figs.~S9 and S10).}
 
 \begin{document}
 \firstsection{Overview}
@@ -417,7 +417,7 @@ In the volumes almost every frame contains a conflict that a budget can release 
 Figure~\ref{fig:supp_budget_selection} shows the selection rule of the paper's Mode selection paragraph. On Wildfires 5\% gives the smallest validation NPE at a small SNS cost and is the smallest budget within the tolerance; on Storms validation NPE falls at every step up to 10\%, SNS changes little beyond 6\%, and $J$ is smallest at 10\%. The first quarter of Ring contains no conflict that a budget releases (Fig.~\ref{fig:supp_budget_matrix}), so its selection keeps 1\%, while later frames change at larger budgets.
 
 \section{Bound Evaluation on an Earlier Benchmark}\label{sec:supp_bounds}
-Section~5.5 of the paper evaluates the bounds on the frames of an earlier benchmark, prepared with the same extractor, matching and reference estimator and with one default configuration $\Theta_0$ (Section~\ref{sec:placement}) on every sequence. Table~\ref{tab:supp_bounds} lists the sequences and, for four budgets, the frames on which the interval cost $\tau$ of the selected order equals the lower bound; for $\varepsilon>0$ the bound is the larger of the bounded-topology certificate and the flattening certificate (Section~\ref{sec:chain}). The 12-hourly Storms sequence and the 30-frame Wildfires sequence are prepared differently from the hourly Storms and 32-frame Wildfires inputs of the main comparison, and Ring follows the TMTM generator.
+Sections~6.2 and~6.3 of the paper (Q1, Q2) evaluate the bounds on the bound suite, the frames of an earlier benchmark prepared with the same extractor, matching and reference estimator and with one default configuration $\Theta_0$ (Section~\ref{sec:placement}) on every sequence. Table~\ref{tab:supp_bounds} lists the sequences and, for four budgets, the frames on which the interval cost $\tau$ of the selected order equals the lower bound; for $\varepsilon>0$ the bound is the larger of the bounded-topology certificate and the flattening certificate (Section~\ref{sec:chain}). The 12-hourly Storms sequence and the 30-frame Wildfires sequence are prepared differently from the hourly Storms and 32-frame Wildfires inputs of the main comparison, and Ring follows the TMTM generator.
 
 \begin{table*}[t]
 \centering\small
@@ -497,6 +497,44 @@ Figure~\ref{fig:ring-result} shows a joint guidance--topology sweep on Ring: $\v
 \input{tables/table2_parameters_runtime.tex}
 \input{tables/table_volume_parameters.tex}
 Table~\ref{tab:anchor-parameters-final} lists the four planar Balanced budgets (1, 1, 5 and 10\%) and layout parameters; Table~\ref{tab:volume-parameters} separately lists the volumetric datasets and settings. The planar table reports one uncached Balanced run on Apple M4, with one BLAS/TTK thread, sequential extraction and the default HiGHS scheduler. Optimization includes ordering and placement; total time additionally includes preprocessing, trees, matching/reference estimation, rasterization, I/O and checks. Imports, reporting and metric export are excluded; OS caches may be warm. Timings do not establish speedup significance. Baseline NPE uses the disclosed CompactTMTM and ST-MTM solver adaptations, not author binaries.
+
+\FloatBarrier
+\section{Construction Overview and Schematics}\label{sec:supp_construction}
+Algorithm~\ref{alg:construction} lists the complete construction of Section~5 of the paper, separating the discrete order selection from fixed-order placement. Figure~\ref{fig:direction-open} illustrates the motion-derived reference of Section~3.3, and Fig.~\ref{fig:selective_relaxation} shows how a selective flattening admits the order $A,C,D,B$ while keeping the $C,D$ grouping; such a proposal is still evaluated against the original merge matrix and the budget (Section~\ref{sec:search}).
+
+\begin{algorithm}[htbp]
+\caption{Single-Control AnchorMTM}\label{alg:construction}
+\KwData{2D/3D field sequence and grid; $\varepsilon\ge0$; fixed configuration $\Theta_0$.}
+\KwResult{Temporal map $I^\varepsilon$, error records, or a failure report.}
+Extract augmented trees, leaf supports and extrema; match supports and assign Track IDs\;
+Estimate one direction and fixed references $q_t$; reuse this preprocessing across budgets\;
+$\eta\leftarrow(\varepsilon_0+\varepsilon)\Delta_F$\;
+\For{each time step $t$ in temporal order}{
+ Report and stop if widths and gaps exceed the fixed canvas\;
+ $\mathcal{C}_t\leftarrow\operatorname{GenerateAndRefine}(T_t,q_t,W_t,V_t,\eta)$; retain strict-topology candidates\;
+ Evaluate $\tau(\pi)$, $\nroe(\pi)$ and $\delta^*(\pi)$ for candidates\;
+ $\mathcal{F}_t\leftarrow\{\pi\in\mathcal{C}_t:\delta^*(\pi)\le\eta\}$\;
+ \lIf{$\mathcal{F}_t=\varnothing$}{report no feasible candidate and stop}
+ Select $\pi_t^\varepsilon$ from $\mathcal{F}_t$ by $(\tau,\nroe)$\;
+ Compute optimal merge barriers for $\pi_t^\varepsilon$\;
+ Solve the four-term QP only for $\pi_t^\varepsilon$, with cap $\tau(\pi_t^\varepsilon)+\beta_0$ and valid matched history\;
+ Reconstruct the profile by leaf/LCA filling and barrier correction\;
+ Record candidate counts, continuous and rendered errors, motion and failures; append profile to $I^\varepsilon$\;
+}
+\KwReturn{$I^\varepsilon$ and diagnostic records}\;
+\end{algorithm}
+\begin{figure}[t]
+\centering
+\includegraphics[width=0.85\columnwidth]{figures/anchor_direction_open.pdf}
+\caption{Motion-derived spatial reference. Matched extremum displacements define one direction $a^*$ for the sequence; extrema project onto the parallel reference axis $q$ from a common origin $o$. Tracks, contours and projection positions are schematic.}
+\label{fig:direction-open}
+\end{figure}
+\begin{figure}[t]
+\centering
+\includegraphics[width=\columnwidth]{figures/anchor_relaxation_open.pdf}
+\caption{Selective relaxation releases the $A,B$ block constraint and admits order $A,C,D,B$ while retaining the $C,D$ grouping. The accompanying profiles illustrate changed merge barriers; source-level guides show the hierarchy changes. Heights are schematic, and candidate orders still require evaluation against the original merge matrix.}
+\label{fig:selective_relaxation}
+\end{figure}
 
 \FloatBarrier
 \bibliographystyle{abbrv-doi-narrow}

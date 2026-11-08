@@ -1,48 +1,49 @@
-论文 1037（PacificVis 2027 会议论文轨道）LaTeX 源文件，版本 v20（2026-11-08）
-底稿：用户加入作者信息后的版本（Overleaf 导出），在其上修改。格式与 v19 相同，按官方 VGTC 会议模板
-（vgtc_conference_latex-2024.02.14）。
+论文 1037（PacificVis 2027 会议论文轨道）LaTeX 源文件，v21 草稿（2026-11-08 中午）
+官方 VGTC 会议模板（vgtc_conference_latex-2024.02.14），单盲，作者信息已加入。
+
+这是重写中的草稿，不是最终稿
+  已完成：第 1 步（论文骨架：统一表述、下界移到方法前、公式精简）、第 2 步（正文结果图）。
+  未完成：第 3 步（摘要、引言、相关工作重写，补引用）、第 4 步（实验按问题 Q1–Q4 重排）、
+          补充材料同步（算法框、两张示意图移入）、全文数字核对。
+  所以摘要和引言还是旧版文字；实验部分图的位置与文字顺序暂时不完全对应。
+
+新的论文思路（一句话）
+  把合并树地图的轴锚定到空间，位置上必然要付出代价；我们算出任何地图都逃不掉的这份代价，
+  做出一个只比它多付一点的地图（AnchorMTM），并用它说明现有地图的大部分误差并不是这份代价。
+
+结构
+  1 引言（待重写）  2 相关工作（待重写）
+  3 空间锚定的合并树地图：合并树与剖面；统一表述（Eq. 3）——TMTM、ST-MTM 是"合并误差为 0、
+    没有参考项"的两个特例（表 1）；空间参照；冲突在哪（图 2）
+  4 保住树的代价：三个与布局无关的下界（定理 1–3）；"树逼的 vs 画法选的"
+  5 AnchorMTM：统一表述的一个实例，逼近下界（叶序、放置、重建）
+  6 实验（待按 Q1 下界紧不紧 / Q2 现有方法误差有多少是树逼的 / Q3 是否更准、守预算 / Q4 预算买到什么 重排）
+  7 讨论与局限  8 结论
+
+与 v20 相比的主要改动
+  * 编号公式 23 个 → 9 个；新增统一表述公式和方法族表（表 1）。
+  * 新图 4：位置–拓扑平面（七个序列，含二维和三维，所有方法在同一平面上，灰色为不可达区）。
+  * 新图 6：三维效果对比（Tangaroa、Cylinder；参考位置 / TMTM / ST-MTM / AnchorMTM ε=0、5%、20%）。
+  * 新图 7：逐帧分布（三个二维 + 两个三维数据集，ε=0/2/5/10/20%）。
+  * Ring 案例（原图 7 与 5.6 节）和两张参数表移到补充材料末尾（图 S8、表 S3–S4）。
+  * 贡献改为三条短句。
+  * 篇幅：正文 9 页（17.5 栏，上限 18 栏）+ 参考文献 1 页；补充材料 13 页。
 
 文件
-  main.tex          正文
-  supplement.tex    补充材料（与正文同一模板、同一选项，两栏）
-  figures/          全部图（v20 新增 budget_distribution.pdf 和 budget_supp_*.pdf 四张）
-  tables/           正文 \input 的四张表
-  refs.bib          参考文献
-  vgtc.cls, abbrv-doi-narrow.bst   官方模板文件
+  main.tex、supplement.tex、refs.bib、vgtc.cls、abbrv-doi-narrow.bst、tables/、figures/
+  新图同时有可编辑的 SVG（文字为文本）：figures/plane_compact.svg、volume_gallery.svg、budget_distribution_2d3d.svg
 
 编译
   Overleaf（pdfLaTeX）：上传整个压缩包，主文件选 main.tex；补充材料把主文件切换为 supplement.tex。
   本地：pdflatex main && bibtex main && pdflatex main && pdflatex main
 
-v20 相对用户版本的改动
-  1. 作者块（两份文件相同）：
-     - Lele Wang 的标记改为 1,2,*，与 Yu Dong 的 1,* 一致（* 即共同一作脚注）；
-     - 脚注先写 "Lele Wang and Yu Dong contributed equally"，再写单位；
-     - 删去第一条脚注里重复的 "Jun Liu is the corresponding author."（已有 † 脚注）；
-     - 补充材料加上与正文相同的 † 通讯作者脚注；Jun Liu 的标记写成 1,2,†，与其他人格式一致；
-     - \hypersetup 的 pdfauthor 改为七位作者（原来仍是 First Author, Second Author）。
-  2. 正文新增图 8（单栏）：AnchorMTM 在合并预算 ε=0–10% 下的逐帧分布（三组平面数据，完整序列，
-     与主对比表同一配置）。上：每帧最大位移；下：每帧实际合并误差与预算线。5.4 节加一段解读。
-  3. 补充材料新增 S10 节和图 S1–S4：扩展扫描（到 30%，Ring 到 100%，含 SNS）、帧×预算矩阵、
-     体数据默认配置扫描、Balanced 预算选择过程。原图 S1、S2（位置–拓扑平面、方向）顺延为 S5、S6，
-     正文引用已同步。补充材料调了浮动体放置参数（不改字号、行距），共 12 页。
-  4. 两处小错：体数据段 "continuous direction in Section 4.2" 改为 4.1（方向定义在 4.1）；
-     Wildfires 相对 ST-MTM 的 NPE 降低 96.367% 原写 96.3%，改为 96.4%。
+作者信息
+  两份文件里 "E-mails: To be added." 和 "Corresponding author. E-mail: To be added." 要填。
 
-需要你处理
-  * 作者脚注里 "E-mails: To be added." 和 "Corresponding author. E-mail: To be added." 两处要填。
-  * 篇幅（9 页 = 18 栏；按参考文献标题位置测量，含真实作者块和新图 8）：
-        v20 原样                                  20.2 栏
-        算法框 Algorithm 1 移到补充材料           19.9 栏
-        两张参数表（表 1、表 3）移到补充材料      19.6 栏
-        Ring 案例（图 7 与 5.6 节）移到补充材料   19.4 栏
-        图 5（选择性放松示意图）删去或移走         19.9 栏
-        算法框 + 参数表 + Ring                     18.6 栏
-        算法框 + 参数表 + Ring + 图 5              18.2 栏（再删约 13 行文字即为 9 页）
-    注意：正文里表号按出现顺序编排，参数表（表 1）移走后主对比表会变成表 1。新图图例不写表号，不受影响。
-  * 模板建议在正文末尾加 "Supplemental Materials" 和 "Figure Credits" 两个不编号小节，视篇幅决定。
-  * 正式提交前请在 PacificVis 2027 征稿说明中确认评审方式（单盲或双盲）。
-
-作图脚本：仓库 paper/anchor_full/figure_drafts/budget_distribution.py（只读已保存结果，不重跑算法；
-数据来自 paper/pvis2027/budget_tradeoff_20261105/ 与 experiments_ratio_p_20261104/，并逐值核对
-ε=0 与所选 ε 的结果与主表 Exact、Balanced 运行完全一致）。
+新图的数据来源（都是已保存结果，没有新实验）
+  * 图 4：早期七序列基准的下界与 AnchorMTM 前沿；TMTM/ST-MTM/OLO 取与参考更一致的镜像。
+  * 图 6：AnchorMTM 位置由 frontier 管线重算，与存档结果及体数据预算扫描逐项一致；
+    TMTM、ST-MTM 为仓库中按原文实现保存的锚点，同一特征。若要换成标量地图，需要
+    output/current_method_parameter_sweep_20261029/{tangaroa,cylinder}/epsilon_*.npz（合作者机器上）。
+  * 图 7：budget_tradeoff_20261105 的完整序列逐帧结果（平面）和 volume_per_frame_audit.csv（体数据）。
+  作图脚本在仓库 paper/anchor_full/figure_drafts/（plane_fig.py compact、volume_gallery_fig.py、budget_distribution.py v21）。

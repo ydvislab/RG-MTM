@@ -1,0 +1,20 @@
+\begin{table}[t]
+\centering
+\caption{Maps of time-varying scalar fields as instances of Eq.~\ref{eq:family}. Order rule: how leaves are ordered; placement: nonzero terms and temporal target; $\eta$: allowed merge error relative to the scalar range (tolerance $\varepsilon_0$ omitted); axis: what a position encodes.}
+\label{tab:family}
+\footnotesize
+\setlength{\tabcolsep}{2pt}
+\renewcommand{\arraystretch}{1.05}
+\begin{tabular*}{\columnwidth}{@{\extracolsep{\fill}}>{\raggedright\arraybackslash}p{0.19\columnwidth}>{\raggedright\arraybackslash}p{0.25\columnwidth}>{\raggedright\arraybackslash}p{0.25\columnwidth}c>{\raggedright\arraybackslash}p{0.13\columnwidth}@{}}
+\toprule
+Method & Order rule & Placement & $\eta$ & Axis \\
+\midrule
+TMTM~\cite{Koepp:2023:TMTM} & children by overlap with the previous frame & packed by sample count; no optimization & 0 & tree traversal \\
+ST-MTM~\cite{STMTM:2026} & tree-constrained OLO, kept unless cheaper by a ratio & $\lambda_G$ (stress), $\lambda_M$ with $\hat x$ = previous anchor & 0 & relative distance \\
+OLO~\cite{BarJoseph:2001:OLO} & tree-constrained OLO & ranks only & 0 & order \\
+Projection, Hilbert, Morton~\cite{Franke:2021:1DP} & by reference or curve & at reference or curve rank & none & location or curve rank \\
+\midrule
+AnchorMTM & least $\tau$ within the budget & $\lambda_R$ dominant, $\hat x$ follows projected motion & $\varepsilon$ & location \\
+\bottomrule
+\end{tabular*}
+\end{table}

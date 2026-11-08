@@ -1,0 +1,20 @@
+\begin{table}[t]
+\centering
+\caption{时变标量场地图作为式~(\ref{eq:family}) 的实例。叶序规则：叶子如何排序；放置：非零项与时间目标；$\eta$：相对于标量范围的容许合并误差（省略容差 $\varepsilon_0$）；轴：位置所编码的内容。}
+\label{tab:family}
+\footnotesize
+\setlength{\tabcolsep}{2pt}
+\renewcommand{\arraystretch}{1.05}
+\begin{tabular*}{\columnwidth}{@{\extracolsep{\fill}}>{\raggedright\arraybackslash}p{0.19\columnwidth}>{\raggedright\arraybackslash}p{0.25\columnwidth}>{\raggedright\arraybackslash}p{0.25\columnwidth}c>{\raggedright\arraybackslash}p{0.13\columnwidth}@{}}
+\toprule
+方法 & 叶序规则 & 放置 & $\eta$ & 轴 \\
+\midrule
+TMTM~\cite{Koepp:2023:TMTM} & 按相邻帧子树重叠贪心排列子节点 & 按样本数打包；不优化锚点 & 0 & 树的遍历 \\
+ST-MTM~\cite{STMTM:2026} & 时间一致的顺序，除非 OLO 按比例阈值更优 & $\lambda_G$（应力）、仅作用于匹配锚点的 $\lambda_M$，随后分配区间 & 0 & 相对距离 \\
+OLO~\cite{BarJoseph:2001:OLO} & 受树约束的最优叶序 & 仅给出次序 & 0 & 次序 \\
+投影、Hilbert、Morton~\cite{Franke:2021:1DP} & 按参考位置或曲线 & 置于参考位置或曲线序号处 & 无 & 位置或曲线序号 \\
+\midrule
+AnchorMTM & 预算内 $\tau$ 最小 & 以 $\lambda_R$ 为主，$\hat x$ 跟随投影运动 & $\varepsilon$ & 位置 \\
+\bottomrule
+\end{tabular*}
+\end{table}

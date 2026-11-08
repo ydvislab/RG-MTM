@@ -10,7 +10,7 @@ Inputs (saved results, read only; no algorithm is rerun):
 Per frame t: NPE_t = max_i |x_i - q_i| / L_world (rendered anchors), NMLE_t = attained fixed-leaf merge error / scalar range,
 SNS_t = scale-normalized stress. Table NPE is the mean of NPE_t over frames.
 
-Run:  python budget_distribution.py [v21]  ->  ../../pvis2027/latex_v21/figures/budget_*.pdf (+ svg, png previews next to this file)
+Run:  python budget_distribution.py [v21|v22]   (v22 = main-paper Fig. 7 of v21+, budget_per_frame.*)  ->  ../../pvis2027/latex_v21/figures/budget_*.pdf (+ svg, png previews next to this file)
 """
 import json
 from pathlib import Path
@@ -351,8 +351,101 @@ def main_figure_v21():
     return stats
 
 
+# ---------------------------------------------------------------- v22 main figure (Fig. 7): one row, log scale, share of frames using the budget
+# Design: notes/2026-11-08-figure-design.md, section "图 7". Palette of section 1: Exact dark blue, eps > 0 light blue,
+# budget of Table 2 orange edge (Storms 10% Balanced, PM2.5 fixed 5%).
+NAVY, MID, PALE, SEL = '#08519c', '#2171b5', '#c6dbef', '#e6550d'
+PM25 = PV / 'pm25_hourly_20261107'
+FLOOR = 0.1                                                    # % of axis length; smaller values drawn at the floor as triangles
+
+
+def load_pm25():
+    d = pd.read_csv(PM25 / 'six_budgets_20261108/PM25_six_budgets_per_frame.csv')
+    assert d.rendered_budget_ok.all() and len(d) == 6 * 744
+    t = pd.read_csv(PM25 / 'comparison_metrics.csv').set_index('Method')
+    runs = {e: d[np.isclose(d.epsilon, e / 100)].sort_values('frame') for e in [0, 1, 2, 5, 10, 20]}
+    for e, r in runs.items():
+        assert len(r) == 744 and (r.NMLE_max <= e / 100 + 1e-9).all(), e
+    assert abs(runs[0].E_max.mean() - t.loc['Exact', 'NPE']) < 1e-9 and abs(runs[5].E_max.mean() - t.loc['5%', 'NPE']) < 1e-9
+    return runs
+
+
+def boxes_log(ax, xs, samples, styles, width=.64):
+    """Box: quartiles; whiskers: 5th-95th percentiles; dots: remaining frames; diamond: mean (= NPE).
+    Values below FLOOR are drawn at FLOOR as triangles (log axis)."""
+    for x, v, (fill, edge, med_c, lw) in zip(xs, samples, styles):
+        v = np.asarray(v, float); p5, q1, med, q3, p95 = np.percentile(v, [5, 25, 50, 75, 95])
+        c = lambda y: max(y, FLOOR)
+        ax.add_patch(plt.Rectangle((x - width / 2, c(q1)), width, c(q3) - c(q1), fc=fill, ec=edge, lw=lw, zorder=3))
+        ax.plot([x - width / 2, x + width / 2], [c(med)] * 2, color=med_c, lw=1.0, zorder=4, solid_capstyle='butt')
+        for a, b in ((p95, q3), (p5, q1)):
+            ax.plot([x, x], [c(a), c(b)], color=NAVY, lw=.5, zorder=2)
+            ax.plot([x - width / 4, x + width / 4], [c(a)] * 2, color=NAVY, lw=.5, zorder=2)
+        o = v[(v > p95) | (v < p5)]
+        rng = np.random.default_rng(int(1000 * x) + len(v)); jit = (rng.random(len(o)) - .5) * width * .55
+        hi = o >= FLOOR
+        ax.scatter(x + jit[hi], o[hi], s=1.2, color=MID, alpha=.5, lw=0, zorder=2, rasterized=False)
+        if (~hi).any():
+            ax.scatter(x + jit[~hi], np.full((~hi).sum(), FLOOR), marker='v', s=4, color=MID, alpha=.7, lw=0, zorder=2)
+        ax.scatter([x], [v.mean()], marker='D', s=9, fc='white', ec='black', lw=.55, zorder=5)
+
+
+def main_figure_v22():
+    st = load_planar('Storms'); pm = load_pm25()
+    vol = pd.read_csv(SWEEP / 'volume_per_frame_audit.csv'); assert vol.rendered_budget_ok.all()
+    EP, EV = [0, 1, 2, 5, 10, 20], [0, 2, 5, 10, 20]
+    panels = [('Storms (2D, 744 frames)', EP, {e: 100 * st[e].NPE.to_numpy() for e in EP},
+               {e: st[e].topology_max.to_numpy() for e in EP}, 10),
+              (r'PM$_{2.5}$ hourly (2D, 744 frames)', EP, {e: 100 * pm[e].E_max.to_numpy() for e in EP},
+               {e: pm[e].NMLE_max.to_numpy() for e in EP}, 5)]
+    for n in ['Tangaroa', 'Cylinder']:
+        g = vol[vol.dataset == n]; nf = g.frame.nunique()
+        gg = {e: g[np.isclose(g.epsilon, e / 100)].sort_values('frame') for e in EV}
+        for e in EV:
+            assert len(gg[e]) == nf and (gg[e].NMLE_max <= e / 100 + 1e-6).all()   # Cylinder eps=0 keeps a 1e-7 rendering residue
+        panels.append((f'{n} (3D, {nf} frames)', EV, {e: 100 * gg[e].E_max.to_numpy() for e in EV}, {e: gg[e].NMLE_max.to_numpy() for e in EV}, None))
+    fig = plt.figure(figsize=(7.0, 1.72))
+    gs = fig.add_gridspec(1, 5, width_ratios=[6, 6, .3, 5, 5], wspace=.1)
+    stats = {}
+    for k, (slot, (title, E, disp, merr, sel)) in enumerate(zip([0, 1, 3, 4], panels)):
+        ax = fig.add_subplot(gs[0, slot]); pos = np.arange(len(E))
+        sty = [(NAVY, NAVY, 'white', .5) if e == 0 else (PALE, SEL, NAVY, 1.1) if e == sel else (PALE, MID, NAVY, .5) for e in E]
+        boxes_log(ax, pos, [disp[e] for e in E], sty)
+        ax.set_yscale('log'); ax.set_ylim(.075, 62)
+        ax.set_yticks([.1, .3, 1, 3, 10, 30]); ax.yaxis.set_minor_locator(matplotlib.ticker.NullLocator())
+        ax.set_yticklabels(['0.1', '0.3', '1', '3', '10', '30'] if k == 0 else [])
+        ax.yaxis.grid(True, color=GRID, lw=.4); ax.set_axisbelow(True)
+        ax.set_xlim(-.6, len(E) - .4); ax.set_xticks(pos); ax.set_xticklabels([f'{e:g}' for e in E]); ax.tick_params(pad=1.5)
+        ax.set_title(title, pad=2.5, fontsize=7)
+        if sel is not None:
+            i = E.index(sel); ax.text(i, 45, 'Table 2', ha='center', va='center', fontsize=6, color=SEL, zorder=6)
+        used = {e: int((merr[e] > 1e-6).sum()) for e in E}; nf = len(merr[E[0]])
+        for i, e in enumerate(E):
+            pct = 100 * used[e] / nf; lab = '>99%' if 99 < pct < 100 and round(pct) == 100 else f'{pct:.0f}%'
+            ax.text(i, -.2, lab, transform=ax.get_xaxis_transform(), ha='center', va='top', fontsize=6,
+                    color=SEL if e == sel else '#444444')
+        if k == 0:
+            ax.set_ylabel('Worst displacement per frame\n(% of axis length)', labelpad=2, fontsize=6.6, linespacing=1.0)
+            ax.text(-.03, -.035, r'budget $\varepsilon$ (%)', transform=ax.transAxes, ha='right', va='top', fontsize=6)
+            ax.text(-.03, -.2, 'frames using it', transform=ax.transAxes, ha='right', va='top', fontsize=6, color='#444444')
+        q = lambda e, p: round(float(np.percentile(disp[e], p)), 2)
+        stats[title] = {f'{e:g}': dict(median=q(e, 50), p90=q(e, 90), max=round(float(disp[e].max()), 2), mean=round(float(disp[e].mean()), 4),
+                                       used=f'{used[e]}/{nf}', merge_max=round(100 * float(merr[e].max()), 3), below_floor=int((disp[e] < FLOOR).sum()))
+                        for e in E}
+    fig.subplots_adjust(left=.093, right=.997, top=.86, bottom=.24)
+    for ext in ['pdf', 'svg']:
+        fig.savefig(OUT / f'budget_per_frame.{ext}', bbox_inches='tight', pad_inches=.015)
+    fig.savefig(PREV / 'budget_per_frame.png', dpi=300, bbox_inches='tight', pad_inches=.015)
+    plt.close(fig)
+    return stats
+
+
 if __name__ == '__main__':
     import sys
+    if sys.argv[1:] == ['v22']:
+        for k, v in main_figure_v22().items():
+            print(k, json.dumps(v))
+        raise SystemExit
     if sys.argv[1:] == ['v21']:
         for k, v in main_figure_v21().items():
             print(k, v)

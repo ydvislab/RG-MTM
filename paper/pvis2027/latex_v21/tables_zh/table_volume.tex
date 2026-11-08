@@ -1,0 +1,22 @@
+\begin{table}[t]
+\centering
+\caption{固定 $x$ 参考方向下的体数据比较。粗体与下划线标出每个数据集上的最优与次优值，并列者共享标记。}
+\label{tab:volume-comparison}
+\footnotesize
+\setlength{\tabcolsep}{1.2pt}
+\renewcommand{\arraystretch}{0.9}
+\begin{tabular*}{\columnwidth}{@{\extracolsep{\fill}}lccc lccc@{}}
+\toprule
+\multirow{2}{*}{数据集} & \multicolumn{3}{c}{TMTM} & \multicolumn{4}{c}{AnchorMTM（本文）} \\
+\cmidrule(lr){2-4}\cmidrule(lr){5-8}
+ & SNS$\downarrow$ & TW$\uparrow$ & NPE$\downarrow$ & 模式 & SNS$\downarrow$ & TW$\uparrow$ & NPE$\downarrow$ \\
+\midrule
+\multirow{2}{*}{Cylinder} & \multirow{2}{*}{$0.2956$} & \multirow{2}{*}{$\underline{0.8017}$} & \multirow{2}{*}{$0.4769$} & Exact & $\underline{0.1226}$ & $0.8010$ & $\underline{0.1773}$ \\
+ &  &  &  & Balanced & $\mathbf{0.0329}$ & $\mathbf{0.9117}$ & $\mathbf{0.0458}$ \\
+\multirow{2}{*}{Tangaroa} & \multirow{2}{*}{$0.5255$} & \multirow{2}{*}{$0.6701$} & \multirow{2}{*}{$0.3866$} & Exact & $\underline{0.1204}$ & $\underline{0.8213}$ & $\underline{0.1285}$ \\
+ &  &  &  & Balanced & $\mathbf{0.1124}$ & $\mathbf{0.8408}$ & $\mathbf{0.0653}$ \\
+\bottomrule
+\end{tabular*}
+\vspace{2pt}
+\begin{minipage}{\columnwidth}\footnotesize 全部为本地测量，包括改编后的 TMTM。TW 取 $k=1$，覆盖 102/102 和 201/201 帧。模式仅适用于 AnchorMTM。各配置为冻结的探索性结果，并非盲测；设置见补充表~S4。\end{minipage}
+\end{table}

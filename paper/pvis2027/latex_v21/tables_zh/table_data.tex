@@ -1,0 +1,29 @@
+\begin{table}[t]
+\centering
+\caption{两组序列。下界组复用早期基准保存的树和一组默认配置；布局组重建 ST-MTM 基准，并加入一个逐小时 PM$_{2.5}$ 序列和 TMTM 的体数据。}
+\label{tab:data}
+\footnotesize
+\setlength{\tabcolsep}{2pt}
+\renewcommand{\arraystretch}{0.95}
+\begin{tabular*}{\columnwidth}{@{\extracolsep{\fill}}lllrl@{}}
+\toprule
+组 & 序列 & 场 & 帧数 & 小节 \\
+\midrule
+下界组 & Storms~\cite{Hersbach:2020:ERA5} & ERA5 海平面气压（12 小时） & 118 & \ref{sec:bounds-eval}, \ref{sec:eval-forced} \\
+ & Wildfires~\cite{Franke:2021:1DP} & 火辐射功率，逐日 & 30 & \\
+ & OLR~\cite{NOAA:OLR} & 向外长波辐射 & 60 & \\
+ & PM$_{2.5}$~\cite{Dong:2026:PM25} & PM$_{2.5}$ 浓度，逐日 & 366 & \\
+ & Ring & 合成圆环 & 40 & \\
+ & Tangaroa~\cite{Popinet:2004:Tangaroa} & 速度大小（三维） & 201 & \\
+ & Cylinder~\cite{Camarri:2005:Cylinder} & $Q$ 判据（三维） & 102 & \\
+\midrule
+布局组 & Gaussian & 三个移动的峰 & 64 & \ref{sec:eval-placement}, \ref{sec:eval-budget} \\
+ & Ring & 合成圆环 & 40 & \\
+ & Wildfires & 火辐射功率（32 个时段） & 32 & \\
+ & Storms & ERA5 气压距平（1 小时） & 744 & \\
+ & PM$_{2.5}$~\cite{Kong:2021:CAQRA} & PM$_{2.5}$ 浓度，逐小时 & 744 & \\
+ & Tangaroa & 速度大小（三维） & 201 & \\
+ & Cylinder & $Q$ 判据（三维） & 102 & \\
+\bottomrule
+\end{tabular*}
+\end{table}

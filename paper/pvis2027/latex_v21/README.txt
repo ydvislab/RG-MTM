@@ -8,8 +8,11 @@
       只标 ε=0 的点，Storms 标注改短；图 7 离群帧不再左右抖动，纵轴延伸到 0.004%，7 个低于 0.1% 的 Storms 帧按实际值画出，
       不再用三角形压在底线上。字体统一为 Times New Roman，字号加大。
     * 第 6 章各小节标题与开头段由问句改为陈述句；表 3 "Used in" 列改为对应小节号。
-  未完成：第 7 步——两处邮箱 "To be added"、是否在致谢中披露生成式 AI（IEEE 政策）、最终 PDF 检查与上传。
-  中文正式译稿：main_zh.md。预览：paper/1037_v23.pdf、paper/1037_v23_supplement.pdf。
+  通讯作者邮箱已填（liujun@sccas.cn）；不写致谢（用户决定，2026-11-09）。
+  未完成：第一作者脚注中的 "E-mails: To be added."（其余作者邮箱）、最终 PDF 检查与上传。
+  中文译稿：main_zh.tex（与 main.tex 逐段逐句对应、同一模板排版，图片沿用英文原图，图注和表格已译；
+          XeLaTeX 编译，类文件 vgtc_zh.cls，表格 tables_zh/），PDF 为 paper/1037_v23_zh.pdf；
+          main_zh.md 为同内容的 Markdown 版。预览：paper/1037_v23.pdf、paper/1037_v23_supplement.pdf。
 
 新的论文思路（一句话）
   把合并树地图的轴锚定到空间，位置上必然要付出代价；我们算出任何地图都逃不掉的这份代价，

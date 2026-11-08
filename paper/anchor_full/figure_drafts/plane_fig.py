@@ -115,7 +115,7 @@ def annotate_hero(ax, s):
     for x, y, e in [p for p in s['pts'] if p[2] in (.05, .2)]:
         ax.annotate(r'$\varepsilon=$' + f'{100 * e:g}%', (x, y), xytext=(3, 3.5), textcoords='offset points',
                     fontsize=5.8, color=BLUE, zorder=9)
-    ax.text(11.0, 3.3, 'maps that follow\nthe bounds', fontsize=6.2, color=BLUE, zorder=9, linespacing=1.05)
+    ax.text(11.0, 3.3, 'anchored maps', fontsize=6.2, color=BLUE, zorder=9, linespacing=1.05)
     c = BM['curves']['Storms']
     ax.annotate('space-filling curves\nbreak the tree', (100 * c['Hilbert']['NMLE_max'], 100 * c['Hilbert']['NROE']),
                 xytext=(0, 9), textcoords='offset points', fontsize=6.0, color=M['Hilbert']['c'], ha='center',
@@ -139,7 +139,7 @@ def main():
         if k >= 3: ax.set_xlabel('Worst merge error (%)', fontsize=6.0)
     h = [Patch(facecolor=GREY, edgecolor=HATCH, hatch='//////', lw=0, label='below the bound (unreachable)'),
          Line2D([], [], color=BLUE, lw=1.3, marker='o', ms=2.8, mec='white', mew=.4,
-                label='maps that follow the bounds')]
+                label=r'anchored maps ($\varepsilon$ = 0$-$100%)')]
     for k in ('OLO', 'TMTM', 'ST-MTM', 'Hilbert', 'Morton', 'Projection'):
         s_ = M[k]; h.append(Line2D([], [], marker=s_['mk'], ms=3.6 * (1.45 if s_['mk'] == '*' else 1), color=s_['c'],
                                    mec='k' if s_['mk'] == '*' else 'white', mew=.3, ls='none', label=k))

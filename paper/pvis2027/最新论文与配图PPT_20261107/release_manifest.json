@@ -1,0 +1,30 @@
+{
+  "updated": "2026-11-08",
+  "user_pdf_sha256": "f01346208e5f5b86c03c1885b00545dc0b6155944cae1311a1abf6eee482c8ad",
+  "files": [
+    {
+      "path": "paper/pvis2027/最新论文与三张PPT/AnchorMTM_最新论文.pdf",
+      "sha256": "f01346208e5f5b86c03c1885b00545dc0b6155944cae1311a1abf6eee482c8ad"
+    },
+    {
+      "path": "paper/pvis2027/drafts/method_anchor_figures_updated_en.tex",
+      "sha256": "5d5b572ab657cadb1802d7e445d20c9b09d02bf7480dfbc96a7b218f574476d0"
+    },
+    {
+      "path": "paper/pvis2027/figures/anchor_cylinder_centered_blue.pdf",
+      "sha256": "8cbc63e1c91e773a38ebf2d824375db8db93c9a8bd8fabf43f8644b8eada3e2f"
+    },
+    {
+      "path": "paper/pvis2027/最新论文与配图PPT_20261107/图8_Cylinder三维结果.pptx",
+      "sha256": "541ad99af452daafec9a2dfaa3b3ae1f60445f5b22f7c07ce745aac0c4f36088"
+    },
+    {
+      "path": "paper/pvis2027/最新论文与配图PPT_20261107/当前图3_跨帧特征对应.pptx",
+      "sha256": "24710fed9e7909f9ec5ce99cf76d59894ba780df6c924624178d79faebaccf3b"
+    },
+    {
+      "path": "paper/pvis2027/最新论文与配图PPT_20261107/当前图7_PM25逐小时.pptx",
+      "sha256": "dc1703d06730663e8937eb678737951dcb872788388e219891c0c674be875249"
+    }
+  ]
+}

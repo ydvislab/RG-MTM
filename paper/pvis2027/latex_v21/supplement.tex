@@ -55,7 +55,7 @@ Jun~Liu$^{1,2,}$\thanks{Corresponding author. E-mail: To be added.}
 
 \hypersetup{pdftitle={Supplementary Material for AnchorMTM},pdfauthor={Lele Wang, Yu Dong, Yuxiang Meng, Guan Li, Zhe Wang, Guihua Shan, Jun Liu}}
 
-\abstract{This document supplements the paper ``AnchorMTM: Spatially Anchored Merge Tree Maps with Position Bounds.'' It gives the full definitions, proofs and implementation details for the bounds and AnchorMTM, per-frame distributions of AnchorMTM over the merge budget (Figs.~S1--S4), the evaluation of the bounds on an earlier benchmark (Figs.~S5 and S6), and an exploratory volumetric case.}
+\abstract{This document supplements the paper ``AnchorMTM: Spatially Anchored Merge Tree Maps with Position Bounds.'' It gives the full definitions, proofs and implementation details for the bounds and AnchorMTM, per-frame distributions of AnchorMTM over the merge budget (Figs.~S1--S4), the evaluation of the bounds on an earlier benchmark (Figs.~S5 and S6), an exploratory volumetric case, and the Ring case study with all parameter settings and runtimes (Fig.~S8, Tables~S3 and S4).}
 
 \begin{document}
 \firstsection{Overview}
@@ -483,6 +483,20 @@ The variant in Fig.~\ref{fig:cylinder-centered} uses the same 102 volumes, retai
 Its fixed tree-compatible order needs a worst-case reference cap of 55.21\%; we explicitly allow 56.21\%, including 1\% slack. Monotone warping of the tree profile through the optimized intervals produces 32768-position rasters. All retained-pair checks yield NMLE$_{max}=0$, within 1\%, including half-pixel position rounding; this conservative order does not exploit budgeted reordering or introduce simulation frames.
 
 Central guidance exposes unfolding but sacrifices anchoring. Frame-balanced mean absolute $X$ error is 21.1\%, 25.5\% and 28.1\% for guidance weights 1, 4 and 16, versus 1.9\% for the Cartesian-reference configuration. This differs from NPE and pooled mean displacement. These outputs are not the Cartesian-reference configurations of the paper's volumetric table. Equal-$X$ features may differ in $Y,Z$; their layout separation does not encode depth.
+
+\FloatBarrier
+\section{Ring Case Study, Parameters and Runtime}\label{sec:supp_ring_params}
+\begin{figure}[!t]
+\centering
+\includegraphics[width=\columnwidth]{figures/anchor_ring_result.pdf}
+\caption{Ring comparison. Left: AnchorMTM with topology allowance $\varepsilon$ and guidance strength $\alpha=\varepsilon/20\%$ raised together, from neutral central targets ($\alpha=0$) to full spatial guidance ($\alpha=1$); the upward shift reflects guidance, not the allowance alone. Right: supplied Hilbert/Morton reference panels and same-input local TMTM/ST-MTM results. Below: source snapshots at frames 0, 10, 20, 30 and 39. All computed maps use 40 frames and 196 positions; the scalar key applies to computed maps and snapshots. Vertical coordinates denote normalized layout position or curve rank.}
+\label{fig:ring-result}
+\end{figure}
+Figure~\ref{fig:ring-result} shows a joint guidance--topology sweep on Ring: $\varepsilon=0,2,5,10,20\%$ and guidance strength $\alpha=\varepsilon/20\%$. Layout targets interpolate between the canvas midpoint and the fixed $-128.7^\circ$ physical projection: $q_{layout}=(1-\alpha)q_{mid}+\alpha q_{physical}$. Thus stronger guidance moves the reconstructed ring upward through actual optimization, with no image translation. This qualitative sweep changes both guidance and topology allowance, and each panel lists both values; it is not an epsilon-only ablation, its $\alpha=0$ panel is not the Exact Mode of the paper's comparison table, and it does not replace the frozen main-table settings. TMTM/ST-MTM maps use the same fields and trees; Hilbert/Morton remain supplied references. Five source snapshots show expansion and strengthening.
+
+\input{tables/table2_parameters_runtime.tex}
+\input{tables/table_volume_parameters.tex}
+Table~\ref{tab:anchor-parameters-final} lists the four planar Balanced budgets (1, 1, 5 and 10\%) and layout parameters; Table~\ref{tab:volume-parameters} separately lists the volumetric datasets and settings. The planar table reports one uncached Balanced run on Apple M4, with one BLAS/TTK thread, sequential extraction and the default HiGHS scheduler. Optimization includes ordering and placement; total time additionally includes preprocessing, trees, matching/reference estimation, rasterization, I/O and checks. Imports, reporting and metric export are excluded; OS caches may be warm. Timings do not establish speedup significance. Baseline NPE uses the disclosed CompactTMTM and ST-MTM solver adaptations, not author binaries.
 
 \FloatBarrier
 \bibliographystyle{abbrv-doi-narrow}

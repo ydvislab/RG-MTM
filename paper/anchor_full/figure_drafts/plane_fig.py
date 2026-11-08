@@ -154,5 +154,49 @@ def main():
               {k: (round(100 * v['NMLE_max'], 1), round(100 * v['NROE'], 2)) for k, v in BM['curves'].get(n, {}).items()})
 
 
+def compact(out_dir):
+    """v21 main-paper version: one row, Storms panel slightly wider, short annotations, Times New Roman."""
+    from matplotlib import font_manager
+    for f in ['Times New Roman.ttf', 'Times New Roman Italic.ttf', 'Times New Roman Bold.ttf']:
+        q = Path('/System/Library/Fonts/Supplemental') / f
+        if q.exists(): font_manager.fontManager.addfont(str(q))
+    plt.rcParams.update({'font.family': 'Times New Roman', 'mathtext.fontset': 'stix', 'axes.titleweight': 'normal', 'svg.fonttype': 'none'})
+    fig = plt.figure(figsize=(7.05, 1.9))
+    gs = fig.add_gridspec(1, 7, width_ratios=[1.5, 1, 1, 1, 1, 1, 1], left=.06, right=.995, bottom=.2, top=.78, wspace=.42)
+    for k, n in enumerate(NAMES):
+        ax = fig.add_subplot(gs[0, k]); s_ = panel(ax, n, hero=(k == 0))
+        ax.set_title(LABEL[n] + (' (3D)' if n in ('Tangaroa', 'Cylinder') else ''), loc='left', pad=2.5, fontsize=7)
+        ax.set_xticks([0, 5, 20, 60]); ax.set_xticklabels(['0', '5', '20', '60'])
+        if k == 0:
+            nu = s_['bv'][0]; nb = s_['nb']; lo = min(v['best'] for v in nb.values())
+            share = [100 * (v['best'] - nu) / v['best'] for v in nb.values()]
+            ax.plot([0, 0], [0, nu], color=INK, lw=3.0, solid_capstyle='butt', zorder=8, clip_on=False)
+            ax.plot([0, 0], [nu, lo], color=HATCH, lw=3.0, solid_capstyle='butt', zorder=8, clip_on=False)
+            off = lambda dx, dy=0: offset_copy(ax.transData, fig=fig, x=dx, y=dy, units='points')
+            ax.text(0, (nu + lo) / 2, f'not forced:\n{min(share):.0f}\u2013{max(share):.0f}%', transform=off(9), fontsize=6.2,
+                    va='center', color='#5F6870', linespacing=1.0, zorder=9)
+            ax.annotate(r'forced by the tree, $\nu^*$', (0, .55 * nu), xytext=(9, 11), textcoords='offset points', fontsize=6.2,
+                        color=INK, va='center', zorder=9,
+                        arrowprops=dict(arrowstyle='-', lw=.5, color=INK, shrinkA=0, shrinkB=1.5))
+            ax.set_ylabel('Mean order error (%)', fontsize=7)
+            ax.yaxis.set_major_locator(matplotlib.ticker.MultipleLocator(5))
+    fig.text(.53, .02, 'Worst merge error over frames (% of scalar range, square-root scale)', ha='center', fontsize=7)
+    h = [Patch(facecolor=GREY, edgecolor=HATCH, hatch='//////', lw=0, label='below the bound'),
+         Line2D([], [], color=BLUE, lw=1.3, marker='o', ms=2.8, mec='white', mew=.4, label=r'AnchorMTM, $\varepsilon$ = 0$-$100%')]
+    for k in ('TMTM', 'ST-MTM', 'OLO', 'Hilbert', 'Morton', 'Projection'):
+        s2 = M[k]; h.append(Line2D([], [], marker=s2['mk'], ms=3.6 * (1.45 if s2['mk'] == '*' else 1), color=s2['c'],
+                                   mec='k' if s2['mk'] == '*' else 'white', mew=.3, ls='none', label=k))
+    fig.legend(handles=h, ncol=8, loc='upper center', bbox_to_anchor=(.53, 1.02), fontsize=6.6, handlelength=1.4,
+               columnspacing=1.1, handletextpad=.4)
+    out_dir.mkdir(parents=True, exist_ok=True)
+    for ext in ('pdf', 'svg'):
+        fig.savefig(out_dir / f'plane_compact.{ext}')
+    fig.savefig(HERE / 'preview_v20' / 'plane_compact.png', dpi=250); plt.close(fig)
+
+
 if __name__ == '__main__':
-    main()
+    import sys
+    if sys.argv[1:] == ['compact']:
+        compact(HERE.parents[1] / 'pvis2027/latex_v21/figures')
+    else:
+        main()

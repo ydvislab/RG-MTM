@@ -9,8 +9,8 @@
 \toprule
 Method & Order rule & Placement & $\eta$ & Axis \\
 \midrule
-TMTM~\cite{Koepp:2023:TMTM} & children by overlap with the previous frame & packed by sample count; no optimization & 0 & tree traversal \\
-ST-MTM~\cite{STMTM:2026} & tree-constrained OLO, kept unless cheaper by a ratio & $\lambda_G$ (stress), $\lambda_M$ with $\hat x$ = previous anchor & 0 & relative distance \\
+TMTM~\cite{Koepp:2023:TMTM} & greedy child order by subtree overlap between frames & packed by sample count; no anchor optimization & 0 & tree traversal \\
+ST-MTM~\cite{STMTM:2026} & concordant order unless OLO is cheaper by a ratio & $\lambda_G$ (stress), $\lambda_M$ on matched anchors, then intervals & 0 & relative distance \\
 OLO~\cite{BarJoseph:2001:OLO} & tree-constrained OLO & ranks only & 0 & order \\
 Projection, Hilbert, Morton~\cite{Franke:2021:1DP} & by reference or curve & at reference or curve rank & none & location or curve rank \\
 \midrule

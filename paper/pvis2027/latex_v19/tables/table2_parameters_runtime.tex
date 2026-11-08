@@ -1,0 +1,21 @@
+\begin{table}[!ht]
+\centering
+\caption{Balanced-mode parameter settings and runtime (seconds).}
+\label{tab:anchor-parameters-final}
+\footnotesize
+\setlength{\tabcolsep}{2pt}
+\renewcommand{\arraystretch}{0.95}
+\begin{tabular}{@{}lcccc@{}}
+\toprule
+Parameter & Gaussian & Ring & Wildfires & Storms \\
+\midrule
+$\varepsilon$ & 1\% & 1\% & 5\% & 10\% \\
+$L$ & 4096 & 196 & 4096 & 4096 \\
+$s_w$ & 0.00581 & 0.00328 & 0.00053 & 0.01170 \\
+$t_{opt}$ & 0.156 & 0.150 & 3.324 & 2.600 \\
+$t_{total}$ & 1.340 & 0.486 & 4.424 & 63.447 \\
+\bottomrule
+\end{tabular}
+\vspace{2pt}
+\begin{minipage}{0.94\columnwidth}\footnotesize Weights $(4,1,0.5,0.1)$ and $\rho=0.5$ are fixed. $s_w$ is width per support measure; $L$ is raster length. Times are one run on Apple M4: optimization and full pipeline, respectively.\end{minipage}
+\end{table}

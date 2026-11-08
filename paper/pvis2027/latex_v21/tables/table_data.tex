@@ -7,9 +7,9 @@
 \renewcommand{\arraystretch}{0.95}
 \begin{tabular*}{\columnwidth}{@{\extracolsep{\fill}}lllrl@{}}
 \toprule
-Suite & Sequence & Field & Frames & Used in \\
+Suite & Sequence & Field & Frames & Section \\
 \midrule
-Bound & Storms~\cite{Hersbach:2020:ERA5} & ERA5 sea-level pressure (12\,h) & 118 & Q1, Q2 \\
+Bound & Storms~\cite{Hersbach:2020:ERA5} & ERA5 sea-level pressure (12\,h) & 118 & \ref{sec:bounds-eval}, \ref{sec:eval-forced} \\
  & Wildfires~\cite{Franke:2021:1DP} & fire radiative power, daily & 30 & \\
  & OLR~\cite{NOAA:OLR} & outgoing longwave radiation & 60 & \\
  & PM$_{2.5}$~\cite{Dong:2026:PM25} & PM$_{2.5}$ concentration, daily & 366 & \\
@@ -17,7 +17,7 @@ Bound & Storms~\cite{Hersbach:2020:ERA5} & ERA5 sea-level pressure (12\,h) & 118
  & Tangaroa~\cite{Popinet:2004:Tangaroa} & velocity magnitude (3D) & 201 & \\
  & Cylinder~\cite{Camarri:2005:Cylinder} & $Q$-criterion (3D) & 102 & \\
 \midrule
-Layout & Gaussian & three moving peaks & 64 & Q3, Q4 \\
+Layout & Gaussian & three moving peaks & 64 & \ref{sec:eval-placement}, \ref{sec:eval-budget} \\
  & Ring & synthetic ring & 40 & \\
  & Wildfires & fire radiative power (32 bins) & 32 & \\
  & Storms & ERA5 pressure anomaly (1\,h) & 744 & \\

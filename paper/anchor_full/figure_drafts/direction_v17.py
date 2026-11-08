@@ -36,7 +36,7 @@ for k, n in enumerate(['Tangaroa', 'Cylinder']):
     cb.ax.tick_params(labelsize=5.2, length=2); cb.set_label('mean order bound (%)', fontsize=5.6, labelpad=1)
     ax.set_title(n, fontsize=7, pad=2)
     ax = fig.add_subplot(g[k, 1]); labs = ['x', 'y', 'z', 'stored', 'smallest bound']; x = np.arange(len(labs)); w = .2
-    for j, (key, col, lab) in enumerate([('nu_allow', '#000000', 'bound'), ('ours_NROE', C['A'], r'anchored, $\varepsilon=0$'),
+    for j, (key, col, lab) in enumerate([('nu_allow', '#000000', 'bound'), ('ours_NROE', C['A'], r'AnchorMTM, $\varepsilon=0$'),
                                           ('ST-MTM_NROE', C['D'], 'ST-MTM'), ('TMTM_NROE', C['base'], 'TMTM')]):
         ax.bar(x + (j - 1.5) * w, [100 * K[l][key] for l in labs], w, color=col, label=lab, lw=0)
     ax.set_xticks(x); ax.set_xticklabels(['x', 'y', 'z', 'stored', 'best'], fontsize=5.6)

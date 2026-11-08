@@ -1,0 +1,170 @@
+[
+ [
+  "Aupetit:2007:VD",
+  "OK",
+  "Visualizing distortions and recovering topology in continuous projecti",
+  2007
+ ],
+ [
+  "Doraiswamy:2021:TM",
+  "OK",
+  "TopoMap: A 0-dimensional Homology Preserving Projection of High-Dimens",
+  2021
+ ],
+ [
+  "Edelsbrunner:2002:TPS",
+  "OK",
+  "Topological Persistence and Simplification",
+  2002
+ ],
+ [
+  "Eisen:1998:CA",
+  "OK",
+  "Cluster analysis and display of genome-wide expression patterns",
+  1998
+ ],
+ [
+  "Eldridge:2015:MD",
+  "NO DOI",
+  "",
+  null
+ ],
+ [
+  "Fernau:2010:CTC",
+  "OK",
+  "Comparing trees via crossing minimization",
+  2010
+ ],
+ [
+  "Heine:2011:DCT",
+  "OK",
+  "Drawing Contour Trees in the Plane",
+  2011
+ ],
+ [
+  "Huson:2026:DOT",
+  "OK",
+  "Displacement-Optimized Tanglegrams for Trees and Networks",
+  2026
+ ],
+ [
+  "Klawitter:2025:GP",
+  "OK",
+  "Visualizing Geophylogenies - Internal and External Labeling with Phylo",
+  2025
+ ],
+ [
+  "Koepp:2019:TT",
+  "OK",
+  "Temporal Treemaps: Static Visualization of Evolving Trees",
+  2019
+ ],
+ [
+  "Lan:2024:AR",
+  "OK",
+  "Topological Characterization and Uncertainty Visualization of Atmosphe",
+  2024
+ ],
+ [
+  "Liu:2013:SF",
+  "OK",
+  "StoryFlow: Tracking the Evolution of Stories",
+  2013
+ ],
+ [
+  "Lohfink:2020:FCT",
+  "OK",
+  "Fuzzy Contour Trees: Alignment and Joint Layout of Multiple Contour Tr",
+  2020
+ ],
+ [
+  "Lukasczyk:2017:NTG",
+  "OK",
+  "Nested Tracking Graphs",
+  2017
+ ],
+ [
+  "Lukasczyk:2020:DNTG",
+  "OK",
+  "Dynamic Nested Tracking Graphs",
+  2020
+ ],
+ [
+  "Oesterling:2017:TVMT",
+  "OK",
+  "Computing and Visualizing Time-Varying Merge Trees for High-Dimensiona",
+  2017
+ ],
+ [
+  "Pont:2022:WMT",
+  "OK",
+  "Wasserstein Distances, Geodesics and Barycenters of Merge Trees",
+  2022
+ ],
+ [
+  "Rauscher:2025:1DO",
+  "OK",
+  "Visually Assessing 1\u2010D Orderings of Contiguous Spatial Polygons",
+  2025
+ ],
+ [
+  "Saikia:2017:GFT",
+  "OK",
+  "Global Feature Tracking and Similarity Estimation in Time\u2010Dependent Sc",
+  2017
+ ],
+ [
+  "Silver:1997:Tracking",
+  "OK",
+  "Tracking and visualizing turbulent 3D features",
+  1997
+ ],
+ [
+  "Tanahashi:2012:Storyline",
+  "OK",
+  "Design Considerations for Optimizing Storyline Visualizations",
+  2012
+ ],
+ [
+  "Valdrighi:2024:MRV",
+  "OK",
+  "MoReVis: A Visual Summary for Spatiotemporal Moving Regions",
+  2024
+ ],
+ [
+  "Widanagamaachchi:2012:DTG",
+  "OK",
+  "Interactive exploration of large-scale time-varying data using dynamic",
+  2012
+ ],
+ [
+  "Wood:2008:SOT",
+  "OK",
+  "Spatially Ordered Treemaps",
+  2008
+ ],
+ [
+  "Wulms:2021:SVS",
+  "OK",
+  "Stable Visual Summaries for Trajectory Collections",
+  2021
+ ],
+ [
+  "Yan:2022:GAMT",
+  "OK",
+  "Geometry-Aware Merge Tree Comparisons for Time-Varying Data With Inter",
+  2023
+ ],
+ [
+  "Yan:2024:TROPHY",
+  "OK",
+  "TROPHY: A Topologically Robust Physics-Informed Tracking Framework for",
+  2023
+ ],
+ [
+  "vanBeusekom:2023:DSL",
+  "ERR",
+  "HTTP Error 404: Not Found",
+  null
+ ]
+]

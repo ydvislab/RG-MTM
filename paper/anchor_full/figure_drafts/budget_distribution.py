@@ -10,7 +10,7 @@ Inputs (saved results, read only; no algorithm is rerun):
 Per frame t: NPE_t = max_i |x_i - q_i| / L_world (rendered anchors), NMLE_t = attained fixed-leaf merge error / scalar range,
 SNS_t = scale-normalized stress. Table NPE is the mean of NPE_t over frames.
 
-Run:  python budget_distribution.py   ->  ../../pvis2027/latex_v20/figures/budget_*.pdf (+ png previews next to this file)
+Run:  python budget_distribution.py [v21]  ->  ../../pvis2027/latex_v21/figures/budget_*.pdf (+ svg, png previews next to this file)
 """
 import json
 from pathlib import Path
@@ -27,7 +27,7 @@ HERE = Path(__file__).resolve().parent
 PV = HERE.parents[1] / 'pvis2027'
 SWEEP = PV / 'budget_tradeoff_20261105'
 RATIO = PV / 'experiments_ratio_p_20261104'
-OUT = PV / 'latex_v20/figures'
+OUT = PV / 'latex_v21/figures'
 PREV = HERE / 'preview_v20'
 OUT.mkdir(parents=True, exist_ok=True); PREV.mkdir(exist_ok=True)
 
@@ -38,7 +38,7 @@ for f in ['Times New Roman.ttf', 'Times New Roman Bold.ttf', 'Times New Roman It
 plt.rcParams.update({'font.family': 'Times New Roman', 'mathtext.fontset': 'stix', 'font.size': 7,
                      'axes.titlesize': 7.5, 'axes.labelsize': 7, 'xtick.labelsize': 6.2, 'ytick.labelsize': 6.2,
                      'axes.linewidth': .55, 'xtick.major.size': 2, 'ytick.major.size': 2, 'xtick.major.width': .5,
-                     'ytick.major.width': .5, 'pdf.fonttype': 42, 'axes.spines.top': False, 'axes.spines.right': False})
+                     'ytick.major.width': .5, 'pdf.fonttype': 42, 'svg.fonttype': 'none', 'axes.spines.top': False, 'axes.spines.right': False})
 BLUE, LIGHT, ORANGE, LORANGE = '#0072B2', '#cfe3f1', '#D55E00', '#f6d2bd'
 DARK, LDARK = '#3d4a55', '#dfe3e6'
 GREY, GRID, DOT = '#6b7378', '#e3e7ea', '#8a9399'
@@ -305,7 +305,58 @@ def supp_selection():
     plt.close(fig)
 
 
+# ---------------------------------------------------------------- v21 main figure: 2D and 3D in one row, common budgets
+def main_figure_v21():
+    E = [0, 2, 5, 10, 20]
+    vol = pd.read_csv(SWEEP / 'volume_per_frame_audit.csv'); assert vol.rendered_budget_ok.all()
+    cols = []
+    for n in PLANAR:
+        runs = load_planar(n)
+        cols.append((n, f'{n} (2D, {FRAMES[n]})', {e: 100 * runs[e].NPE.to_numpy() for e in E}, {e: 100 * runs[e].topology_max.to_numpy() for e in E}, SELECTED[n]))
+    for n in ['Tangaroa', 'Cylinder']:
+        g = vol[vol.dataset == n]; nf = g.frame.nunique()
+        cols.append((n, f'{n} (3D, {nf})', {e: 100 * g[np.isclose(g.epsilon, e / 100)].E_max.to_numpy() for e in E},
+                     {e: 100 * g[np.isclose(g.epsilon, e / 100)].NMLE_max.to_numpy() for e in E}, None))
+    fig = plt.figure(figsize=(7.0, 2.35))
+    gs = fig.add_gridspec(2, 6, width_ratios=[1, 1, 1, .12, 1, 1], height_ratios=[1.45, 1], hspace=.2, wspace=.32)
+    slots = [0, 1, 2, 4, 5]; pos = np.arange(len(E)); stats = {}
+    for c, (n, title, disp, merr, sel) in zip(slots, cols):
+        col = [(ORANGE, LORANGE) if e == sel else (DARK, LDARK) if e == 0 else (BLUE, LIGHT) for e in E]
+        ax = fig.add_subplot(gs[0, c]); sqrt_axis(ax)
+        boxes(ax, pos, [disp[e] for e in E], col, width=.6)
+        top = max(v.max() for v in disp.values()); ax.set_ylim(0, top * 1.08)
+        tk = [t for t in {'Storms': [0, 1, 5, 10, 20, 40], 'Wildfires': [0, .5, 1, 2, 4], 'Ring': [0, 1, 2, 5, 10],
+                          'Tangaroa': [0, 1, 5, 10], 'Cylinder': [0, 1, 5, 10, 20]}[n] if t <= top * 1.08]
+        ax.set_yticks(tk); ax.set_yticklabels([f'{t:g}' for t in tk])
+        ax.set_xticks(pos); ax.set_xticklabels([]); ax.set_xlim(-.6, len(E) - .4); ax.set_title(title, pad=2.5, fontsize=7); style(ax)
+        ax2 = fig.add_subplot(gs[1, c])
+        strip(ax2, pos, [merr[e] for e in E], col, width=.6, s=1.1, alpha=.35)
+        ax2.scatter(pos, E, marker='_', s=36, color=GREY, lw=.9, zorder=4)
+        ax2.set_xticks(pos); ax2.set_xticklabels([f'{e:g}' for e in E]); ax2.set_xlim(-.6, len(E) - .4); ax2.set_ylim(-.8, 21); ax2.set_yticks([0, 10, 20]); style(ax2)
+        if c == 0:
+            ax.set_ylabel('Worst displacement\nper frame (%)', labelpad=2); ax2.set_ylabel('Merge error\nper frame (%)', labelpad=5)
+        stats[n] = {e: (round(float(np.median(disp[e])), 2), round(float(np.percentile(disp[e], 90)), 2), round(float(disp[e].max()), 2),
+                        int((merr[e] > 1e-4).sum()), len(merr[e])) for e in E}
+    fig.text(.53, .015, r'Merge budget $\varepsilon$ (%)', ha='center', fontsize=7)
+    h = [Patch(fc=LDARK, ec=DARK, lw=.5, label=r'Exact ($\varepsilon=0$)'), Patch(fc=LIGHT, ec=BLUE, lw=.5, label=r'$\varepsilon>0$'),
+         Patch(fc=LORANGE, ec=ORANGE, lw=.5, label=r'Balanced (selected $\varepsilon$)'),
+         Line2D([], [], ls='none', marker='D', ms=2.6, mfc='white', mec=GREY, mew=.55, label='mean'),
+         Line2D([], [], ls='none', marker='_', ms=6, mec=GREY, mew=.9, label=r'budget $\varepsilon$')]
+    fig.legend(handles=h, ncol=5, loc='upper center', bbox_to_anchor=(.53, 1.06), frameon=False, fontsize=6.3, handlelength=1.2, columnspacing=1.3)
+    fig.subplots_adjust(left=.075, right=.995, top=.88, bottom=.13)
+    for ext in ['pdf', 'svg']:
+        fig.savefig(OUT / f'budget_distribution_2d3d.{ext}', bbox_inches='tight', pad_inches=.015)
+    fig.savefig(PREV / 'budget_distribution_2d3d.png', dpi=250, bbox_inches='tight', pad_inches=.015)
+    plt.close(fig)
+    return stats
+
+
 if __name__ == '__main__':
+    import sys
+    if sys.argv[1:] == ['v21']:
+        for k, v in main_figure_v21().items():
+            print(k, v)
+        raise SystemExit
     st = main_figure()
     for k, v in st.items():
         print(k, {a: (tuple(round(x, 2) for x in b) if isinstance(b, tuple) else b) for a, b in v.items()})

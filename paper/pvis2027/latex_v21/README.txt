@@ -41,9 +41,13 @@
   两份文件里 "E-mails: To be added." 和 "Corresponding author. E-mail: To be added." 要填。
 
 新图的数据来源（都是已保存结果，没有新实验）
-  * 图 4：早期七序列基准的下界与 AnchorMTM 前沿；TMTM/ST-MTM/OLO 取与参考更一致的镜像。
+  * 图 3：合作者提供的流程图（PPTX 导出），可编辑源文件 figures/anchor_framework.pptx。
+  * 图 5：早期七序列基准的下界与 AnchorMTM 前沿；TMTM/ST-MTM/OLO 取与参考更一致的镜像。
   * 图 6：AnchorMTM 位置由 frontier 管线重算，与存档结果及体数据预算扫描逐项一致；
     TMTM、ST-MTM 为仓库中按原文实现保存的锚点，同一特征。若要换成标量地图，需要
     output/current_method_parameter_sweep_20261029/{tangaroa,cylinder}/epsilon_*.npz（合作者机器上）。
   * 图 7：budget_tradeoff_20261105 的完整序列逐帧结果（平面）和 volume_per_frame_audit.csv（体数据）。
   作图脚本在仓库 paper/anchor_full/figure_drafts/（plane_fig.py compact、volume_gallery_fig.py、budget_distribution.py v21）。
+  * 图 9 与表 2 的 PM2.5 行、补充表 S3 的 PM2.5 列：合作者的逐小时 PM2.5 结果
+    （仓库 paper/pvis2027/pm25_hourly_20261107/：comparison_metrics.csv、timing.json、eps_*_summary.json）；
+    图 9 的可编辑版本是 figures/pm25_hourly.svg。

@@ -21,7 +21,20 @@ from matplotlib.lines import Line2D
 from matplotlib.patches import Patch
 import v23_figures as v
 import plane_fig as pf
-from fig_plane_her import series, OUT, FIG, PANELS, GREY, HATCH, BLUE, TM, ST
+from fig_plane_her import series as series_v33, OUT, FIG, PANELS, GREY, HATCH, BLUE, TM, ST
+V35 = FIG / 'volumes_v35'   # v35: Tangaroa along the streamwise x axis (volumes_v35.py figs Tangaroa x)
+
+
+def series(n):
+    f = V35 / f'{n.lower()}_x_plane.json'
+    if n != 'Tangaroa' or not f.exists(): return series_v33(n)
+    d = json.loads(f.read_text()); be = 100 * np.array(d['bound']['epsilon']); bv = 100 * np.array(d['bound']['envelope'])
+    pts = sorted((100 * b['NMLE_max'], 100 * b['NROE_mean'], b['epsilon']) for b in d['construction']); fx, fy = [], []
+    for x, y, e in pts:
+        if not fy or y < fy[-1] - 1e-12: fx.append(x); fy.append(y)
+    e0 = next((x, y) for x, y, e in pts if e == 0.)
+    base = {m: 100 * v['best'] for m, v in d['baselines_NROE'].items()}
+    return be, bv, np.array(fx), np.array(fy), e0, base, (100 * d['projection_NMLE_max'], 0.), bv[0]
 OUT = Path(os.environ.get('FIG6_OUT', OUT))
 # Gaussian: its bound is zero, so it needs a separate '0' position on the log axis. The baselines' mean order error
 # comes from the collaborator's package 01 (gaussian_plane_row.py writes this file on the Mac); without it the row is left out.

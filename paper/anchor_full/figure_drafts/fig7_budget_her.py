@@ -62,6 +62,8 @@ def summary():
 
 def main():
     v.use_times(); S = summary()
+    v35 = HERE.parent / 'figdata/volumes_v35/tangaroa_x_budget.json'   # v35: Tangaroa along the streamwise x axis (no 1% run)
+    if v35.exists(): S['Tangaroa'] = json.loads(v35.read_text())
     fig = plt.figure(figsize=(7.05, 2.55)); g = fig.add_gridspec(2, 7, height_ratios=[3.2, 1], hspace=.2, wspace=.3,
                                                                 left=.085, right=.995, top=.79, bottom=.2)
     for k, (n, title) in enumerate(SEQ):

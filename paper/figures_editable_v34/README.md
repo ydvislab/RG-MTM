@@ -27,7 +27,7 @@
 
 ## 版本说明
 - `Fig1`、`Fig2`、`Fig3`、`Fig7`、`FigS2`、`FigS3`、`FigS5` 是合作者 v34 zip 里的最新版，尚未替换进 `paper/pvis2027/latex_v30/figures/`。
-- `Fig4`、`Fig5`、`Fig6` 是 v34 当前状态。之后删除 Gaussian、更换 Tangaroa 的轴时，这几张会重新生成。
+- `Fig4`、`Fig5`、`Fig6` 已按 v35（2026-11-09，Tangaroa 改为沿流向 x 轴）重新生成，与 `paper/1037_v35.pdf` 一致。其余图在 v35 没有变化。
 
 重新生成：
 ```bash

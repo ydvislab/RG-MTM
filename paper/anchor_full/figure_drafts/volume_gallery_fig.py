@@ -44,7 +44,9 @@ def main():
             ax = fig.add_subplot(g[r, c])
             if key == 'reference':
                 u = qn; dv = np.zeros_like(u); note = f'frames 0\u2013{len(Q) - 1}'
-                ax.scatter(t, u, s=.3, lw=0, color='#4d5358', rasterized=True)
+                # vector, not rasterized: a one-colour raster is stored as a 1-bit indexed image with a soft mask,
+                # which some PDF viewers (macOS Preview) draw as blank (v25 fix, 2026-11-09)
+                ax.scatter(t, u, s=.3, lw=0, color='#4d5358', rasterized=False)
             else:
                 m = d['maps'][key]; X = [(np.asarray(x) - o) / L for x in m['x']]; u = np.concatenate(X); dv = u - qn
                 srt = np.argsort(np.abs(dv))

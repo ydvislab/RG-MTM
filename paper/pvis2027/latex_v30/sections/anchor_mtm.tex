@@ -13,7 +13,7 @@ Order search receives the prepared tree, reference targets, widths and merge all
 \end{equation}
 The exact tree supplies a feasible strict-topology seed. Selective flattening releases additional permutations while retaining deeper blocks, as illustrated in Fig.~\ref{fig:selective_relaxation}.
 
-\paragraph{Construction sequence.} For each frame, generate and refine candidate orders; compute $\tau$, NROE and $\delta^*$; admit the budget-feasible orders; choose the lexicographic minimum; solve its capped QP; fill and correct the profile; then check the rendered merge matrix and append the temporal column. The supplementary algorithm lists these steps with the tracking and rounding procedures.
+\paragraph{Construction sequence.} For each frame, generate and refine candidate orders; compute $\tau$, NROE and $\delta^*$; admit the budget-feasible orders; choose the lexicographic minimum; solve its capped QP; fill and correct the profile; then check the rendered merge matrix and append the temporal column. Supplementary Section~S3 details candidate generation, refinement and rounding.
 
 \begin{figure}[!tb]
 \centering
@@ -44,4 +44,4 @@ The selected order is now fixed, so placement changes coordinates without revisi
 with fixed slack $\beta_0$. Because $\tau$ is attained, this cap is feasible and transfers the selected order's displacement control to the final anchors. The cap prevents a relative-distance or temporal term from moving an anchor arbitrarily far from its spatial target. Conversely, the fixed slack leaves room to improve these secondary relationships after the discrete order has been chosen. Within a frame the feasible set is linear and the objective quadratic; frame order enters only through matched predecessor targets.
 
 \subsection{Profile Reconstruction}
-The final stage receives the order, anchor intervals and optimal barriers. Leaf-arc samples fill the intervals and LCA paths fill their gaps~\cite{Koepp:2023:TMTM,STMTM:2026}. Barrier correction clips each inter-anchor interior to $b_k$ and raises its peak when needed. Profiles share direction, origin, extent and pixel scale; their stack is $I^\varepsilon(t,u)=\psi_t^\varepsilon(u)$. Integer rounding can affect merge levels, so the rendered fixed-label matrix, including its diagonal, is checked after reconstruction. The supplementary material supplies the full algorithm and rounding procedure.
+The final stage receives the order, anchor intervals and optimal barriers. Leaf-arc samples fill the intervals and LCA paths fill their gaps~\cite{Koepp:2023:TMTM,STMTM:2026}. Barrier correction clips each inter-anchor interior to $b_k$ and raises its peak when needed. Profiles share direction, origin, extent and pixel scale; their stack is $I^\varepsilon(t,u)=\psi_t^\varepsilon(u)$. Integer rounding can affect merge levels, so the rendered fixed-label matrix, including its diagonal, is checked after reconstruction.

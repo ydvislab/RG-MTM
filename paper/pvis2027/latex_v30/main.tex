@@ -1,7 +1,5 @@
-% Paper 1037, v30 (2026-11-09): built on the collaborator's AnchorMTM_Revised (upstream d67c9c2); see notes/2026-11-09-v30-figure-decisions.md.
-% Build: tectonic -X compile --keep-logs method_anchor_figures_updated_en.tex
-% Unchanged companion: method_anchor_single_parameter_supplement.tex/.pdf.
-% Changes: ANCHORMTM_SINGLE_PARAMETER_VALIDATION.md.
+% Paper 1037, v33 (2026-11-09). Companion: supplementary.tex.
+% Build: tectonic -X compile main.tex   (or pdflatex + bibtex + pdflatex x2)
 \documentclass[preprint]{vgtc}   % single-blind: authors shown, submission ID in the page header
 \usepackage[T1]{fontenc}
 \usepackage{mathptmx}
@@ -37,7 +35,7 @@
 \newcommand{\lca}{\operatorname{lca}}
 \newcommand{\nroe}{\mathrm{NROE}}
 \newcommand{\pos}[1]{\left[#1\right]^+}
-\title{AnchorMTM: Spatially Anchored Merge Tree Maps\\for Time-Varying Scalar Fields}
+\title{AnchorMTM: Spatially Anchored Merge Tree Maps with\\Topology--Position Tradeoffs}
 \author{%
 Lele~Wang$^{1,2}$\thanks{%
 Affiliations:
@@ -67,8 +65,8 @@ Jun~Liu$^{1,2}$\thanks{Corresponding author. E-mail: liujun@sccas.cn.}
 \vgtccategory{Research}
 \vgtcinsertpkg
 \usepackage{tikz}
-\hypersetup{pdftitle={AnchorMTM: Spatially Anchored Merge Tree Maps for Time-Varying Scalar Fields},pdfauthor={Lele Wang, Yu Dong, Yuxiang Meng, Guan Li, Zhe Wang, Guihua Shan, Jun Liu}}
-\abstract{Merge tree maps summarize a time-varying scalar field in a single static image: each time step becomes a one-dimensional profile of its merge tree, and the profiles are stacked along time, so that nested features appear as nested bands. The vertical axis of these maps, however, encodes tree order or relative distance rather than location, so an analyst can see how features nest but not where they are or where they move. We present AnchorMTM, a spatially anchored merge tree map whose vertical axis is one fixed spatial direction. Anchoring exposes a structural conflict: an exact profile keeps every subtree contiguous, whereas the projected locations of sibling subtrees may interleave. We quantify the displacement this conflict forces through three layout-independent lower bounds, for exact topology, for features of finite width, and for a bounded change of merge levels, and we build the map around them. A leaf-order search admits orders through a closed-form merge-error test, a capped quadratic program places the extrema, and a single merge budget controls how much merge-level fidelity may be traded for position. On five planar and two volumetric sequences, the selected orders attain the width-aware bound on 1,335 of 1,624 planar frames; on the real-data sequences, 56--98\% of the order error of existing merge tree maps is not forced by the tree; and at zero merge error, AnchorMTM lowers the mean worst displacement of TMTM and ST-MTM by 73--96\%, while ST-MTM retains better neighborhood preservation. The bounds make the positional price of a spatial axis measurable before a map is drawn.}
+\hypersetup{pdftitle={AnchorMTM: Spatially Anchored Merge Tree Maps with Topology-Position Tradeoffs},pdfauthor={Lele Wang, Yu Dong, Yuxiang Meng, Guan Li, Zhe Wang, Guihua Shan, Jun Liu}}
+\abstract{Merge tree maps summarize a time-varying scalar field in one static image: each time step becomes a one-dimensional profile of its merge tree, and the profiles are stacked along time, so that nested features appear as nested bands. The vertical axis of these maps encodes tree order or relative distance rather than location, so an analyst sees how features nest but not where they are or how they move. We present AnchorMTM, a merge tree map whose vertical axis is one fixed spatial direction. Anchoring the axis exposes a conflict: a profile that shows the tree exactly keeps every subtree contiguous, whereas the locations of sibling subtrees may interleave along the direction. We derive lower bounds on the displacement this conflict forces, for exact topology, for features of finite width and for a bounded change of merge levels. The bounds depend only on the trees and the feature locations, so they apply to every merge tree map and are known before any layout is computed. AnchorMTM then builds the map under a single merge budget that limits how far the displayed merge levels may change. On five planar and two volumetric sequences, the bounds show that most of the positional error of existing merge tree maps is not forced by the tree. AnchorMTM attains the exact-topology bound for finite widths on most planar frames and, with the tree kept exactly, draws features much closer to their locations, while existing maps preserve neighborhoods better. Where conflicting subtrees merge at similar levels, a small budget removes most of the remaining displacement. The bounds make the positional price of a spatial axis measurable before a map is drawn.}
 \keywords{Time-varying scalar fields, merge tree maps, topology-based visualization, spatial anchoring, lower bounds, constrained layout.}
 \teaser{
 \centering

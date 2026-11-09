@@ -1,45 +1,45 @@
 \section{The Positional Price of Keeping the Tree}\label{sec:bounds}
-The positional cost comes from two sources: constraints imposed by the hierarchy and additional choices made by a layout. We first isolate the hierarchy in a point model, then account for interval packing, and finally allow controlled changes to merge levels. This progression answers RQ1--RQ3 using the same reference coordinate. Suppress $t$, write $[v]^+=\max(v,0)$ and take empty maxima as zero; complete packing derivations are in the supplementary material.
+The positional cost comes from two sources: constraints imposed by the hierarchy and additional choices made by a layout. We first isolate the hierarchy in a point model, then account for interval packing, and finally allow a bounded merge error. This progression answers RQ1--RQ3 using the same reference coordinate. Suppress $t$, write $[v]^+=\max(v,0)$ and take empty maxima as zero; the proofs are in Supplementary Section~S2.
 
 \subsection{Exact Topology}
-The first question removes feature width and asks what the hierarchy alone forces. Exact topology keeps sibling subtrees in separate blocks, so their reference hulls determine the cost of choosing either block orientation. Let $[m_X,M_X]$ be the reference hull of subtree $X$ in the reduced equal-level tree.
-\begin{theorem}[Exact-topology position bound]\label{thm:order}
+The first question removes feature width and asks what the hierarchy alone forces. An exact profile keeps sibling subtrees in separate blocks, so their reference hulls determine the cost of either block orientation. Let $[m_X,M_X]$ be the reference hull of subtree $X$, the smallest interval that contains the references of its leaves.
+\begin{proposition}[Exact-topology bound]\label{thm:order}
 Every exact profile satisfies $\nroe(\pi)\ge\nu^*$, where
 \begin{equation}\label{eq:nu}
 \nu^*=\frac{1}{2L}\max_v\max_{X\ne Y\in\mathrm{ch}(v)}[\min(M_X-m_Y,M_Y-m_X)]^+.
 \end{equation}
-Recursive ordering by child-hull midpoint attains $\nu^*$ in $O(n\log n)$ time.
-\end{theorem}
-Sibling blocks must take one orientation. Its inversion cost is either $[M_X-m_Y]^+/2$ or $[M_Y-m_X]^+/2$, and midpoint order chooses the smaller. Every inverted leaf pair separates at its LCA. Therefore error above $\nu^*$ can be removed by reordering in the point model.
+Ordering the children of every node by the midpoints of their hulls attains $\nu^*$ in $O(n\log n)$ time.
+\end{proposition}
+Two sibling blocks must take one orientation, and each orientation inverts some references: placing $X$ first costs $[M_X-m_Y]^+/2$, placing $Y$ first $[M_Y-m_X]^+/2$, and midpoint order chooses the smaller. Every inverted pair of leaves is separated at its lowest common ancestor, so the midpoint order has no larger inversion. Any order error above $\nu^*$ is therefore chosen by the layout, not forced by the tree; we call it \emph{not forced}.
 
 \subsection{Finite Widths}
-Set $H_i=\rho W_i/2$, $\ell_i=q_i-W_i/2-H_i$, $h_i=q_i+W_i/2+H_i$ and $s_i=W_i+g$. Packing summaries
+Set $H_i=\rho W_i/2$, $\ell_i=q_i-W_i/2-H_i$, $h_i=q_i+W_i/2+H_i$ and $s_i=W_i+g$. For a set $S$ of leaves, the packing summaries
 \begin{equation}\label{eq:packing}
 \begin{split}
 A(S)&=\max_{a\in S}\bigl(\ell_a+\sum_{i\in S:\ell_i\ge\ell_a}s_i\bigr),\\
 B(S)&=\max_{b\in S}\bigl(\sum_{i\in S:h_i\le h_b}s_i-h_b\bigr)
 \end{split}
 \end{equation}
-measure the interval span forced by upper and lower reference-endpoint sets. Define $\omega(X,Y)=\tfrac12\min\{A(X)+B(Y),A(Y)+B(X)\}-g/2$, and $E_\partial=\max\{0,B(\mathcal F)-g,A(\mathcal F)-g-L\}$ for all leaves $\mathcal F$.
-\begin{theorem}[Width-aware position bound]\label{thm:width}
-For every feasible exact-topology interval layout,
+bound how far right the intervals of $S$ must reach and, negated, how far left they must begin, given their references and anchor slack. Define $\omega(X,Y)=\tfrac12\min\{A(X)+B(Y),A(Y)+B(X)\}-g/2$ for two disjoint leaf sets, and the canvas term $E_\partial=\max\{0,B(\mathcal F)-g,A(\mathcal F)-g-L\}$ for the set $\mathcal F$ of all leaves.
+\begin{proposition}[Width-aware bound]\label{thm:width}
+For every exact interval layout in order $\pi$,
 \begin{equation}\label{eq:widthbound}
 \|x-q\|_\infty\ge\tau(\pi)\ge\mathcal B_w
 =\max\{E_\partial,\max_{(X,Y)\in\mathcal P_0}\omega(X,Y)\},
 \end{equation}
-where $\mathcal P_0$ contains distinct sibling descendant-leaf sets. With zero widths and gaps, $\mathcal B_w=L\nu^*$.
-\end{theorem}
-The first and last anchors must accommodate their intervals and intervening gaps up to the permitted anchor slack. Sibling contiguity chooses a block orientation, while the canvas ends supply $E_\partial$. Thus ordering alone no longer determines the positional cost: even an order attaining the point bound may require additional displacement to fit its intervals. The bound has coordinate units, while $\nu^*$ is normalized by $L$. This motivates evaluating the exact packing cost of each candidate order before optimizing its anchors.
+where $\mathcal P_0$ is the set of pairs of sibling subtrees, taken as leaf sets. With zero widths and gaps, $\mathcal B_w=L\nu^*$.
+\end{proposition}
+The first and last anchors of a block must enclose its intervals and gaps, up to the anchor slack, and the two canvas ends add $E_\partial$. Ordering alone therefore no longer determines the positional cost: even an order that attains the point bound may need further displacement to fit its intervals. $\mathcal B_w$ is in coordinate units, whereas $\nu^*$ is normalized by $L$. The construction therefore evaluates the exact packing cost $\tau$ of each candidate order before it places the anchors.
 
 \subsection{Bounded Merge Error}
-If leaf $k$ lies between descendants $i,j$ of node $u$, interval containment gives $V_{ik}^{\psi}\le V_{ij}^{\psi}$, hence $V_{ik}\le h(u)+2\eta$. Let $A_\eta(u)$ be the highest ancestor with $h(A_\eta(u))-h(u)\le2\eta$. Form $\mathcal P_\eta$ from pairs $(\mathcal D(u),\{k\})$ with $k\notin\mathcal D(A_\eta(u))$, and pairs $(\mathcal D(u),\mathcal D(w))$ with each set disjoint from the other's $A_\eta$ ancestor set, for internal $u,w$.
-\begin{theorem}[Bounded-topology position bound]\label{thm:chain}
-If $\dtop\le\eta$, every pair in $\mathcal P_\eta$ lies wholly in one block orientation. Thus
+In a profile with $\dtop\le\eta$, if leaf $k$ lies between descendants $i,j$ of node $u$, the interval between $i$ and $k$ lies inside that between $i$ and $j$, so $V_{ik}^{\psi}\le V_{ij}^{\psi}$ and hence $V_{ik}\le h(u)+2\eta$. Let $A_\eta(u)$ be the highest ancestor of $u$ with $h(A_\eta(u))-h(u)\le2\eta$. Form $\mathcal P_\eta$ from the pairs $(\mathcal D(u),\{k\})$ with $k\notin\mathcal D(A_\eta(u))$, and the pairs $(\mathcal D(u),\mathcal D(w))$ of internal nodes $u,w$ in which each set is disjoint from the other's $\mathcal D(A_\eta(\cdot))$.
+\begin{proposition}[Bounded-merge-error bound]\label{thm:chain}
+If $\dtop\le\eta$, then for every pair $(X,Y)\in\mathcal P_\eta$ the leaves of $X$ all precede or all follow those of $Y$. Thus
 \begin{equation}\label{eq:chainbounds}
 \begin{split}
 \nroe(\pi)&\ge C_\eta=\max_{(X,Y)\in\mathcal P_\eta}\frac{[\min(M_X-m_Y,M_Y-m_X)]^+}{2L},\\
 \tau(\pi)&\ge C_{w,\eta}=\max\{E_\partial,\max_{(X,Y)\in\mathcal P_\eta}\omega(X,Y)\}.
 \end{split}
 \end{equation}
-\end{theorem}
-The accumulated ancestor gap determines which outside leaves may enter a block, so an allowance releases only the conflicts supported by sufficiently small merge-level differences. Flattening parent gaps of at most $2\eta$ gives a second certificate; we use the larger of the two valid bounds. Together, the three results distinguish forced displacement from displacement chosen by a layout. Their algorithmic implication is to search orders using the exact fixed-order cost $\tau$, admit them only when their merge error fits the allowance, and limit additional displacement during anchor placement. A certificate is a lower bound; the construction must still produce and check a feasible map.
+\end{proposition}
+The test uses the accumulated level difference to the ancestor, so an allowance releases only the conflicts between subtrees that merge within $2\eta$ of each other. Flattening every node whose parent lies at most $2\eta$ above it and applying Propositions~\ref{thm:order} and~\ref{thm:width} to the flattened tree gives a second valid bound; neither dominates, and we report the larger. Together, the three bounds separate displacement forced by the tree from displacement chosen by a layout. They also suggest the construction: search orders by their exact fixed-order cost $\tau$, admit an order only when its merge error fits the allowance, and limit further displacement when placing the anchors. A lower bound does not produce a map; the construction must still build one and check it.

@@ -1,6 +1,6 @@
 \begin{table}[!tb]
 \centering
-\caption{Volumetric datasets and Balanced-mode parameter settings.}
+\caption{Volumetric settings of the Balanced configurations.}
 \label{tab:volume-parameters}
 \footnotesize
 \setlength{\tabcolsep}{2pt}
@@ -9,11 +9,7 @@
 \toprule
 Parameter & Cylinder & Tangaroa \\
 \midrule
-Frames & 102 & 201 \\
 Grid & $135\times64\times48$ & $300\times180\times120$ \\
-Scalar & $Q$-criterion & Speed $\|\mathbf{v}\|$ \\
-Persistence & 2\% per-frame range & 0.2 absolute \\
-Reference & $+x$ & $+x$ \\
 $\varepsilon$ & 1\% & 33.33\% \\
 $N_r$ & 32768 & 131072 \\
 $s_w$ & $2.70668\times10^{-5}$ & 0.40953 \\
@@ -24,5 +20,5 @@ Extra$/L_{world}$ & 0.1 & 0.1 \\
 \bottomrule
 \end{tabular}
 \vspace{2pt}
-\begin{minipage}{0.94\columnwidth}\footnotesize Weights are reference, geometry, temporal and eccentricity. $s_w$ is width per support measure (Cylinder voxel counts; Tangaroa physical volume); $N_r$ is raster length, distinct from the physical canvas extent $L_{world}$. Exact uses zero allowance with the same other parameters as its Balanced counterpart.\end{minipage}
+\begin{minipage}{0.94\columnwidth}\footnotesize Weights are reference, geometry, temporal and eccentricity. $s_w$ is width per support measure (Cylinder voxel counts; Tangaroa physical volume); $N_r$ is raster length, distinct from the physical canvas extent $L_{world}$. Exact Mode differs only in $\varepsilon$.\end{minipage}
 \end{table}

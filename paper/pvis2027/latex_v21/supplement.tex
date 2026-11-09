@@ -1,5 +1,5 @@
 % Supplementary Material for paper 1037 (v25, 2026-11-09; reorganized to follow the paper), companion to main.tex, in the same official VGTC conference template.
-\documentclass{vgtc}                % same class and option as main.tex
+\documentclass[preprint]{vgtc}   % single-blind: authors shown, submission ID in the page header
 \usepackage[T1]{fontenc}
 \usepackage{mathptmx}
 \usepackage{amsmath,amssymb,amsthm}
@@ -24,6 +24,7 @@
 \setcounter{topnumber}{3}\setcounter{dbltopnumber}{3}\setcounter{totalnumber}{4}
 \newcommand{\dtop}{d_{\mathrm{top}}}\newcommand{\nroe}{\mathrm{NROE}}
 \newcommand{\lca}{\operatorname{lca}}\newcommand{\pos}[1]{\left[#1\right]^+}
+\preprinttext{Online Submission ID: 1037 --- Supplementary Material}
 \onlineid{1037}
 \vgtccategory{Research}
 \vgtcinsertpkg
@@ -59,7 +60,7 @@ Jun~Liu$^{1,2}$\thanks{Corresponding author. E-mail: liujun@sccas.cn.}
 \hypersetup{pdftitle={Supplementary Material for AnchorMTM},pdfauthor={Lele Wang, Yu Dong, Yuxiang Meng, Guan Li, Zhe Wang, Guihua Shan, Jun Liu}}
 
 
-\abstract{This document supplements the paper ``AnchorMTM: Spatially Anchored Merge Tree Maps with Position Bounds.'' It follows the order of the paper. Section~S1 fixes the notation, Section~S2 proves the bounds and the optimal barriers, and Section~S3 completes the construction. Section~S4 describes the compared methods, the data and the settings. Section~S5 adds results in the order of the evaluation, including the per-frame effect of the budget and an hourly air-pollution episode. Section~S6 lists the complete results, one table per measure, with every method in its own column.}
+\abstract{This document supplements the paper ``AnchorMTM: Spatially Anchored Merge Tree Maps with Position Bounds.'' It follows the order of the paper. Section~S1 fixes the notation, Section~S2 proves the bounds and the optimal barriers, and Section~S3 completes the construction. Section~S4 describes the compared methods, the data and the settings. Section~S5 adds results in the order of the evaluation, including the maps and positions of every sequence, the per-frame effect of the budget and an hourly air-pollution episode. Section~S6 lists the complete results, one table per measure, with every method in its own column.}
 
 \begin{document}
 \setcounter{section}{-1}
@@ -405,6 +406,12 @@ For each frame, reporting distinguishes the order certificate, a width-aware low
 Exact Mode sets $\varepsilon=0$ and keeps only the numerical allowance $\eta=\varepsilon_0\Delta_F$, which merges saddles tied to within $\varepsilon_0\Delta_F$; strict exact topology is $\eta=0$. The exact-tree structure is retained among refinement seeds, but capacity and numerical failures can still stop layout. The renderer reports invalid raster capacity and nonfinite values. Optimal filling may introduce strict-extremum clearance and records measured budget discrepancies and topology diagnostics. There is no uniform final budget/label-coverage rejection or repair gate. Applying the full labelled-tree interpretation requires checking that labels cover the rendered tree; a continuous barrier optimum alone does not establish this.
 
 \subsection{Implementation Conventions}\label{sec:impl}
+\begin{figure}[t]
+\centering
+\includegraphics[width=\columnwidth]{figures/anchor_leaf_correspondence_v26.pdf}
+\caption{Leaf correspondence across frames: leaf-arc supports are matched one to one by maximum overlap; matched leaves continue a track, unmatched ones start or end one.}
+\label{fig:supp-correspondence}
+\end{figure}
 The paper describes the construction mathematically. The conventions below record how the implementation realizes it, including correspondence, reference estimation and the single-control interface.
 
 \paragraph{Correspondence provenance and temporal confidence.}
@@ -433,6 +440,12 @@ Reconstruction calls the existing leaf/LCA filling and optimal-barrier correctio
 \FloatBarrier
 \section{Compared Methods, Data and Settings}\label{sec:protocol}
 \subsection{Methods as Instances of One Layout Problem}\label{sec:family}
+\begin{figure*}[t]
+\centering
+\includegraphics[width=.92\textwidth]{figures/anchor_related_work_mapping_v26.pdf}
+\caption{Three ways to draw a scalar field along one axis, on a common 35-sample field. (a) Domain-based traversals keep sample adjacency along a curve; (b) feature-based summaries keep feature sizes; (c) topology-based profiles keep the merge tree. AnchorMTM belongs to (c) and adds a fixed spatial direction to it.}
+\label{fig:supp-mapping-strategies}
+\end{figure*}
 \begin{table}[t]
 \centering
 \caption{Maps of time-varying scalar fields as instances of the layout problem (Eq.~3 of the paper). Order rule: how leaves are ordered; placement: nonzero terms and temporal target; $\eta$: allowed merge error relative to the scalar range (tolerance $\varepsilon_0$ omitted); axis: what a position encodes.}
@@ -486,7 +499,7 @@ Figure~\ref{fig:supp_budget_selection} shows this selection rule. On Wildfires 5
 
 \FloatBarrier
 \section{Additional Results}\label{sec:results}
-The results below follow the evaluation of the paper: tightness and forced error (S5.1), the per-frame effect of the budget (S5.2), and three qualitative cases (S5.3--S5.5).
+The results below follow the evaluation of the paper: tightness and forced error (S5.1), maps and positions on every sequence (S5.2), the per-frame effect of the budget (S5.3), and three qualitative cases (S5.4--S5.6).
 
 \subsection{Tightness of the Bounds and Forced Error}\label{sec:supp_bounds}
 The paper evaluates the bounds on the bound suite (Section~\ref{sec:dataprep}). Table~\ref{tab:supp_bounds} lists the sequences and, for four budgets, the frames on which the interval cost $\tau$ of the selected order equals the lower bound; for $\varepsilon>0$ the bound is the larger of the bounded-topology certificate and the flattening certificate (Section~\ref{sec:chain}).
@@ -535,6 +548,22 @@ Because the bounds need no layout, they can also compare reference directions be
 \caption{The forced cost depends on the reference direction and can be computed before a map is drawn. Left: mean order bound at the numerical allowance $\varepsilon_0$ over 400 directions of the hemisphere (equal-area projection; centre $z$, rim the $xy$ plane); markers: coordinate axes, the stored direction (star) and the smallest bound (cross). Right: the bound and the mean order error of AnchorMTM at $\varepsilon=0$, ST-MTM and TMTM in these directions. The bound spans 4.70--10.14\% on Tangaroa and 5.49--28.15\% on Cylinder.}
 \label{fig:supp_direction}
 \end{figure}
+
+\FloatBarrier
+\subsection{Maps and Positions on Every Sequence}\label{sec:supp_positions}
+\begin{figure*}[t]
+\centering
+\includegraphics[width=\textwidth]{figures/map_gallery_supp.pdf}
+\caption{Rendered maps of OLR and daily PM$_{2.5}$, encoded as the map figure of the paper: three tracked extrema per sequence (circles in the snapshots, dashed reference trajectories on the maps). On PM$_{2.5}$ the tracked maxima move little and the matched identities change often, so its maps look alike; the positional difference shows in the numbers below each map.}
+\label{fig:supp-map-gallery}
+\end{figure*}
+\begin{figure*}[t]
+\centering
+\includegraphics[width=\textwidth]{figures/volume_gallery.pdf}
+\caption{Every extremum against its reference, on four planar and two volumetric sequences. Each dot is one extremum in one frame at its position on the axis (fraction of the canvas), coloured by its signed displacement $(x-q)/L$; grey dots lie on their references. The first column shows the references themselves. Native maps are rescaled to the canvas, in the mirror that agrees better with the reference; AnchorMTM uses the default configuration. Below each panel: mean displacement, mean worst displacement per frame and, for a positive budget, the attained merge error.}
+\label{fig:supp-positions}
+\end{figure*}
+The map figure of the paper follows a few tracked features; Figs.~\ref{fig:supp-map-gallery} and~\ref{fig:supp-positions} show the rest. Figure~\ref{fig:supp-positions} plots every extremum of every frame, so it shows the whole distribution of displacements rather than selected features. On the four planar sequences, TMTM and ST-MTM draw extrema 17--30\% of the axis from their references on average, AnchorMTM with the exact tree 1.0--3.2\%. On Cylinder, TMTM and ST-MTM gather the vortices near the middle of the axis, whereas AnchorMTM already reproduces the shedding pattern of the references with the exact tree; on Tangaroa, whose conflicts lie deep in the tree, the pattern appears only near $\varepsilon=20\%$. Table~\ref{tab:full-planar-positions} and Table~\ref{tab:full-volume} list the numbers.
 
 \FloatBarrier
 \subsection{Where a Budget Acts}\label{sec:supp_budget}
@@ -682,7 +711,7 @@ PM$_{2.5}$ (hourly) & 0.8887 & 0.8277 & 0.7781 & 0.8224 & 0.7884 & 0.7657\\\bott
 
 \begin{table*}[t]
 \centering\small
-\caption{Bound suite, planar sequences, default configuration: positions behind the paper's position figure. Mean displacement over all features and NPE in percent of the canvas, worst merge error in percent of the scalar range. Native maps are rescaled to the canvas and shown in their more favourable mirror; their per-frame order reproduces the stored NROE exactly.}\label{tab:full-planar-positions}
+\caption{Bound suite, planar sequences, default configuration: the positions of Fig.~\ref{fig:supp-positions}. Mean displacement over all features and NPE in percent of the canvas, worst merge error in percent of the scalar range. Native maps are rescaled to the canvas and shown in their more favourable mirror; their per-frame order reproduces the stored NROE exactly.}\label{tab:full-planar-positions}
 \setlength{\tabcolsep}{4.2pt}
 \begin{tabular}{ll|rr|rrr}\toprule
  & & \multicolumn{2}{c|}{keep the tree} & \multicolumn{3}{c}{AnchorMTM, budget $\varepsilon$}\\
@@ -704,7 +733,7 @@ Ring & mean displacement & 26.84 & 23.83 & 2.44 & 1.20 & 0.62\\
 
 \begin{table*}[t]
 \centering\small
-\caption{Layout suite, volumes. Top: stored configurations with the $+x$ reference (the paper's volumetric table; Balanced uses 1\% on Cylinder and 33.33\% on Tangaroa). Bottom: default configuration with the references of the paper's position figure; mean displacement and NPE in percent of the canvas, worst merge error in percent of the scalar range. Native maps are rescaled to the canvas and shown in their more favourable mirror.}\label{tab:full-volume}
+\caption{Layout suite, volumes. Top: stored configurations with the $+x$ reference (the paper's volumetric table; Balanced uses 1\% on Cylinder and 33.33\% on Tangaroa). Bottom: default configuration with the references of Fig.~\ref{fig:supp-positions}; mean displacement and NPE in percent of the canvas, worst merge error in percent of the scalar range. Native maps are rescaled to the canvas and shown in their more favourable mirror.}\label{tab:full-volume}
 \setlength{\tabcolsep}{4.2pt}
 \begin{tabular}{ll|rr|rrrrr}\toprule
 \multicolumn{9}{l}{\emph{Stored configurations, $+x$ reference}}\\

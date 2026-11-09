@@ -36,7 +36,7 @@ MS = {'Wildfires': 1.6, 'OLR': 1.4, 'PM2.5': .7, 'Ring': 1.6, 'Tangaroa': .3, 'C
 
 def main():
     D = {n: json.loads((FIGD / f'{SRC[n]}.json').read_text()) for n in NAMES}
-    fig = plt.figure(figsize=(7.05, 5.25))
+    fig = plt.figure(figsize=(7.05, 4.75))
     g = fig.add_gridspec(len(NAMES), len(COLS) + 1, width_ratios=[1] * len(COLS) + [.05], hspace=.6, wspace=.1,
                          left=.06, right=.955, top=.962, bottom=.055)
     norm = TwoSlopeNorm(0, -.3, .3)

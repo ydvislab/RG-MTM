@@ -21,6 +21,7 @@
 \setlength{\@dblfpbot}{0pt plus 1fil}
 \makeatother
 \setcounter{dbltopnumber}{2}
+\renewcommand{\dbltopfraction}{.92}
 \setcounter{secnumdepth}{3}
 \newtheorem{theorem}{定理}
 \newtheorem{lemma}{引理}
@@ -208,11 +209,11 @@ AnchorMTM 回答这些问题并绘制地图。它以场序列和一个数，即�
 \section{AnchorMTM}\label{sec:method}
 \begin{figure*}[t]
 \centering
-\includegraphics[width=\textwidth]{figures/anchor_framework.pdf}
-\caption{AnchorMTM 的构建（$F(x,t)$：位置 $x$、时间 $t$ 处的场）。(1) 提取与参考：每帧的合并树、跨帧匹配的叶支撑，以及一个固定方向 $d$（式~\ref{eq:autodirection} 的 $a^*$），它给每个极值一个参考位置 $q$。(2) 拓扑预算布局：允许量 $\eta$ 所容许的叶序，然后在位移上限下放置锚点 $x$；$\eta=0$ 时叶序保持子树块、锚点离开参考位置，$\eta>0$ 时可以容许跟随参考位置的叶序。(3) 拓扑到一维的映射：区间和屏障填充每个剖面 $\psi_t$，剖面组成地图 $I^\varepsilon(t,u)=\psi^\varepsilon_t(u)$。图为示意。}
+\includegraphics[width=\textwidth]{figures/anchor_pipeline_v26.pdf}
+\caption{AnchorMTM 由场 $F(x,t)$ 和一个预算 $\varepsilon$ 计算地图。(1) 树与参考：每帧一棵合并树，跨帧匹配的叶支撑，以及一个固定方向 $d=a^*$（式~\ref{eq:autodirection}），它给每个极值一个参考位置 $q$。(2) 轴的代价：仅由 $T$、$q$ 和 $W$，三个下界在任何布局之前就说明树迫使多少位移、多少合并误差能把它释放（此处为 Storms 的下界，与图~\ref{fig:plane} 相同）。(3) 叶序与锚点：最优合并误差 $\delta^*(\pi)$ 不超过允许量 $\eta$ 的叶序被容许，选出 $\tau$ 最小者，再由带上限的二次规划放置锚点；$\eta=0$ 时叶序保持子树块，$\eta>0$ 时可以跟随参考位置。(4) 剖面与核验：屏障和叶弧样本填充每个剖面 $\psi_t$，每个渲染帧都按预算核验。输出：地图（此处为 $\varepsilon=10\%$ 的 Storms，标出改变的屏障）以及逐帧的位移和合并误差记录。(1)、(3)、(4) 为示意。}
 \label{fig:framework}
 \end{figure*}
-AnchorMTM 为序列的每一帧求解式~\ref{eq:family}，带参考项，允许量为 $\eta=(\varepsilon_0+\varepsilon)\Delta_F$。其中 $\Delta_F$ 是序列的标量范围，$\varepsilon_0=10^{-7}$ 是固定的数值容差，$\varepsilon\ge0$ 是预算，也是唯一的控制量。\emph{精确模式}（$\varepsilon=0$）在 $\varepsilon_0\Delta_F$ 之内的并列以外保持树，\emph{预算模式}（$\varepsilon>0$）以声明的合并误差换取位置。图~\ref{fig:framework} 给出三个阶段。第一阶段按上文计算树、匹配和参考，并给每个叶子宽度 $W_i=s\,m_i$，$s$ 是一个固定的尺度。式~\ref{eq:family} 把离散的叶序与连续的放置耦合在一起，第二阶段按下界所提示的方式把它们分开：先按下界所约束的量 $\tau$ 选择叶序，再放置锚点。第三阶段绘制并核验剖面。
+AnchorMTM 为序列的每一帧求解式~\ref{eq:family}，带参考项，允许量为 $\eta=(\varepsilon_0+\varepsilon)\Delta_F$。其中 $\Delta_F$ 是序列的标量范围，$\varepsilon_0=10^{-7}$ 是固定的数值容差，$\varepsilon\ge0$ 是预算，也是唯一的控制量。\emph{精确模式}（$\varepsilon=0$）在 $\varepsilon_0\Delta_F$ 之内的并列以外保持树，\emph{预算模式}（$\varepsilon>0$）以声明的合并误差换取位置。图~\ref{fig:framework} 给出四个步骤。第一步按上文计算树、匹配和参考，并给每个叶子宽度 $W_i=s\,m_i$，$s$ 是一个固定的尺度。第二步计算上一节的下界，它们不需要别的输入，在任何布局之前就说明地图无法避免什么。式~\ref{eq:family} 把离散的叶序与连续的放置耦合在一起，第三步按下界所提示的方式把它们分开：先按下界所约束的量 $\tau$ 选择叶序，再放置锚点。第四步绘制并核验剖面，输出为每一帧记录实际达到的位移和合并误差，并与预算对照。
 
 \subsection{预算内的叶序}
 一帧可以用哪些叶序？如果锚点之间的某种剖面能把合并误差保持在 $\eta$ 之内，这个叶序就是可容许的。这可以精确判定，因为对固定叶序，最优屏障有闭式解。
@@ -276,6 +277,12 @@ AnchorMTM 为序列的每一帧求解式~\ref{eq:family}，带参考项，允许
 \caption{各方法把四个平面序列和两组体数据的特征画在哪里（Storms 见图~\ref{fig:storms_overview}）。每个点是一帧中的一个特征，位于其在轴上的位置（画布的比例），颜色表示它相对参考的有符号位移；灰点位于参考位置上。第一列是只由数据算出的参考位置，即把地图读作位置时应当再现的位置。所有方法使用相同的树和特征；原生地图缩放到画布，并取与参考更一致的镜像。AnchorMTM 使用默认配置，参考取匹配运动方向，Cylinder 取顺流 $x$ 轴。每个面板下方：全部特征的平均位移、每帧最坏位移的平均，以及正预算下实际达到的合并误差。}
 \label{fig:volume-gallery}
 \end{figure*}
+\begin{figure*}[t]
+\centering
+\includegraphics[width=\textwidth]{figures/budget_per_frame.pdf}
+\caption{完整序列上 AnchorMTM 每帧最坏位移随合并预算 $\varepsilon$ 的变化（对数刻度）：两个平面输入使用表~\ref{tab:quantitative-final} 的配置，两组体数据使用默认配置。箱体：四分位数；须：第 5--95 百分位；点：须之外的所有帧；菱形：均值，即表中的 NPE；深色：Exact；橙色：表~\ref{tab:quantitative-final} 的预算。底行给出实际合并误差为正的帧所占比例；没有帧超出其预算。}
+\label{fig:budget-distribution}
+\end{figure*}
 \emph{平面输入。} 在精确保持树的条件下，Exact 在表~\ref{tab:quantitative-final} 的全部五个平面输入上把 NPE 相对 TMTM 和 ST-MTM 降低 73--96\%（PM$_{2.5}$ 上为 73.5 和 75.1\%），也低于破坏树的 Hilbert 和 Morton 曲线。Balanced 的预算至多 10\%，它相对 Exact 进一步把 NPE 在 Ring 上降低 16.2\%、在 Wildfires 上降低 11.6\%、在 Storms 上降低 64.9\%；在 Gaussian 上地图不变，在 PM$_{2.5}$ 上固定的 5\% 预算把 NPE 降低 66.3\%。这些结果表明的是与所选参考的对齐，而不是质量的全面提升。ST-MTM 在全部四个基准输入上报告了更高的 TW。在所有分数都在本地测得的 PM$_{2.5}$ 上，ST-MTM 的 SNS 也低于、TW 也高于 Exact（0.1897 和 0.8224 对 0.1964 和 0.7884）。与曲线相比，Balanced 在 Gaussian、Wildfires 和 Storms 上改进了 SNS 和 TW；Hilbert 在 Ring 上更好（SNS 0.1252、TW 0.9048 对 0.1334、0.8571，TW 只来自一个合格帧），两条曲线在 PM$_{2.5}$ 上的 TW 都高于 5\% 地图。
 
 \emph{每个序列上的位置。} 图~\ref{fig:volume-gallery} 逐个特征、逐帧比较每张地图把特征画在哪里与特征实际在哪里。参考列只由数据算出，是沿所选方向的位置真值。在四个平面序列上，TMTM 和 ST-MTM 把特征画得离参考位置平均为轴长的 17--30\%（平均最坏位移 24--51\%），两者都没有再现参考位置的模式。在精确的树下，AnchorMTM 以 1.0--3.2\% 的平均位移（最坏 1.7--6.9\%）再现了它，5\% 的预算把最坏位移降到 0.7--2.9\%。
@@ -289,12 +296,7 @@ AnchorMTM 为序列的每一帧求解式~\ref{eq:family}，带参考项，允许
 \emph{预算得到遵守。} Exact 在每个输入上测得的合并误差都为零，Balanced 至多达到 0、0.982、4.421 和 9.985\%，均在其预算之内。所有运行都通过连续和栅格核验，没有锚点塌缩；Ring 在 26 个 Exact 帧和 21 个 Balanced 帧中需要经过核验的联合整数取整。在体数据的扫描中，全部 1,515 个渲染帧都按其叶子的合并矩阵重新核验，没有违规。核验覆盖极值，而非增广树的每个内部标签。
 
 \subsection{预算在哪里起作用}\label{sec:eval-budget}
-\begin{figure*}[t]
-\centering
-\includegraphics[width=\textwidth]{figures/budget_per_frame.pdf}
-\caption{完整序列上 AnchorMTM 每帧最坏位移随合并预算 $\varepsilon$ 的变化（对数刻度）：两个平面输入使用表~\ref{tab:quantitative-final} 的配置，两组体数据使用默认配置。箱体：四分位数；须：第 5--95 百分位；点：须之外的所有帧；菱形：均值，即表中的 NPE；深色：Exact；橙色：表~\ref{tab:quantitative-final} 的预算。底行给出实际合并误差为正的帧所占比例；没有帧超出其预算。}
-\label{fig:budget-distribution}
-\end{figure*}
+
 预算限制的是合并误差而非位移，所以它对地图的作用取决于有多少帧含有它能释放的冲突（图~\ref{fig:budget-distribution}）。在 Storms 上，$\varepsilon=10\%$ 时 35\% 的帧用到允许量，集中在几段连续的帧中。因此预算缩短了上尾：每帧位移的中位数只从 1.10\% 变到 0.84\%，而第 90 百分位从 10.7\% 降到 2.5\%，最坏帧从 44.8\% 降到 11.5\%。在逐小时 PM$_{2.5}$ 上，97\% 的帧用到 5\% 的预算，整个分布下移：中位数从 14.5\% 降到 2.1\%。体数据表现相同。在 $\varepsilon=2\%$ 时，201 个 Tangaroa 帧中的 200 个和 102 个 Cylinder 帧中的 98 个用到预算；Cylinder 的中位数在 2\% 时就从 6.8\% 降到 1.0\%，Tangaroa 的中位数在 20\% 时从 11.3\% 降到 1.2\%。在 Wildfires 上，同样的 32 帧中的 7 帧在每个预算下用到允许量；在 Ring 上，中位数从 3.9\% 降到 1.0\%，而最后一帧在预算达到 63\% 之前一直停在 10.0\%。在 Gaussian 上，预算不改变任何一帧。补充材料给出所有序列的这些分布，以及一个从地图读出的逐小时 PM$_{2.5}$ 污染过程。
 
 \section{讨论与局限}

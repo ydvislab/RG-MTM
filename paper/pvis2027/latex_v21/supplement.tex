@@ -607,7 +607,7 @@ Central guidance exposes unfolding but sacrifices anchoring. Frame-balanced mean
 
 \FloatBarrier
 \section{Complete Results by Method}\label{sec:complete}
-This section lists every measured value of the paper, one table per group of measures, with one column per method. Tables~\ref{tab:full-order} and~\ref{tab:full-bound-other} cover the bound suite, Tables~\ref{tab:full-layout} and~\ref{tab:full-volume} the layout suite. Percentages refer to the canvas (order error, displacement) or to the scalar range (merge error). Every baseline is shown in the mirror stated in Section~\ref{sec:baselines}. A dash marks a method that does not apply: the curves are defined on planar grids only, and OLO yields an order without anchors.
+This section lists every measured value of the paper, one table per group of measures, with one column per method. Tables~\ref{tab:full-order}, \ref{tab:full-bound-other} and~\ref{tab:full-planar-positions} cover the bound suite, Tables~\ref{tab:full-layout} and~\ref{tab:full-volume} the layout suite. Percentages refer to the canvas (order error, displacement) or to the scalar range (merge error). Every baseline is shown in the mirror stated in Section~\ref{sec:baselines}. A dash marks a method that does not apply: the curves are defined on planar grids only, and OLO yields an order without anchors.
 
 \begin{table*}[t]
 \centering\small
@@ -682,7 +682,29 @@ PM$_{2.5}$ (hourly) & 0.8887 & 0.8277 & 0.7781 & 0.8224 & 0.7884 & 0.7657\\\bott
 
 \begin{table*}[t]
 \centering\small
-\caption{Layout suite, volumes. Top: stored configurations with the $+x$ reference (the paper's volumetric table; Balanced uses 1\% on Cylinder and 33.33\% on Tangaroa). Bottom: default configuration with the references of the paper's volume figure; mean displacement and NPE in percent of the canvas, worst merge error in percent of the scalar range. Native maps are rescaled to the canvas and shown in their more favourable mirror.}\label{tab:full-volume}
+\caption{Bound suite, planar sequences, default configuration: positions behind the paper's position figure. Mean displacement over all features and NPE in percent of the canvas, worst merge error in percent of the scalar range. Native maps are rescaled to the canvas and shown in their more favourable mirror; their per-frame order reproduces the stored NROE exactly.}\label{tab:full-planar-positions}
+\setlength{\tabcolsep}{4.2pt}
+\begin{tabular}{ll|rr|rrr}\toprule
+ & & \multicolumn{2}{c|}{keep the tree} & \multicolumn{3}{c}{AnchorMTM, budget $\varepsilon$}\\
+Sequence & Measure & TMTM & ST-MTM & 0 & 5\% & 20\%\\\midrule
+Wildfires & mean displacement & 19.62 & 22.23 & 3.24 & 1.44 & 0.78\\
+ & NPE & 46.80 & 38.53 & 6.93 & 2.94 & 1.19\\
+ & worst merge error & 0 & 0 & 0 & 4.99 & 19.56\\
+OLR & mean displacement & 29.65 & 26.72 & 1.00 & 0.77 & 0.62\\
+ & NPE & 50.92 & 47.04 & 1.72 & 1.22 & 0.88\\
+ & worst merge error & 0 & 0 & 0 & 2.43 & 19.77\\
+PM$_{2.5}$ (daily) & mean displacement & 17.14 & 24.56 & 1.87 & 0.75 & 0.75\\
+ & NPE & 24.08 & 33.11 & 1.85 & 0.70 & 0.69\\
+ & worst merge error & 0 & 0 & 0 & 4.67 & 5.62\\
+Ring & mean displacement & 26.84 & 23.83 & 2.44 & 1.20 & 0.62\\
+ & NPE & 43.74 & 41.58 & 3.40 & 1.46 & 0.67\\
+ & worst merge error & 0 & 0 & 0 & 4.97 & 12.35\\\bottomrule
+\end{tabular}
+\end{table*}
+
+\begin{table*}[t]
+\centering\small
+\caption{Layout suite, volumes. Top: stored configurations with the $+x$ reference (the paper's volumetric table; Balanced uses 1\% on Cylinder and 33.33\% on Tangaroa). Bottom: default configuration with the references of the paper's position figure; mean displacement and NPE in percent of the canvas, worst merge error in percent of the scalar range. Native maps are rescaled to the canvas and shown in their more favourable mirror.}\label{tab:full-volume}
 \setlength{\tabcolsep}{4.2pt}
 \begin{tabular}{ll|rr|rrrrr}\toprule
 \multicolumn{9}{l}{\emph{Stored configurations, $+x$ reference}}\\

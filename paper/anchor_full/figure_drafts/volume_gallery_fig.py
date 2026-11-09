@@ -1,4 +1,5 @@
-"""v21 main-paper 3D figure: where each method draws the features of Tangaroa and Cylinder (draft, 2026-11-08).
+"""v26 main-paper position gallery: where each method draws the features of four planar and two volumetric sequences (2026-11-09;
+extends the v21 3D figure; planar rows from planar_gallery_data.py, Storms is left to the teaser).
 
 Each panel plots every feature of every frame at its displayed position on the axis (vertical, fraction of the canvas)
 against time, coloured by its signed displacement from the reference (x - q) / L. The first column shows the
@@ -15,7 +16,10 @@ import matplotlib.pyplot as plt
 from matplotlib import font_manager
 from matplotlib.colors import TwoSlopeNorm, LinearSegmentedColormap
 
-HERE = Path(__file__).resolve().parent; RES = HERE.parent / 'figdata/volume_gallery20261108'
+HERE = Path(__file__).resolve().parent; FIGD = HERE.parent / 'figdata'
+SRC = {'Wildfires': 'planar_gallery20261109/wildfires', 'OLR': 'planar_gallery20261109/olr', 'PM2.5': 'planar_gallery20261109/pm25',
+       'Ring': 'planar_gallery20261109/ring', 'Tangaroa': 'volume_gallery20261108/tangaroa', 'Cylinder': 'volume_gallery20261108/cylinder'}
+LAB = {'Wildfires': 'Wildfires (2D)', 'OLR': 'OLR (2D)', 'PM2.5': 'PM$_{2.5}$ (2D)', 'Ring': 'Ring (2D)', 'Tangaroa': 'Tangaroa (3D)', 'Cylinder': 'Cylinder (3D)'}
 OUT = HERE.parents[1] / 'pvis2027/latex_v21/figures'
 for f in ['Times New Roman.ttf', 'Times New Roman Italic.ttf']:
     q = Path('/System/Library/Fonts/Supplemental') / f
@@ -26,14 +30,15 @@ plt.rcParams.update({'font.family': 'Times New Roman', 'mathtext.fontset': 'stix
                      'xtick.major.width': .5, 'ytick.major.width': .5})
 COLS = [('reference', 'Reference $q$'), ('TMTM', 'TMTM'), ('ST-MTM', 'ST-MTM'),
         ('eps=0', r'AnchorMTM, $\varepsilon=0$'), ('eps=0.05', r'$\varepsilon=5\%$'), ('eps=0.2', r'$\varepsilon=20\%$')]
-NAMES = ['Tangaroa', 'Cylinder']
+NAMES = ['Wildfires', 'OLR', 'PM2.5', 'Ring', 'Tangaroa', 'Cylinder']
+MS = {'Wildfires': 1.6, 'OLR': 1.4, 'PM2.5': .7, 'Ring': 1.6, 'Tangaroa': .3, 'Cylinder': .3}   # planar sequences have few features per frame
 
 
 def main():
-    D = {n: json.loads((RES / f'{n.lower()}.json').read_text()) for n in NAMES}
-    fig = plt.figure(figsize=(7.05, 2.55))
-    g = fig.add_gridspec(2, len(COLS) + 1, width_ratios=[1] * len(COLS) + [.05], hspace=.5, wspace=.1,
-                         left=.055, right=.955, top=.9, bottom=.1)
+    D = {n: json.loads((FIGD / f'{SRC[n]}.json').read_text()) for n in NAMES}
+    fig = plt.figure(figsize=(7.05, 5.25))
+    g = fig.add_gridspec(len(NAMES), len(COLS) + 1, width_ratios=[1] * len(COLS) + [.05], hspace=.6, wspace=.1,
+                         left=.06, right=.955, top=.962, bottom=.055)
     norm = TwoSlopeNorm(0, -.3, .3)
     cmap = LinearSegmentedColormap.from_list('dev', ['#2d004b', '#8073ac', '#4d5358', '#e08214', '#7f3b08'])  # grey = on target
     stats = {}
@@ -46,11 +51,11 @@ def main():
                 u = qn; dv = np.zeros_like(u); note = f'frames 0\u2013{len(Q) - 1}'
                 # vector, not rasterized: a one-colour raster is stored as a 1-bit indexed image with a soft mask,
                 # which some PDF viewers (macOS Preview) draw as blank (v25 fix, 2026-11-09)
-                ax.scatter(t, u, s=.3, lw=0, color='#4d5358', rasterized=False)
+                ax.scatter(t, u, s=MS[n], lw=0, color='#4d5358', rasterized=False)
             else:
                 m = d['maps'][key]; X = [(np.asarray(x) - o) / L for x in m['x']]; u = np.concatenate(X); dv = u - qn
                 srt = np.argsort(np.abs(dv))
-                ax.scatter(t[srt], u[srt], c=dv[srt], s=.3, lw=0, cmap=cmap, norm=norm, rasterized=True)
+                ax.scatter(t[srt], u[srt], c=dv[srt], s=MS[n], lw=0, cmap=cmap, norm=norm, rasterized=True)
                 mean = 100 * np.mean(np.abs(dv)); worst = 100 * np.mean([np.max(np.abs(x - q)) for x, q in zip(X, Q)])
                 nmle = 100 * m.get('NMLE_max', m.get('NMLE_max_stored', 0.))
                 note = f'mean {mean:.1f}%, worst {worst:.1f}%\nmerge error {nmle:.1f}%' if key.startswith('eps') and key != 'eps=0' \
@@ -64,11 +69,11 @@ def main():
             if r == 0:
                 ax.set_title(title, fontsize=7, pad=3)
             if c == 0:
-                ax.set_ylabel(f'{n} (3D)\nposition on axis', fontsize=6.6, labelpad=2)
-    cax = fig.add_subplot(g[:, -1]); sm = plt.cm.ScalarMappable(norm=norm, cmap=cmap)
+                ax.set_ylabel(f'{LAB[n]}\nposition on axis', fontsize=6.6, labelpad=2)
+    cax = fig.add_subplot(g[1:-1, -1]); sm = plt.cm.ScalarMappable(norm=norm, cmap=cmap)
     cb = fig.colorbar(sm, cax=cax, extend='both'); cb.ax.tick_params(labelsize=5.6, length=1.6, pad=1)
     cb.set_label('signed displacement $(x-q)/L$', fontsize=6.4, labelpad=2); cb.outline.set_linewidth(.4)
-    fig.text(.5, .01, 'Time (frame) \u2192', ha='center', fontsize=7)
+    fig.text(.5, .008, 'Time (frame) \u2192', ha='center', fontsize=7)
     OUT.mkdir(parents=True, exist_ok=True)
     for ext in ('pdf', 'svg'):
         fig.savefig(OUT / f'volume_gallery.{ext}', dpi=400)

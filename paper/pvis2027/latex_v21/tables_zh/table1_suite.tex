@@ -1,0 +1,24 @@
+\begin{table*}[t]
+\centering
+\caption{七个序列上的比较。NPE：每帧最坏位移相对轴长的平均（AnchorMTM 优化的性质）；SNS 和 TW：锚点间距相对支撑质心距离的距离保真度（AnchorMTM 不优化）。粗体：每行每项度量的最优值。除空间填充曲线（最坏合并误差为标量范围的 8--40\%）和 $\varepsilon=10\%$ 的 AnchorMTM（在其预算之内）以外，所有地图都保持树。曲线只适用于平面数据。}
+\label{tab:quantitative-final}
+\footnotesize
+\setlength{\tabcolsep}{1.6pt}
+\renewcommand{\arraystretch}{0.95}
+\begin{tabular*}{\textwidth}{@{\extracolsep{\fill}}l*{18}{c}@{}}
+\toprule
+序列 & \multicolumn{3}{c}{Hilbert} & \multicolumn{3}{c}{Morton} & \multicolumn{3}{c}{TMTM} & \multicolumn{3}{c}{ST-MTM} & \multicolumn{3}{c}{本文，$\varepsilon=0$} & \multicolumn{3}{c}{本文，$\varepsilon=10\%$} \\
+\cmidrule(lr){2-4}\cmidrule(lr){5-7}\cmidrule(lr){8-10}\cmidrule(lr){11-13}\cmidrule(lr){14-16}\cmidrule(lr){17-19}
+ & NPE$\downarrow$ & SNS$\downarrow$ & TW$\uparrow$ & NPE$\downarrow$ & SNS$\downarrow$ & TW$\uparrow$ & NPE$\downarrow$ & SNS$\downarrow$ & TW$\uparrow$ & NPE$\downarrow$ & SNS$\downarrow$ & TW$\uparrow$ & NPE$\downarrow$ & SNS$\downarrow$ & TW$\uparrow$ & NPE$\downarrow$ & SNS$\downarrow$ & TW$\uparrow$ \\
+\midrule
+Storms & $0.297$ & $0.126$ & $0.726$ & $0.271$ & $0.131$ & $0.713$ & $0.419$ & $0.080$ & $0.824$ & $0.463$ & $\mathbf{0.030}$ & $\mathbf{0.965}$ & $0.051$ & $0.120$ & $0.770$ & $\mathbf{0.027}$ & $0.113$ & $0.752$ \\
+Wildfires & $0.278$ & $0.146$ & $0.889$ & $0.235$ & $0.085$ & $0.893$ & $0.468$ & $0.221$ & $0.817$ & $0.385$ & $0.079$ & $\mathbf{0.919}$ & $0.069$ & $0.085$ & $0.875$ & $\mathbf{0.020}$ & $\mathbf{0.061}$ & $0.876$ \\
+OLR & $0.504$ & $0.060$ & $0.881$ & $0.208$ & $0.091$ & $0.890$ & $0.509$ & $0.142$ & $0.814$ & $0.470$ & $\mathbf{0.006}$ & $\mathbf{0.975}$ & $0.017$ & $0.012$ & $0.956$ & $\mathbf{0.011}$ & $0.010$ & $0.962$ \\
+PM$_{2.5}$ & $0.178$ & $0.063$ & $0.757$ & $0.089$ & $0.070$ & $0.722$ & $0.241$ & $0.051$ & $0.760$ & $0.331$ & $\mathbf{0.026}$ & $\mathbf{0.922}$ & $0.018$ & $0.065$ & $0.751$ & $\mathbf{0.007}$ & $0.052$ & $0.727$ \\
+Ring & $0.589$ & $0.104$ & $0.899$ & $0.574$ & $0.133$ & $0.802$ & $0.437$ & $0.171$ & $0.707$ & $0.416$ & $\mathbf{0.080}$ & $\mathbf{0.917}$ & $0.034$ & $0.164$ & $0.686$ & $\mathbf{0.007}$ & $0.142$ & $0.707$ \\
+\midrule
+Tangaroa & -- & -- & -- & -- & -- & -- & $0.306$ & $0.525$ & $0.670$ & $0.342$ & $\mathbf{0.165}$ & $\mathbf{0.814}$ & $0.112$ & $0.362$ & $0.726$ & $\mathbf{0.062}$ & $0.341$ & $0.754$ \\
+Cylinder & -- & -- & -- & -- & -- & -- & $0.477$ & $0.296$ & $0.802$ & $0.516$ & $0.135$ & $\mathbf{0.899}$ & $0.092$ & $0.110$ & $0.814$ & $\mathbf{0.012}$ & $\mathbf{0.041}$ & $0.889$ \\
+\bottomrule
+\end{tabular*}
+\end{table*}

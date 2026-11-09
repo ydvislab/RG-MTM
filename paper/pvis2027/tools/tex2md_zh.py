@@ -78,11 +78,11 @@ keywords = re.search(re.escape(BS + 'keywords{') + r'(.*?)\}\n', tex).group(1)
 
 out = []
 out.append('# AnchorMTM：带位置下界的空间锚定合并树地图\n')
-out.append('**中文译稿（正式稿，与 `main.tex` v28 逐句对应，2026-11-09）**\n')
+out.append('**中文译稿（正式稿，与 `main.tex` v29 逐句对应，2026-11-09）**\n')
 out.append('Lele Wang¹²\\*　Yu Dong¹\\*　Yuxiang Meng¹²　Guan Li¹²　Zhe Wang¹²　Guihua Shan¹²³　Jun Liu¹²†\n')
 out.append('¹ 中国科学院计算机网络信息中心先进交互式技术与应用研究室，北京  \n² 中国科学院大学，北京  \n³ 国科大杭州高等研究院，杭州\n')
 out.append('\\* Lele Wang 与 Yu Dong 对本文贡献相同。　† 通讯作者，liujun@sccas.cn。  \n邮箱：lelewang@cnic.cn；dongyu@cnic.cn；yxmeng@cnic.cn；liguan@sccas.cn；wangzhe@sccas.cn；shanghuihua@sccas.cn；liujun@sccas.cn\n')
-out.append('> 译稿说明：由 `main_zh.tex` 自动转换；公式保留原文写法；图、表、节、定理、式和参考文献编号与英文 PDF 一致。排版以 `paper/1037_v28_zh.pdf` 为准。\n')
+out.append('> 译稿说明：由 `main_zh.tex` 自动转换；公式保留原文写法；图、表、节、定理、式和参考文献编号与英文 PDF 一致。排版以 `paper/1037_v29_zh.pdf` 为准。\n')
 out.append('---\n')
 out.append('**图 1** ' + inline(teaser.strip()) + '\n')
 out.append('## 摘要\n')

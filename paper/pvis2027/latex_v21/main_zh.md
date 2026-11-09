@@ -1,6 +1,6 @@
 # AnchorMTM：带位置下界的空间锚定合并树地图
 
-**中文译稿（正式稿，与 `main.tex` v28 逐句对应，2026-11-09）**
+**中文译稿（正式稿，与 `main.tex` v29 逐句对应，2026-11-09）**
 
 Lele Wang¹²\*　Yu Dong¹\*　Yuxiang Meng¹²　Guan Li¹²　Zhe Wang¹²　Guihua Shan¹²³　Jun Liu¹²†
 
@@ -11,7 +11,7 @@ Lele Wang¹²\*　Yu Dong¹\*　Yuxiang Meng¹²　Guan Li¹²　Zhe Wang¹²　
 \* Lele Wang 与 Yu Dong 对本文贡献相同。　† 通讯作者，liujun@sccas.cn。  
 邮箱：lelewang@cnic.cn；dongyu@cnic.cn；yxmeng@cnic.cn；liguan@sccas.cn；wangzhe@sccas.cn；shanghuihua@sccas.cn；liujun@sccas.cn
 
-> 译稿说明：由 `main_zh.tex` 自动转换；公式保留原文写法；图、表、节、定理、式和参考文献编号与英文 PDF 一致。排版以 `paper/1037_v28_zh.pdf` 为准。
+> 译稿说明：由 `main_zh.tex` 自动转换；公式保留原文写法；图、表、节、定理、式和参考文献编号与英文 PDF 一致。排版以 `paper/1037_v29_zh.pdf` 为准。
 
 ---
 

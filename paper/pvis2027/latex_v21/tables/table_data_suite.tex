@@ -1,0 +1,21 @@
+\begin{table}[t]
+\centering
+\caption{The seven sequences. Leaves: extrema per frame after simplification. Every result in the paper uses these sequences with one default configuration; Fig.~\ref{fig:storms_overview} uses hourly fields of the same ERA5 source.}
+\label{tab:data}
+\footnotesize
+\setlength{\tabcolsep}{2.5pt}
+\renewcommand{\arraystretch}{0.95}
+\begin{tabular*}{\columnwidth}{@{\extracolsep{\fill}}llrrl@{}}
+\toprule
+Sequence & Scalar field & Frames & Leaves & Tree \\
+\midrule
+Storms~\cite{Hersbach:2020:ERA5} & ERA5 sea-level pressure, 2D, 12\,h & 118 & 1--8 & join \\
+Wildfires~\cite{Franke:2021:1DP} & $\log(1+\mathrm{FRP})$, 2D, daily & 30 & 6--11 & split \\
+OLR~\cite{NOAA:OLR} & outgoing longwave radiation, 2D & 60 & 2--8 & join \\
+PM$_{2.5}$~\cite{Dong:2026:PM25} & PM$_{2.5}$ concentration, 2D, daily & 366 & 1--7 & split \\
+Ring~\cite{Koepp:2023:TMTM} & synthetic expanding ring, 2D & 40 & 1--7 & split \\
+Tangaroa~\cite{Popinet:2004:Tangaroa} & velocity magnitude, 3D & 201 & 18--93 & join \\
+Cylinder~\cite{Camarri:2005:Cylinder,Weinkauf:SquareCylinder} & $Q$-criterion, 3D & 102 & 4--75 & split \\
+\bottomrule
+\end{tabular*}
+\end{table}

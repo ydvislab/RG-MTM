@@ -1,5 +1,13 @@
-论文 1037（PacificVis 2027 会议论文轨道）LaTeX 源文件，当前为 v25（2026-11-09）
-官方 VGTC 会议模板（vgtc_conference_latex-2024.02.14），单盲，作者信息已加入。
+论文 1037（PacificVis 2027 会议论文轨道）LaTeX 源文件，当前为 v29（2026-11-09）
+官方 VGTC 会议模板，preprint 选项：单盲，作者信息显示，页眉为 "Online Submission ID: 1037"。
+
+v29：
+  * 正文只用一套数据（7 个序列：Storms 12h、Wildfires、OLR、PM2.5 逐日、Ring、Tangaroa、Cylinder），同一管线、同一默认配置。
+    表 1 = tables/table1_suite.tex（figure_drafts/table1_suite.py）；表 2 = tables/table_data_suite.tex。
+  * 图：1 Storms 总览（逐小时，示意）；2 冲突；3 流程图（用户编辑的合作者 PPT 导出 figures/anchor_framework_user.pdf）；
+    4 受控树；5 位置–拓扑平面；6 渲染地图 Storms/Ring（map_gallery_fig.py）；7 逐帧预算（budget_suite_fig.py）。
+  * 原 layout 组（ST-MTM 基准重建、逐小时 PM2.5、调参体数据）移到补充材料 S4。
+  * 三维标量地图待合作者提供树数组或渲染列（见 notes/2026-11-09-v29-restructure-plan.md）。
 
 当前状态（2026-11-09，v25）
   v25：按用户意见通篇重写（逻辑框架见 notes/2026-11-09-v25-framework.md）：

@@ -1,0 +1,21 @@
+\begin{table}[t]
+\centering
+\caption{七个序列。叶子：简化后每帧的极值数。论文中的所有结果都使用这些序列和同一组默认配置；图~\ref{fig:storms_overview} 使用同一 ERA5 数据源的逐小时场。}
+\label{tab:data}
+\footnotesize
+\setlength{\tabcolsep}{2.5pt}
+\renewcommand{\arraystretch}{0.95}
+\begin{tabular*}{\columnwidth}{@{\extracolsep{\fill}}llrrl@{}}
+\toprule
+序列 & 标量场 & 帧数 & 叶子 & 树 \\
+\midrule
+Storms~\cite{Hersbach:2020:ERA5} & ERA5 海平面气压，二维，12 小时 & 118 & 1--8 & join \\
+Wildfires~\cite{Franke:2021:1DP} & $\log(1+\mathrm{FRP})$，二维，逐日 & 30 & 6--11 & split \\
+OLR~\cite{NOAA:OLR} & 向外长波辐射，二维 & 60 & 2--8 & join \\
+PM$_{2.5}$~\cite{Dong:2026:PM25} & PM$_{2.5}$ 浓度，二维，逐日 & 366 & 1--7 & split \\
+Ring~\cite{Koepp:2023:TMTM} & 合成扩张圆环，二维 & 40 & 1--7 & split \\
+Tangaroa~\cite{Popinet:2004:Tangaroa} & 速度大小，三维 & 201 & 18--93 & join \\
+Cylinder~\cite{Camarri:2005:Cylinder,Weinkauf:SquareCylinder} & $Q$ 判据，三维 & 102 & 4--75 & split \\
+\bottomrule
+\end{tabular*}
+\end{table}

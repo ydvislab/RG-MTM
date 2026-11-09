@@ -3,7 +3,7 @@
 \usepackage[T1]{fontenc}
 \usepackage{mathptmx}
 \usepackage{amsmath,amssymb,amsthm}
-\usepackage{booktabs,placeins,array}
+\usepackage{booktabs,placeins,array,multirow,colortbl}
 \usepackage[ruled,vlined]{algorithm2e}
 \SetKwInput{KwData}{Data}\SetKwInput{KwResult}{Result}
 \SetKwProg{Fn}{Function}{:}{}\SetKw{KwReturn}{return}\SetKw{KwBreak}{break}
@@ -66,12 +66,10 @@ Jun~Liu$^{1,2}$\thanks{Corresponding author. E-mail: liujun@sccas.cn.}
 \setcounter{section}{-1}
 \firstsection{Overview}
 \maketitle
-The paper makes three claims: the displacement that a merge tree forces on a spatially anchored map can be bounded from the data alone; AnchorMTM attains these bounds with one merge-error budget; and existing maps pay more than the tree demands. This supplement supports each claim in the same order. It first states the conventions behind the bounds (S1) and proves them (S2). It then gives every detail of the construction that the paper summarizes (S3). Before the additional results, it describes how the compared maps were produced and how the data were prepared (S4), so that every number in S5 and S6 can be traced to a method and a configuration. The results of S5 follow the subsections of the evaluation, and S6 collects all measured values by method. Statements use the join convention; split trees are handled by negating the field, and nodes with equal merge levels form multifurcations.
+This supplement contains what the paper refers to but cannot hold: the proofs (S1), the details needed to reproduce AnchorMTM (S2), additional results on the seven sequences of the paper (S3), a replication on reconstructed inputs of the ST-MTM benchmark (S4), two exploratory variants (S5), and every measured value by method (S6).
 
-\section{Notation and Error Conventions}\label{sec:interval}
-This section fixes the quantities that the bounds and the measures use. For a frame, $T$ is the supplied merge tree, $\mathcal{F}$ its leaf labels, $\mathcal{D}(v)$ the descendant leaves of node $v$, and $h(v)$ its scalar level. The matrix $V$ records source LCA levels and fixed extremum values on the diagonal. References lie in $[0,L]$; widths $W_i$ are positive in the interval model, with zero widths used only for its non-strict point-model limit. The support $S_i$ contains the extremum and its leaf-arc regular samples, excluding the parent. Its centroid is their unweighted mean, and relative geometry uses Euclidean centroid distances. The frame representation is $M_t=(\pi_t,x_t,\psi_t)$.
-
-For a fixed order $\pi$, introduce interval centers $z_i$ and anchor slack $H_i=\rho W_i/2$, with $0\le\rho\le1$. The valid-layout set $\mathcal{L}(\pi)$ consists of pairs $(x,z)$ satisfying
+\section{Proofs}\label{sec:proofs}
+This section proves Theorems 1--3 and Proposition 1 of the paper, with the paper's notation; we only add the interval layout set used by the width arguments. For a fixed order $\pi$, introduce interval centers $z_i$ and anchor slack $H_i=\rho W_i/2$, with $0\le\rho\le1$. The valid-layout set $\mathcal{L}(\pi)$ consists of pairs $(x,z)$ satisfying
 \begin{equation}\label{eq:layout}
 \begin{aligned}
  W_i/2&\le z_i\le L-W_i/2, &0&\le x_i\le L,\\
@@ -81,30 +79,6 @@ For a fixed order $\pi$, introduce interval centers $z_i$ and anchor slack $H_i=
 \end{aligned}
 \end{equation}
 for every adjacent pair, with minimum gap $g\ge0$. A necessary capacity condition is $\sum_i W_i+(n-1)g\le L$; infeasible widths are reported rather than silently rescaled. We suppress $t$ in within-frame analysis.
-
-Actual reference displacement is $e_i=|x_i-q_i|$, with $E_\infty=\max_i e_i/L$. An order has normalized reference-order error
-\begin{equation}\label{eq:nroe}
- \nroe(\pi)=\frac{1}{2L}\max_k
- \left(\max_{j\le k}q_{\pi(j)}-q_{\pi(k)}\right).
-\end{equation}
-This is the smallest worst displacement divided by $L$ for a nondecreasing point placement in the specified order, ignoring widths and gaps. It is an order obstruction, not the measured displacement of the final anchors.
-
-For $i\ne j$, the displayed merge is the maximum profile value on the interval between $x_i$ and $x_j$. Set $V_{ii}^{\psi}=\psi(x_i)$ and define
-\begin{equation}\label{eq:dtop}
- \dtop(\psi,T)=\max_{i,j}|V_{ij}^{\psi}-V_{ij}|,
- \qquad\mathrm{NMLE}=\dtop/\Delta_F,
-\end{equation}
-where $\Delta_F>0$ is the declared scalar range, shared across the sequence. We require
-\begin{equation}\label{eq:budget}
- \dtop(\psi_t,T_t)\le\eta,
- \qquad\eta=(\varepsilon_0+\varepsilon)\Delta_F.
-\end{equation}
-Here $\varepsilon_0$ accounts for data resolution and $\varepsilon\ge0$ is the additional analyst-selected budget. Exact topology below means zero labelled error on the declared tree; a numerical-tie allowance is accounted for through $\eta$, rather than assumed to be exactly zero on the original matrix.
-
-If source and displayed trees are interpreted in the canonical cophenetic merge-tree representation, with fixed labels covering all their leaves and induced matrices including the diagonal values, the unnormalized discrepancy in Eq.~\ref{eq:dtop} is the labelled interleaving distance~\cite{Munch:2019:LINF,Gasparovic:2024:IID}. Under those representation conditions, $d_B\le d_I\le\dtop$ for the corresponding persistence diagrams and unlabelled trees~\cite{Gasparovic:2024:IID,Morozov:2013:IDMT}. NMLE itself is a normalized discrepancy. If rendering introduces unlabelled extrema, the anchor matrix alone does not justify this identification for the entire displayed tree.
-
-\section{Proofs of the Bounds}\label{sec:proofs}
-The paper states three bounds and the optimal barriers. This section proves them in the same order: the exact-topology bound (S2.1), the width-aware bound together with the exact evaluation of $\tau$ for a fixed order (S2.2), the bounded-topology bound (S2.3), and the optimal barriers (S2.4).
 
 \subsection{Exact-Topology Bound}\label{sec:exact}
 In a reduced tree whose proper ancestor levels strictly increase, zero labelled merge error requires every subtree's leaves to form a contiguous block. Otherwise a foreign leaf between two descendants would force a merge above that subtree's level. Equal-level events are treated as one node before imposing this requirement. For subtree $X$, let $m_X=\min_{i\in\mathcal{D}(X)}q_i$ and $M_X=\max_{i\in\mathcal{D}(X)}q_i$.
@@ -120,7 +94,7 @@ Recursively ordering each node's children by reference-hull midpoint $(m_X+M_X)/
 \begin{proof}[Proof sketch]
 If block $X$ precedes block $Y$, an inversion from $M_X$ to $m_Y$ requires worst point displacement at least $[M_X-m_Y]^+/2$. Reversing the blocks gives $[M_Y-m_X]^+/2$. Every legal order must choose one orientation. Midpoint order chooses the less costly one since $m_X+M_X\le m_Y+M_Y$ is equivalent to $M_X-m_Y\le M_Y-m_X$. Every inverted leaf pair belongs to different child blocks at its lowest common ancestor, so the largest of these sibling costs also bounds all inversions from above in the midpoint order.
 \end{proof}
-The certificate depends only on the source tree and references, not on an observed layout or optimizer. It applies to any exact profile, including outputs of TMTM and ST-MTM with the same feature tree. Attainment refers to Eq.~\ref{eq:nroe}: it does not assert that a finite-width layout or its final quadratic placement attains $L\nu^*$.
+The certificate depends only on the source tree and references, not on an observed layout or optimizer. It applies to any exact profile, including outputs of TMTM and ST-MTM with the same feature tree. Attainment refers to the order error NROE (Eq.~2 of the paper): it does not assert that a finite-width layout or its final quadratic placement attains $L\nu^*$.
 
 \subsection{Width-Aware Bounds and Fixed-Order Evaluation}\label{sec:width}
 For nonoverlapping finite intervals, the fixed-order minimax cost is
@@ -261,7 +235,7 @@ and $b_k=C_k+\delta^*(\pi)$ attains it.
 \begin{proof}
 The displayed merge of the $i$th and $j$th leaf is $\max_{i\le k<j}b_k$, and each barrier must be at least $F_k$ to keep both basins. An error $\delta$ requires $b_k\le V_{\pi(i)\pi(j)}+\delta$ for every pair spanning $k$, i.e., $b_k\le C_k+\delta$; it also requires $\max_{i\le k<j}b_k\ge V_{\pi(i)\pi(j)}-\delta$ and $b_k\ge F_k$. The largest admissible barriers $b_k=C_k+\delta$ satisfy all constraints exactly when $\delta$ is at least each term of $\delta^*$; smaller barriers only lower the maxima. Hence $\delta^*$ is optimal and attained.
 \end{proof}
-For fewer than two leaves the barrier list is empty and $\delta^*=0$. For an exact-tree order, $\delta^*=0$ and the barriers agree with the relevant adjacent LCA levels. For a conflicting order, the minimax solution balances raised and lowered displayed merges. This exact calculation provides the topology oracle in Eq.~\ref{eq:budget}; it does not establish global optimality of the order search. The implemented direct evaluation costs $O(n^3)$ per order. The proposition permits equality at a leaf value. A raster implementation requiring strict extrema may add a small clearance, which must be counted separately in the measured rendered error.
+For fewer than two leaves the barrier list is empty and $\delta^*=0$. For an exact-tree order, $\delta^*=0$ and the barriers agree with the relevant adjacent LCA levels. For a conflicting order, the minimax solution balances raised and lowered displayed merges. This exact calculation provides the topology test $\delta^*(\pi)\le\eta$ of the paper; it does not establish global optimality of the order search. The implemented direct evaluation costs $O(n^3)$ per order. The proposition permits equality at a leaf value. A raster implementation requiring strict extrema may add a small clearance, which must be counted separately in the measured rendered error.
 
 \begin{algorithm}[tp]
 \caption{Optimal Merge Barriers for a Fixed Leaf Order}\label{alg:barriers}
@@ -286,10 +260,8 @@ For fewer than two leaves the barrier list is empty and $\delta^*=0$. For an exa
 \end{algorithm}
 
 \FloatBarrier
-\section{Construction Details}\label{sec:construction}
-AnchorMTM computes a map from the field sequence and the budget $\varepsilon$ alone. This section completes the three stages of the paper: the overall algorithm (S3.1), the candidate leaf orders (S3.2), the placement program (S3.3), the profile reconstruction and its checks (S3.4), and the conventions of the implementation (S3.5).
-
-\subsection{Complete Algorithm and Schematics}\label{sec:supp_construction}
+\section{Reproduction Details}\label{sec:construction}
+\subsection{Algorithm}\label{sec:supp_construction}
 Algorithm~\ref{alg:construction} lists the complete construction of the paper, separating the discrete order selection from fixed-order placement. Figure~\ref{fig:direction-open} illustrates the motion-derived reference, and Fig.~\ref{fig:selective_relaxation} shows how a selective flattening admits the order $A,C,D,B$ while keeping the $C,D$ grouping; such a proposal is still evaluated against the original merge matrix and the budget (Section~\ref{sec:search}).
 
 \begin{algorithm}[htbp]
@@ -329,7 +301,7 @@ $\eta\leftarrow(\varepsilon_0+\varepsilon)\Delta_F$\;
 \subsection{Candidate Generation and Width-Aware Refinement}\label{sec:search}
 The following details specify the AnchorMTM heuristic over a restricted family of candidate orders. The source matrix is used by every merge-budget check. Midpoint initialization, threshold and conflict-driven candidates, and the retained point order are the same as in the main-paper algorithm.
 
-\emph{Candidate structures.} The helper returns the exact tree, threshold flattenings for distinct internal parent gaps up to $2\eta$, and the retained conflict-driven selective flattening. Selective generation starts from the exact tree and considers releasing one or both internal blocks of the sibling pair with the largest order obstruction. Trials respect accumulated ancestor gaps, pass Eq.~\ref{eq:budget}, and are compared by NROE, merge cost, and number of newly released nodes. Non-worsening NROE steps may continue the search; the best strictly improving state is retained. The point candidate $\pi_p$ is the best feasible threshold midpoint order by NROE, replaced by the selective order only if it improves NROE. This is a finite heuristic candidate family, not enumeration of every permutation.
+\emph{Candidate structures.} The helper returns the exact tree, threshold flattenings for distinct internal parent gaps up to $2\eta$, and the retained conflict-driven selective flattening. Selective generation starts from the exact tree and considers releasing one or both internal blocks of the sibling pair with the largest order obstruction. Trials respect accumulated ancestor gaps, pass the budget test $\delta^*\le\eta$, and are compared by NROE, merge cost, and number of newly released nodes. Non-worsening NROE steps may continue the search; the best strictly improving state is retained. The point candidate $\pi_p$ is the best feasible threshold midpoint order by NROE, replaced by the selective order only if it improves NROE. This is a finite heuristic candidate family, not enumeration of every permutation.
 
 \emph{Refinement and selection.} In the refinement, $\sigma$ is the sum of squared positive boundary and pair terms in Eq.~\ref{eq:fixedtau}. Initial structures are ranked by $(\tau,\sigma,\text{number released})$. A refinement uses every insertion position for nodes with at most eight children and positions within distance three otherwise. A move must improve $(\tau,\sigma)$ lexicographically and pass the exact topology check; comparisons use the implementation's numerical tolerances. Retaining $\pi_p$ ensures that the final $(\tau,\nroe)$ selection cannot worsen its fixed-order displacement. Exact midpoint optimality, exact evaluation of $\tau$, and heuristic leaf-order search are separate guarantees. Exhaustive enumeration certifies a global order optimum only when all permutations are covered.
 
@@ -405,41 +377,7 @@ For each frame, reporting distinguishes the order certificate, a width-aware low
 \paragraph{Continuous and rendered acceptance.}
 Exact Mode sets $\varepsilon=0$ and keeps only the numerical allowance $\eta=\varepsilon_0\Delta_F$, which merges saddles tied to within $\varepsilon_0\Delta_F$; strict exact topology is $\eta=0$. The exact-tree structure is retained among refinement seeds, but capacity and numerical failures can still stop layout. The renderer reports invalid raster capacity and nonfinite values. Optimal filling may introduce strict-extremum clearance and records measured budget discrepancies and topology diagnostics. There is no uniform final budget/label-coverage rejection or repair gate. Applying the full labelled-tree interpretation requires checking that labels cover the rendered tree; a continuous barrier optimum alone does not establish this.
 
-\subsection{Implementation Conventions}\label{sec:impl}
-\begin{figure}[t]
-\centering
-\includegraphics[width=\columnwidth]{figures/anchor_leaf_correspondence_v26.pdf}
-\caption{Leaf correspondence across frames: leaf-arc supports are matched one to one by maximum overlap; matched leaves continue a track, unmatched ones start or end one.}
-\label{fig:supp-correspondence}
-\end{figure}
-The paper describes the construction mathematically. The conventions below record how the implementation realizes it, including correspondence, reference estimation and the single-control interface.
-
-\paragraph{Correspondence provenance and temporal confidence.}
-The shared fixed-grid extractor in \texttt{experiments/era5.py} calls \texttt{match\_leaves\_by\_overlap} on consecutive augmented-tree frames. Supports contain the extremum and leaf-arc regular samples, excluding the parent critical sample. Stable \texttt{sample\_ids} identify common spatial samples; fixed-grid C-order indexing supplies them in this extractor. A Hungarian assignment maximizes total intersection count, and zero-overlap pairs are discarded. Matched leaves inherit Track IDs; unmatched current leaves receive new IDs. The first frame and declared temporal-window breaks start identities without a predecessor. Tied assignments have no additional physical tie-breaking criterion.
-
-The shared 2D/3D extraction path and the native-volume paths must be distinguished. The latter accumulate intersections from original-voxel leaf-arc ownership arrays, exclude roots, and retain positive-overlap Hungarian pairs. They implement the same count-based assignment principle through different support representations, rather than all calling one matching function. The automatic-reference adapter accepts precomputed, row-aligned Track IDs and checks frame-wise uniqueness; it does not verify their upstream matching provenance. External inputs must therefore declare their support and correspondence conventions.
-
-For a persistent ID present in consecutive frames, \texttt{motion\_pairs} supplies an extremum displacement to the single sequence-wide direction fit. Unmatched leaves and track interruptions supply no displacement for that step. Rapid motion, support changes or weak overlap may remove or alter correspondences and affect this fit. The implementation does not reconstruct physical split/merge events, branching lineages or links across missing frames.
-
-For placement, the adapter and \texttt{solve\_unified\_sequence} align previous anchors and references by Track ID and pass a valid-match mask. They use unit temporal confidence. Shared preprocessing also records support IoU for diagnostics; the legacy ERA5 extremum-reference branch additionally passes it as \texttt{temporal\_confidence} to the low-level solver. That branch weights temporal residuals by IoU, but still maximizes intersection counts during matching. The current automatic-reference adapter does not enable this weighting; direction estimation also does not use IoU weights.
-
-\paragraph{Automatic reference and implementation convention.}
-The default preprocessing uses the leading eigenvector of the scatter of all matched extremum displacements, once over the full sequence in either 2D or 3D. It maximizes squared projected motion. The sign gives nonnegative total signed motion; when that sum is within $10^{-12}$ of zero, the largest-magnitude component is positive. If motion energy is at most $10^{-20}$, the longest domain axis is used, choosing the first on a tie. These are the existing \texttt{directional\_reference} conventions. A physical direction may be supplied. Repeated top eigenvalues need not select a unique direction; the relative eigengap is reported. This is standard spectral estimation, not joint optimization of direction and topology.
-
-The projected bounding-box corners supply origin $o$ and span $L$. Code stores raw $p_i^t\cdot a$ on $[o,o+L]$; the paper uses $q_i^t=p_i^t\cdot a-o$ and translates anchors and centers by the same origin. Motion differences are invariant under this shift. The low-level \texttt{solve\_anchored\_sequence} adapter connects this preprocessing to the finite width-aware search and four-term capped QP. It returns continuous layouts; the public \texttt{anchor\_mtm} entry additionally invokes existing reconstruction and diagnostics, as specified below. Neither output is an unconditional raster certificate. Existing fixed-axis experimental drivers and stored evidence have not been rerun or relabelled as automatic-reference experiments.
-
-\paragraph{Single-control configuration and execution.}
-The public execution is \texttt{prepare\_fields} (or \texttt{prepare\_sequence}) followed by \texttt{anchor\_mtm(prepared, epsilon)}. Preprocessing and its fitted reference are reused for all budgets. The fixed numerical allowance is $\varepsilon_0=10^{-7}$; every order stage uses the same absolute $\eta=(\varepsilon_0+\varepsilon)\Delta_F$. Default $\varepsilon=0$ retains this allowance and is not strict Exact Mode. Zero labelled error is the mathematical case $\eta=0$, obtained with both allowances zero. Neither 20\% nor 100\% limits the interface.
-
-The default configuration uses the existing scale rules: width scale $s=0.5L/\operatorname{measure}(D)$, gap $g=L/240$, position slack $\beta_0=L/120$, $\rho=0.5$, and weights $(\lambda_R,\lambda_M,\lambda_G,\lambda_C)=(4,0.5,1,0.1)$. All are fixed for a prepared sequence. Output resolution defaults to 2048 samples; insufficient raster capacity is a reported failure. Advanced fixed configurations retain these quantities rather than deleting constraints. Reference-aligned motion and term means are the default. An independently supplied reference cap or conflicting motion control is rejected by the new placement interface.
-
-The canonical ordering implementation retains the existing threshold/selective flattening, midpoint and block-insertion strategies (four initial refinement seeds plus the exact tree, at most eight refinement passes). A collector records generated initial and trial permutations, retaining strict-tree orders and the point candidate. The deduplicated finite pool is evaluated for $\delta^*$, $\tau$ and NROE, filtered by $\eta$, then selected lexicographically by $(\tau,\mathrm{NROE})$; an exact tie uses the permutation lexicographically for reproducibility. The QP receives a singleton order and the explicit cap $\tau+\beta_0$. The older general-purpose \texttt{Controls} interface can use an absolute position cap and compare multiple orders by QP objective; it is not the default AnchorMTM entry. Historical experiment drivers and their outputs are unchanged.
-
-Reconstruction calls the existing leaf/LCA filling and optimal-barrier correction. Records include candidate totals and admitted counts, selected order, $\tau$, $\delta^*$, anchors, reference displacement, NROE, continuous motion residual, and separately rendered errors and failures. NMLEmean and NMLEmax use absolute error over the full fixed-label merge matrix (including the diagonal), divided by $\Delta_F$; ME is the RMS reference-motion residual divided by $L$. Rendered motion is also measured at rounded anchors. A successful computation may record a rendered budget violation; it does not certify full-tree label coverage or repair the output. The renderer's strict-extremum clearance remains separate from the continuous optimum.
-
-\FloatBarrier
-\section{Compared Methods, Data and Settings}\label{sec:protocol}
-\subsection{Methods as Instances of One Layout Problem}\label{sec:family}
+\subsection{Compared Methods}\label{sec:family}
 \begin{figure*}[t]
 \centering
 \includegraphics[width=.92\textwidth]{figures/anchor_related_work_mapping_v26.pdf}
@@ -476,33 +414,10 @@ A merge tree map without a reference has no preferred direction: its mirror imag
 
 On the four benchmark inputs, the SNS and TW of TMTM and ST-MTM are quoted from the ST-MTM paper (Temporal mode, authors' inputs) and are not ranked against local values. Local TW uses $k=(1,3,5,3)$ on Gaussian, Ring, Wildfires and Storms, counting only frames with $0<k<n_t/2$ (64/64, 1/40, 4/32 and 11/744), and $k=1$ on all 744 PM$_{2.5}$ frames.
 
-\subsection{Data Preparation}\label{sec:dataprep}
-The \emph{bound suite} reuses the saved trees, matches and references of an earlier benchmark, prepared with one extractor, one matching rule and one reference estimator, and laid out with one default configuration $\Theta_0$ on every sequence. Its 12-hourly Storms and 30-frame Wildfires sequences are prepared differently from the hourly Storms and 32-frame Wildfires inputs of the layout suite, and Ring follows the TMTM generator.
-
-The \emph{layout suite} reconstructs the four planar inputs of the ST-MTM benchmark. Author-processed arrays are unavailable, so the persistence values of ST-MTM are read as per-frame range fractions (0.1, 0.1, 15 and 10.5\% for Gaussian, Ring, Wildfires and Storms); the result is a disclosed reconstruction, not an identical-input reproduction. The hourly PM$_{2.5}$ sequence covers January 2017 over northern China (110--120$^\circ$E, 32--41$^\circ$N) with 744 reanalysis fields interpolated to $160\times144$. Its maxima are extracted as join trees of the negated field with a persistence of 5\% of each frame's range, a threshold independent of the 5\% layout budget. The volumetric inputs are listed in Table~\ref{tab:volume-parameters}.
-
-\subsection{Settings, Budget Selection and Runtime}\label{sec:settings}
-\input{tables/table2_parameters_runtime.tex}
-\input{tables/table_volume_parameters.tex}
-Table~\ref{tab:anchor-parameters-final} lists the four planar Balanced budgets (1, 1, 5 and 10\%), the fixed 5\% budget of the hourly PM$_{2.5}$ sequence and the layout parameters; Table~\ref{tab:volume-parameters} separately lists the volumetric datasets and settings. The planar table reports one uncached run per sequence on Apple M4, with one BLAS/TTK thread, sequential extraction and the default HiGHS scheduler. Optimization includes ordering and placement; total time additionally includes preprocessing, trees, matching/reference estimation, rasterization, I/O and checks. Imports, reporting and metric export are excluded; OS caches may be warm. Timings do not establish speedup significance. Baseline NPE uses the disclosed CompactTMTM and ST-MTM solver adaptations, not author binaries.
-
-The Balanced budget of each planar input was chosen once from 1--10\% on the first chronological quarter of the sequence by $J=0.5\,\mathrm{NPE}_{norm}+0.5\,\mathrm{SNS}_{norm}$ over candidates within their budget, preferring smaller budgets within 0.01 of the minimum, and frozen before the full runs. Earlier outputs had been observed, so this is not a blind test. PM$_{2.5}$ was added later with a fixed budget of 5\% that this rule did not select, and it is reported under its budget. The volumetric table of the paper uses the stored configurations of Table~\ref{tab:volume-parameters} with the $+x$ reference chosen by an offline displacement rule; the volume figure and the per-frame distributions use the default configuration of the bound suite.
-
-\begin{figure*}[t]
-\centering
-\includegraphics[width=\textwidth]{figures/budget_supp_selection.pdf}
-\caption{Selection of the Balanced budget on the first chronological quarter of each sequence (validation frames). Top: validation NPE (left axis) and SNS (right axis) for $\varepsilon=0$--10\%. Bottom: the score $J$ of the paper over the eligible positive budgets, the band within 0.01 of its minimum, and the selected budget (star), frozen before the full runs. On the Gaussian and Ring validation frames every candidate gives the same map, so the smallest budget is kept.}
-\label{fig:supp_budget_selection}
-\end{figure*}
-
-Figure~\ref{fig:supp_budget_selection} shows this selection rule. On Wildfires 5\% gives the smallest validation NPE at a small SNS cost and is the smallest budget within the tolerance; on Storms validation NPE falls at every step up to 10\%, SNS changes little beyond 6\%, and $J$ is smallest at 10\%. The first quarter of Ring contains no conflict that a budget releases (Fig.~\ref{fig:supp_budget_matrix}), so its selection keeps 1\%, while later frames change at larger budgets.
-
 \FloatBarrier
-\section{Additional Results}\label{sec:results}
-The results below follow the evaluation of the paper: tightness and forced error (S5.1), maps and positions on every sequence (S5.2), the per-frame effect of the budget (S5.3), and three qualitative cases (S5.4--S5.6).
-
+\section{Additional Results on the Seven Sequences}\label{sec:results}
 \subsection{Tightness of the Bounds and Forced Error}\label{sec:supp_bounds}
-The paper evaluates the bounds on the bound suite (Section~\ref{sec:dataprep}). Table~\ref{tab:supp_bounds} lists the sequences and, for four budgets, the frames on which the interval cost $\tau$ of the selected order equals the lower bound; for $\varepsilon>0$ the bound is the larger of the bounded-topology certificate and the flattening certificate (Section~\ref{sec:chain}).
+The paper evaluates the bounds on the seven sequences of the paper (Section~\ref{sec:dataprep}). Table~\ref{tab:supp_bounds} lists the sequences and, for four budgets, the frames on which the interval cost $\tau$ of the selected order equals the lower bound; for $\varepsilon>0$ the bound is the larger of the bounded-topology certificate and the flattening certificate (Section~\ref{sec:chain}).
 
 \begin{table*}[t]
 \centering\small
@@ -524,7 +439,7 @@ Table~\ref{tab:supp_forced} splits the order error of the three tree-keeping map
 
 \begin{table}[h]
 \centering\small
-\caption{Order error of the tree-keeping maps on the bound suite (percent of the canvas, means over frames) and the share above the strict bound $\nu^*$.}\label{tab:supp_forced}
+\caption{Order error of the tree-keeping maps on the seven sequences of the paper (percent of the canvas, means over frames) and the share above the strict bound $\nu^*$.}\label{tab:supp_forced}
 \setlength{\tabcolsep}{3pt}
 \begin{tabular}{lrrrrrrr}\toprule
  & & \multicolumn{2}{c}{OLO} & \multicolumn{2}{c}{TMTM} & \multicolumn{2}{c}{ST-MTM}\\\cmidrule(lr){3-4}\cmidrule(lr){5-6}\cmidrule(lr){7-8}
@@ -554,7 +469,7 @@ Because the bounds need no layout, they can also compare reference directions be
 \begin{figure*}[t]
 \centering
 \includegraphics[width=\textwidth]{figures/map_gallery_supp.pdf}
-\caption{Rendered maps of OLR and daily PM$_{2.5}$, encoded as the map figure of the paper: three tracked extrema per sequence (circles in the snapshots, dashed reference trajectories on the maps). On PM$_{2.5}$ the tracked maxima move little and the matched identities change often, so its maps look alike; the positional difference shows in the numbers below each map.}
+\caption{Rendered maps of Wildfires, OLR and daily PM$_{2.5}$, encoded as the map figure of the paper: the two most significant tracked features per sequence, marked at a few moments by a circle and a square (same symbols in the snapshots). On PM$_{2.5}$ the tracked maxima move little, so its maps look alike; the positional difference shows in the numbers below each map.}
 \label{fig:supp-map-gallery}
 \end{figure*}
 \begin{figure*}[t]
@@ -564,6 +479,33 @@ Because the bounds need no layout, they can also compare reference directions be
 \label{fig:supp-positions}
 \end{figure*}
 The map figure of the paper follows a few tracked features; Figs.~\ref{fig:supp-map-gallery} and~\ref{fig:supp-positions} show the rest. Figure~\ref{fig:supp-positions} plots every extremum of every frame, so it shows the whole distribution of displacements rather than selected features. On the four planar sequences, TMTM and ST-MTM draw extrema 17--30\% of the axis from their references on average, AnchorMTM with the exact tree 1.0--3.2\%. On Cylinder, TMTM and ST-MTM gather the vortices near the middle of the axis, whereas AnchorMTM already reproduces the shedding pattern of the references with the exact tree; on Tangaroa, whose conflicts lie deep in the tree, the pattern appears only near $\varepsilon=20\%$. Table~\ref{tab:full-planar-positions} and Table~\ref{tab:full-volume} list the numbers.
+
+\FloatBarrier
+\section{Replication on the ST-MTM Benchmark Inputs}\label{sec:replication}
+The paper evaluates every method on one suite of seven sequences. ST-MTM reports its results on four planar inputs (Gaussian, Ring, Wildfires, Storms) whose processed arrays are not public. This section reconstructs those inputs, adds an hourly PM$_{2.5}$ sequence and tuned volumetric configurations, and repeats the comparison against the published values. Its preprocessing differs from the paper's suite: Ring, Wildfires and Storms here are other versions of the same sources, and the hourly PM$_{2.5}$ data (2017) are a different dataset from the daily PM$_{2.5}$ sequence (2000) of the paper.
+
+\subsection{Inputs}\label{sec:dataprep}
+The \emph{seven sequences of the paper} reuses the saved trees, matches and references of an earlier benchmark, prepared with one extractor, one matching rule and one reference estimator, and laid out with one default configuration $\Theta_0$ on every sequence. Its 12-hourly Storms and 30-frame Wildfires sequences are prepared differently from the hourly Storms and 32-frame Wildfires inputs of the ST-MTM benchmark reconstruction, and Ring follows the TMTM generator.
+
+The \emph{ST-MTM benchmark reconstruction} reconstructs the four planar inputs of the ST-MTM benchmark. Author-processed arrays are unavailable, so the persistence values of ST-MTM are read as per-frame range fractions (0.1, 0.1, 15 and 10.5\% for Gaussian, Ring, Wildfires and Storms); the result is a disclosed reconstruction, not an identical-input reproduction. The hourly PM$_{2.5}$ sequence covers January 2017 over northern China (110--120$^\circ$E, 32--41$^\circ$N) with 744 reanalysis fields interpolated to $160\times144$. Its maxima are extracted as join trees of the negated field with a persistence of 5\% of each frame's range, a threshold independent of the 5\% layout budget. The volumetric inputs are listed in Table~\ref{tab:volume-parameters}.
+
+\input{tables/table1_comparison.tex}
+\input{tables/table_volume.tex}
+\subsection{Settings, Budget Selection and Runtime}\label{sec:settings}
+\input{tables/table2_parameters_runtime.tex}
+\input{tables/table_volume_parameters.tex}
+Table~\ref{tab:anchor-parameters-final} lists the four planar Balanced budgets (1, 1, 5 and 10\%), the fixed 5\% budget of the hourly PM$_{2.5}$ sequence and the layout parameters; Table~\ref{tab:volume-parameters} separately lists the volumetric datasets and settings. The planar table reports one uncached run per sequence on Apple M4, with one BLAS/TTK thread, sequential extraction and the default HiGHS scheduler. Optimization includes ordering and placement; total time additionally includes preprocessing, trees, matching/reference estimation, rasterization, I/O and checks. Imports, reporting and metric export are excluded; OS caches may be warm. Timings do not establish speedup significance. Baseline NPE uses the disclosed CompactTMTM and ST-MTM solver adaptations, not author binaries.
+
+The Balanced budget of each planar input was chosen once from 1--10\% on the first chronological quarter of the sequence by $J=0.5\,\mathrm{NPE}_{norm}+0.5\,\mathrm{SNS}_{norm}$ over candidates within their budget, preferring smaller budgets within 0.01 of the minimum, and frozen before the full runs. Earlier outputs had been observed, so this is not a blind test. PM$_{2.5}$ was added later with a fixed budget of 5\% that this rule did not select, and it is reported under its budget. The volumetric table of the paper uses the stored configurations of Table~\ref{tab:volume-parameters} with the $+x$ reference chosen by an offline displacement rule; the volume figure and the per-frame distributions use the default configuration of the seven sequences of the paper.
+
+\begin{figure*}[t]
+\centering
+\includegraphics[width=\textwidth]{figures/budget_supp_selection.pdf}
+\caption{Selection of the Balanced budget on the first chronological quarter of each sequence (validation frames). Top: validation NPE (left axis) and SNS (right axis) for $\varepsilon=0$--10\%. Bottom: the score $J$ of the paper over the eligible positive budgets, the band within 0.01 of its minimum, and the selected budget (star), frozen before the full runs. On the Gaussian and Ring validation frames every candidate gives the same map, so the smallest budget is kept.}
+\label{fig:supp_budget_selection}
+\end{figure*}
+
+Figure~\ref{fig:supp_budget_selection} shows this selection rule. On Wildfires 5\% gives the smallest validation NPE at a small SNS cost and is the smallest budget within the tolerance; on Storms validation NPE falls at every step up to 10\%, SNS changes little beyond 6\%, and $J$ is smallest at 10\%. The first quarter of Ring contains no conflict that a budget releases (Fig.~\ref{fig:supp_budget_matrix}), so its selection keeps 1\%, while later frames change at larger budgets.
 
 \FloatBarrier
 \subsection{Where a Budget Acts}\label{sec:supp_budget}
@@ -609,6 +551,8 @@ In the volumes almost every frame contains a conflict that a budget can release 
 Figure~\ref{fig:pm25-hourly} shows how a spatially anchored map reads an episode that the source fields confirm. On 22 January the air is clean (a). On 23 January, orange bands appear in the upper half of the map, and the source field shows separate pollution maxima (b). By 25 January the polluted area covers much of the region, and the bands widen (c). The episode peaks on 26 January: the highest concentrations lie in a narrow belt (d), and the darkest bands descend on the map, that is, the strongest maxima move toward lower reference positions. By 27 January the air has largely cleared (e). Because the axis is anchored, a band that keeps its height is a maximum that stays at the same position along the reference direction while its concentration changes, and a band that drifts is a maximum that moves along this direction. The merge error stays within the budget in all 744 frames (at most 4.998\%). The run stores no reference direction, so the snapshots carry no direction arrow, and no baseline layout of this sequence is available for a side-by-side view.
 
 
+\FloatBarrier
+\section{Exploratory Variants}\label{sec:variants}
 \subsection{Ring: Guidance and Budget Together}\label{sec:supp_ring_params}
 \begin{figure}[!t]
 \centering
@@ -634,13 +578,12 @@ Its fixed tree-compatible order needs a worst-case reference cap of 55.21\%; we 
 
 Central guidance exposes unfolding but sacrifices anchoring. Frame-balanced mean absolute $X$ error is 21.1\%, 25.5\% and 28.1\% for guidance weights 1, 4 and 16, versus 1.9\% for the Cartesian-reference configuration. This differs from NPE and pooled mean displacement. These outputs are not the Cartesian-reference configurations of the paper's volumetric table. Equal-$X$ features may differ in $Y,Z$; their layout separation does not encode depth.
 
-\FloatBarrier
 \section{Complete Results by Method}\label{sec:complete}
-This section lists every measured value of the paper, one table per group of measures, with one column per method. Tables~\ref{tab:full-order}, \ref{tab:full-bound-other} and~\ref{tab:full-planar-positions} cover the bound suite, Tables~\ref{tab:full-layout} and~\ref{tab:full-volume} the layout suite. Percentages refer to the canvas (order error, displacement) or to the scalar range (merge error). Every baseline is shown in the mirror stated in Section~\ref{sec:baselines}. A dash marks a method that does not apply: the curves are defined on planar grids only, and OLO yields an order without anchors.
+This section lists every measured value of the paper, one table per group of measures, with one column per method. Tables~\ref{tab:full-order}, \ref{tab:full-bound-other} and~\ref{tab:full-planar-positions} cover the seven sequences of the paper, Tables~\ref{tab:full-layout} and~\ref{tab:full-volume} the ST-MTM benchmark reconstruction. Percentages refer to the canvas (order error, displacement) or to the scalar range (merge error). Every baseline is shown in the mirror stated in Section~\ref{sec:baselines}. A dash marks a method that does not apply: the curves are defined on planar grids only, and OLO yields an order without anchors.
 
 \begin{table*}[t]
 \centering\small
-\caption{Bound suite: mean order error NROE (top) and worst merge error over frames NMLE (bottom), in percent. $\nu^*$ is the exact-topology bound. AnchorMTM keeps the numerical allowance $\varepsilon_0$ in Exact Mode, which merges saddles tied within $10^{-7}$ of the scalar range; on Cylinder this lowers its order error below the strict $\nu^*$ at a merge error below $10^{-5}$\%.}\label{tab:full-order}
+\caption{The seven sequences: mean order error NROE (top) and worst merge error over frames NMLE (bottom), in percent. $\nu^*$ is the exact-topology bound. AnchorMTM keeps the numerical allowance $\varepsilon_0$ in Exact Mode, which merges saddles tied within $10^{-7}$ of the scalar range; on Cylinder this lowers its order error below the strict $\nu^*$ at a merge error below $10^{-5}$\%.}\label{tab:full-order}
 \setlength{\tabcolsep}{4pt}
 \begin{tabular}{lr|rrr|rrr|rr}\toprule
  & & \multicolumn{3}{c|}{keep the tree} & \multicolumn{3}{c|}{follow space} & \multicolumn{2}{c}{AnchorMTM}\\
@@ -666,7 +609,7 @@ Cylinder & & 0 & 0 & 0 & -- & -- & 14.28 & 0 & 9.71\\\bottomrule
 
 \begin{table*}[t]
 \centering\small
-\caption{Bound suite: motion error ME (percent of clear approach or separation events shown in the wrong direction or not at all), scale-normalized stress SNS and trustworthiness TW ($k=1$). AnchorMTM uses the default configuration $\Theta_0$. Daily PM$_{2.5}$ contains few clear events and was not used for the motion reading of the paper.}\label{tab:full-bound-other}
+\caption{The seven sequences: motion error ME (percent of clear approach or separation events shown in the wrong direction or not at all), scale-normalized stress SNS and trustworthiness TW ($k=1$). AnchorMTM uses the default configuration $\Theta_0$. Daily PM$_{2.5}$ contains few clear events and was not used for the motion reading of the paper.}\label{tab:full-bound-other}
 \setlength{\tabcolsep}{3.2pt}
 \begin{tabular}{l|rrr|rrr|rrr|rrr|rrr}\toprule
  & \multicolumn{3}{c|}{TMTM} & \multicolumn{3}{c|}{ST-MTM} & \multicolumn{3}{c|}{Projection} & \multicolumn{3}{c|}{AnchorMTM, $\varepsilon=0$} & \multicolumn{3}{c}{AnchorMTM, $\varepsilon=10\%$}\\
@@ -683,7 +626,7 @@ Cylinder & 67.0 & 0.296 & 0.802 & 46.0 & 0.135 & 0.899 & 19.3 & 0.043 & 0.878 & 
 
 \begin{table*}[t]
 \centering\small
-\caption{Layout suite, planar inputs: the measures of the paper's comparison table rearranged with one column per method. AnchorMTM's budgeted column is Balanced (1, 1, 5 and 10\% on Gaussian, Ring, Wildfires and Storms) and a fixed 5\% on PM$_{2.5}$; its attained worst merge error is 0, 0.982, 4.421, 9.985 and 4.998\%, and Exact has zero merge error. $^\dagger$Published values of the ST-MTM paper on the authors' inputs, not ranked against local values.}\label{tab:full-layout}
+\caption{ST-MTM benchmark reconstruction, planar inputs: the measures of the paper's comparison table rearranged with one column per method. AnchorMTM's budgeted column is Balanced (1, 1, 5 and 10\% on Gaussian, Ring, Wildfires and Storms) and a fixed 5\% on PM$_{2.5}$; its attained worst merge error is 0, 0.982, 4.421, 9.985 and 4.998\%, and Exact has zero merge error. $^\dagger$Published values of the ST-MTM paper on the authors' inputs, not ranked against local values.}\label{tab:full-layout}
 \setlength{\tabcolsep}{5pt}
 \begin{tabular}{l|rr|rr|rr}\toprule
  & \multicolumn{2}{c|}{follow space} & \multicolumn{2}{c|}{keep the tree} & \multicolumn{2}{c}{AnchorMTM}\\
@@ -711,7 +654,7 @@ PM$_{2.5}$ (hourly) & 0.8887 & 0.8277 & 0.7781 & 0.8224 & 0.7884 & 0.7657\\\bott
 
 \begin{table*}[t]
 \centering\small
-\caption{Bound suite, planar sequences, default configuration: the positions of Fig.~\ref{fig:supp-positions}. Mean displacement over all features and NPE in percent of the canvas, worst merge error in percent of the scalar range. Native maps are rescaled to the canvas and shown in their more favourable mirror; their per-frame order reproduces the stored NROE exactly.}\label{tab:full-planar-positions}
+\caption{The seven sequences, planar sequences, default configuration: the positions of Fig.~\ref{fig:supp-positions}. Mean displacement over all features and NPE in percent of the canvas, worst merge error in percent of the scalar range. Native maps are rescaled to the canvas and shown in their more favourable mirror; their per-frame order reproduces the stored NROE exactly.}\label{tab:full-planar-positions}
 \setlength{\tabcolsep}{4.2pt}
 \begin{tabular}{ll|rr|rrr}\toprule
  & & \multicolumn{2}{c|}{keep the tree} & \multicolumn{3}{c}{AnchorMTM, budget $\varepsilon$}\\
@@ -733,7 +676,7 @@ Ring & mean displacement & 26.84 & 23.83 & 2.44 & 1.20 & 0.62\\
 
 \begin{table*}[t]
 \centering\small
-\caption{Layout suite, volumes. Top: stored configurations with the $+x$ reference (the paper's volumetric table; Balanced uses 1\% on Cylinder and 33.33\% on Tangaroa). Bottom: default configuration with the references of Fig.~\ref{fig:supp-positions}; mean displacement and NPE in percent of the canvas, worst merge error in percent of the scalar range. Native maps are rescaled to the canvas and shown in their more favourable mirror.}\label{tab:full-volume}
+\caption{ST-MTM benchmark reconstruction, volumes. Top: stored configurations with the $+x$ reference (the paper's volumetric table; Balanced uses 1\% on Cylinder and 33.33\% on Tangaroa). Bottom: default configuration with the references of Fig.~\ref{fig:supp-positions}; mean displacement and NPE in percent of the canvas, worst merge error in percent of the scalar range. Native maps are rescaled to the canvas and shown in their more favourable mirror.}\label{tab:full-volume}
 \setlength{\tabcolsep}{4.2pt}
 \begin{tabular}{ll|rr|rrrrr}\toprule
 \multicolumn{9}{l}{\emph{Stored configurations, $+x$ reference}}\\

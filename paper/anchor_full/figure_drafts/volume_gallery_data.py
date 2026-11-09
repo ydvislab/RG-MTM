@@ -30,7 +30,7 @@ SRC = {'Tangaroa': (CODE / 'results/volume3d/tangaroa-paper-p10-full201', CODE /
 def anchor(name):
     d = n1.DATASETS[name](); R = d['scalar_range']
     p = Parameters(**{k: v for k, v in d['parameters'].items() if k in n1.PARAM_FIELDS}); L = p.canvas
-    stored = read(FIG / f'frontier20261027/{name.lower()}.json')['methods']
+    stored = read(FIG / f'frontier20261027/{name.lower().replace(".", "")}.json')['methods']
     out = dict(dataset=name, canvas=L, origin=float(p.canvas_origin), q=[list(map(float, q)) for q in d['references']], maps={})
     for e in EPS:
         t0 = time.perf_counter(); orders = []

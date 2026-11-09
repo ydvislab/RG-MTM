@@ -108,3 +108,34 @@
 | 中文同步 | 1 h |
 
 合计约 8–12 小时。截止时间按 AoE 计约为北京时间 11/10 20:00，时间够，但必须今天确认方案。
+
+## 执行记录（v29，11/9 下午）
+
+- **表 1 重算**：在 7 个序列上重算（`figure_drafts/table1_suite.py`，输出 `figdata/table1_suite20261109.json`、`tables/table1_suite.tex`）。
+  - Exact 的 NPE 比 TMTM/ST-MTM 低：平面 82–97%，体数据 63–82%；Exact 在所有平面序列上也低于两条曲线。
+  - ST-MTM 的 TW 在 7 个序列上都最好，SNS 在 5 个序列上最好。
+  - ε=10% 的最大合并误差为 9.97%。
+- **新图 6**（`map_gallery.pdf`）：Storms（12 小时）和 Ring 的渲染地图，同一色标。
+  - 每个序列标出 2 个最显著的被跟踪特征（按持续性加权的最长连续轨迹，排除边界极值，参考位置跳变超过 0.12 处切断），只在少数时刻用圆圈和方块标出，不再画连续线。
+  - Wildfires、OLR、PM2.5 的同类图放补充材料。
+- **新图 7**（`budget_suite.pdf`）：Storms、PM2.5 逐日、Tangaroa、Cylinder，在同一套数据上重算。
+- **流程图**：直接用用户编辑过的合作者 PPT 导出图（upstream d67c9c2 的 `anchor_framework.pdf`），图注写明四叶子例子为示意。
+  - 他的例子是嵌套型冲突，与图 2 的交错型不同，但都由定理 1 覆盖。
+- **删除**：节点映射图、风暴对比图、表 3（调参后的体数据）。
+- **补充材料改为**：
+  - S1 证明（只保留证明所需的区间布局集合，删去重复的记号章节）
+  - S2 复现细节
+  - S3 七个序列上的补充结果
+  - S4 ST-MTM 基准重建上的复核（原 layout 组：表、调参后的体数据、Balanced 选择、逐帧预算、逐小时 PM2.5 案例）
+  - S5 探索性变体
+  - S6 完整结果表
+
+## 三维地图：需要合作者提供
+
+本机 Cylinder 和 Tangaroa 的树只有元数据（缺 `frame_*.values.f32` 等数组），原始体数据也不在，因此无法渲染 AnchorMTM 的三维标量地图。正文第 8–9 页现在约有一页空白，正好留给三维图。
+
+**请合作者提供 Cylinder（如可能，加上 Tangaroa）：**
+1. AnchorMTM 默认配置（与 frontier 相同：权重 (4,1,0.5,0.1)，ρ=0.5，参考为 Cylinder 顺流 x、Tangaroa 匹配运动方向）在 ε=0 和 ε=5% 下的渲染列（每帧一列，原始数值数组，不要 PNG）。
+   - 也可以只给出树数组，即 `data/real/paper1_suite/square-cylinder3d/trees/frame_*.{values.f32,owner.i32,offsets.i32,regular.i32,nodes.i32,arcs.i32}`，由我们渲染（脚本 `figure_drafts/render_cylinder_maps.py` 已写好）。
+2. 同一色标下的 TMTM、ST-MTM 原始列数组。现有 display_maps 为 2048 行，可以直接用。
+3. 3–5 个 Q 等值面快照，即她图 11 下排使用的相机与时刻。

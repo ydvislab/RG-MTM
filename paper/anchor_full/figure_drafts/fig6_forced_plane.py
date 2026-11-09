@@ -27,6 +27,7 @@ OUT = Path(os.environ.get('FIG6_OUT', OUT))
 # comes from the collaborator's package 01 (gaussian_plane_row.py writes this file on the Mac); without it the row is left out.
 GAUSS = Path(os.environ.get('FIG6_GAUSS', FIG / 'plane_her20261109/gaussian.json'))
 ZERO = .045   # where a value of 0 is drawn, left of an axis break
+SHOW_GAUSSIAN = False   # v34: dropped. Its bound is 0 and the row said no more than the sentence in Section 6.2
 
 
 def nice_top(v):
@@ -46,8 +47,8 @@ def gaussian():
 
 
 def forced(ax):
-    xmin, xmax = .08, 60.
-    rows = (['Gaussian'] if GAUSS.exists() else []) + ROWS
+    xmin, xmax = .1, 60.
+    rows = (['Gaussian'] if SHOW_GAUSSIAN and GAUSS.exists() else []) + ROWS
     data = {n: (gaussian() if n == 'Gaussian' else series(n)) for n in rows}
     at = lambda val: val if val > 0 else ZERO
     x0 = .07 if 'Gaussian' in rows else xmin   # hatching starts right of the axis break
@@ -63,21 +64,21 @@ def forced(ax):
         ax.plot(base['ST-MTM'], y, 'D', ms=3.4, color=ST, mec='white', mew=.4, zorder=7, clip_on=False)  # on top where they meet (PM2.5)
         share = sorted(100 * (b - nu) / b for b in base.values())
         rng = f'{share[0]:.0f}%' if round(share[0]) == round(share[1]) else f'{share[0]:.0f}–{share[1]:.0f}%'
-        ax.text(1.02, y, rng, transform=ax.get_yaxis_transform(), ha='left', va='center', fontsize=6.6, color='#3F474F')
-    ax.text(1.02, len(rows) - .35, 'not forced', transform=ax.get_yaxis_transform(), ha='left', va='bottom', fontsize=6.6, color='#3F474F')
+        ax.text(1.02, y, rng, transform=ax.get_yaxis_transform(), ha='left', va='center', fontsize=8, color='#3F474F')
+    ax.text(1.02, len(rows) - .35, 'not forced', transform=ax.get_yaxis_transform(), ha='left', va='bottom', fontsize=8, color='#3F474F')
     ax.set_xscale('log'); ax.set_ylim(-.6, len(rows) - .4)
-    ax.set_yticks(range(len(rows))); ax.set_yticklabels([LAB.get(n, 'Gaussian (2D)') for n in rows][::-1], fontsize=6.8)
+    ax.set_yticks(range(len(rows))); ax.set_yticklabels([LAB.get(n, 'Gaussian (2D)') for n in rows][::-1], fontsize=8)
     if 'Gaussian' in rows:   # zero to the left of an axis break
         ax.set_xlim(.032, xmax); ax.set_xticks([ZERO, .1, 1, 10, xmax]); ax.set_xticklabels(['0', '0.1', '1', '10', f'{xmax:g}'])
         for dx in (.058, .064):
             ax.plot([dx * .97, dx * 1.03], [-.75, -.45], color='#333', lw=.6, clip_on=False, zorder=9)
     else:
-        ax.set_xlim(xmin, xmax); ax.set_xticks([xmin, .1, 1, 10, xmax]); ax.set_xticklabels([f'{xmin:g}', '0.1', '1', '10', f'{xmax:g}'])
-    ax.tick_params(labelsize=6.5, length=2, pad=1); ax.tick_params(axis='y', length=0)
+        ax.set_xlim(xmin, xmax); ax.set_xticks([xmin, 1, 10, xmax]); ax.set_xticklabels([f'{xmin:g}', '1', '10', f'{xmax:g}'])
+    ax.tick_params(labelsize=8, length=2, pad=1); ax.tick_params(axis='y', length=0)
     ax.xaxis.grid(True, color='#F0F2F4', lw=.5); ax.set_axisbelow(True)
     for sp in ('top', 'right', 'left'): ax.spines[sp].set_visible(False)
-    ax.set_xlabel('mean order error at zero merge error (%, log scale)', fontsize=6.6, labelpad=1)
-    ax.set_title('(a) Forced and chosen order error', loc='left', fontsize=7.6, pad=3)
+    ax.set_xlabel('mean order error at zero\nmerge error (%, log scale)', fontsize=8, labelpad=1)
+    ax.set_title('(a) Forced vs. chosen error', loc='left', fontsize=9, pad=3)
 
 
 def plane(ax, n, first_row, first_col):
@@ -94,29 +95,29 @@ def plane(ax, n, first_row, first_col):
     ax.set_yticks([0, top / 2, top]); ax.set_yticklabels(['0', f'{top / 2:g}', f'{top:g}'])
     ax.spines['left'].set_position(('outward', 3))
     for sp in ('top', 'right'): ax.spines[sp].set_visible(False)
-    ax.tick_params(labelsize=6.3, length=2, pad=1); ax.yaxis.grid(True, color='#F0F2F4', lw=.5); ax.set_axisbelow(True)
-    ax.set_title(LAB[n], loc='left', fontsize=7.2, pad=2)
-    if first_col: ax.set_ylabel('mean order error (%)', fontsize=6.6, labelpad=1)
-    if not first_row: ax.set_xlabel('worst merge error (%)', fontsize=6.6, labelpad=1)
+    ax.tick_params(labelsize=8, length=2, pad=1); ax.yaxis.grid(True, color='#F0F2F4', lw=.5); ax.set_axisbelow(True)
+    ax.set_title(LAB[n], loc='left', fontsize=8.5, pad=2)
+    if first_col: ax.set_ylabel('order error (%)', fontsize=8, labelpad=1)
+    if not first_row: ax.set_xlabel('worst merge error (%)', fontsize=8, labelpad=1)
 
 
 def main():
     v.use_times()
-    fig = plt.figure(figsize=(7.05, 2.3))
-    ga = fig.add_gridspec(1, 1, left=.085, right=.335, bottom=.27, top=.90)
+    fig = plt.figure(figsize=(7.05, 2.95))
+    ga = fig.add_gridspec(1, 1, left=.105, right=.325, bottom=.325, top=.915)
     forced(fig.add_subplot(ga[0, 0]))
-    gb = fig.add_gridspec(2, 3, left=.445, right=.995, bottom=.27, top=.90, wspace=.38, hspace=.66)
-    fig.text(.405, .955, '(b) What a merge budget releases', fontsize=7.6, ha='left', va='bottom')
+    gb = fig.add_gridspec(2, 3, left=.45, right=.99, bottom=.325, top=.915, wspace=.42, hspace=.62)
+    fig.text(.405, .958, '(b) What a merge budget releases', fontsize=9, ha='left', va='bottom')
     for k, n in enumerate(['Ring', 'Wildfires', 'Storms', 'PM25', 'Tangaroa', 'Cylinder']):
         plane(fig.add_subplot(gb[k // 3, k % 3]), n, k < 3, k % 3 == 0)
     h = [Patch(facecolor=GREY, edgecolor=HATCH, hatch='////', lw=0, label='unreachable: below the lower bound'),
-         Line2D([], [], color='#9AA3AB', lw=.8, label='order error not forced by the tree'),
+         Line2D([], [], color='#9AA3AB', lw=.8, label='order error the tree does not force'),
          Line2D([], [], color=BLUE, marker='o', ms=3.4, ls='none', label=r'AnchorMTM order, $\varepsilon=0$'),
          Line2D([], [], color=BLUE, lw=.9, label=r'AnchorMTM order, $\varepsilon$ from 0 to 100%'),
          Line2D([], [], marker='s', ms=3.6, color=TM, ls='none', label='TMTM'),
          Line2D([], [], marker='D', ms=3.3, color=ST, ls='none', label='ST-MTM'),
          Line2D([], [], marker='*', ms=6, color='k', ls='none', label='projection (sorted by reference)')]
-    fig.legend(handles=h, loc='lower center', bbox_to_anchor=(.54, -.025), ncol=4, fontsize=6.6, frameon=False,
+    fig.legend(handles=h, loc='lower center', bbox_to_anchor=(.5, -.02), ncol=3, fontsize=8, frameon=False,
                handlelength=1.6, columnspacing=1.3)
     for ext in ('pdf', 'png'): fig.savefig(OUT / f'forced_plane.{ext}', dpi=300)
 

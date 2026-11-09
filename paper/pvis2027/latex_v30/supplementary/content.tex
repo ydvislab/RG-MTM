@@ -445,4 +445,30 @@ Figure~\ref{fig:ring-result} varies guidance jointly with budget: $q_{layout}=(1
 \subsection{An Hourly PM2.5 Episode}
 Figure~\ref{fig:pm25-hourly} places a 133-hour event within the complete January sequence. Join trees of negated concentration represent high-concentration features, and the display restores positive concentration. The 5\% mode attains 4.998\% maximum merge error across all 744 hours. Snapshots provide the geographic context for the matched peak visible in the temporal map.
 
+
+\subsection{Bound Attainment and Forced Error per Sequence}
+\input{tables/table2_bounds.tex}
+Table~\ref{tab:real-bounds} lists, for the five planar sequences, the frames on which the selected Exact order attains the width-aware bound and the share of the baseline order error that lies above the exact-topology bound $\nu^*$. The shares are computed as $1-\sum_t\nu_t^*/\sum_t\nroe(\pi_t)$ from the recorded anchors of each baseline, in the orientation of the primary measurements.
+
+\subsection{Volumetric Comparison with a Fixed Axis}
+\input{tables/table_volume.tex}
+
+\subsection{Cylinder: Three Maps of the Same Window}
+\begin{figure*}[t]
+\centering
+\includegraphics[width=.85\textwidth]{figures/supp_cylinder_compare.pdf}
+\caption{Cylinder, all 102 frames, drawn by the central-tree variant of AnchorMTM ($g=16$), TMTM and ST-MTM on the same simplified trees. The five stages of the paper's Cylinder figure are visible in both tree-ordered maps; ST-MTM spreads the vortices by relative distance. Each map keeps its own native layout coordinate.}
+\label{fig:supp-cylinder-compare}
+\end{figure*}
+Figure~\ref{fig:supp-cylinder-compare} places the central-tree map of the paper next to TMTM and ST-MTM on the same input. The stages of the wake appear in both tree-ordered maps, so they are a property of the hierarchy rather than of the guidance; what the anchored default configuration adds is the streamwise position of each vortex (the paper's volume figure).
+
+\subsection{PM2.5: Three Maps of the Same Episode}
+\begin{figure*}[t]
+\centering
+\includegraphics[width=\textwidth]{figures/supp_pm25_compare.pdf}
+\caption{The hourly PM2.5 episode of Fig.~\ref{fig:pm25-hourly}, 22--27 January 2017, drawn by TMTM, ST-MTM and AnchorMTM ($\varepsilon=5\%$) on one colour scale; dashed lines a--e mark the snapshot times below. TMTM and ST-MTM are rebuilt with their original configurations; their anchors match the stored table runs frame by frame.}
+\label{fig:supp-pm25-compare}
+\end{figure*}
+Figure~\ref{fig:supp-pm25-compare} compares the three maps of the pollution episode. All three show the build-up from 23 January and the peak on 26 January. In TMTM the polluted bands stay in the middle of the axis; in AnchorMTM they spread over the positions of the polluted areas along the reference direction, and the strongest maxima descend on the map on 26 January as the pollution belt moves toward lower reference positions.
+
 \FloatBarrier\clearpage\bibliographystyle{abbrv-doi-narrow}\bibliography{references}\end{document}

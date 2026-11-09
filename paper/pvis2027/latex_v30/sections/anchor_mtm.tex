@@ -1,5 +1,5 @@
 \begin{figure*}[!tb]
-\paperfigure{figures/anchor_framework.pdf}{fig:framework}{Schematic AnchorMTM workflow: extraction and referencing, topology-budgeted layout, and topology-to-1D reconstruction produce the temporal map. The layout panel combines leaf-order search and anchor placement.}
+\paperfigure{figures/anchor_framework.pdf}{fig:framework}{AnchorMTM workflow on a four-leaf example. Extract and reference: merge trees of the input frames $F(x,t)$, leaf supports matched across frames, and one direction $d=a^*$ that gives every extremum a reference position $q$; the bounds follow from these quantities alone. Topology-budgeted layout: with $\eta=0$ the leaf order keeps every subtree contiguous and the anchors $x$ leave their references; with $\eta>0$ a relaxation candidate admits an order that follows them, and the anchors are placed under a displacement cap. Topology-to-1D mapping: leaf-arc samples and optimal barriers fill each profile $\psi_t$, every rendered frame is checked against the budget, and the stacked profiles form the map.}
 \end{figure*}
 \section{AnchorMTM}\label{sec:method}\label{sec:construction}
 

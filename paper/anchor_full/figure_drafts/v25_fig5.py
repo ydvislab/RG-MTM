@@ -54,7 +54,7 @@ def panel(ax, n):
 
 def main():
     v.use_times()
-    fig = plt.figure(figsize=(7.05, 3.25))
+    fig = plt.figure(figsize=(7.05, 2.85))
     gs = fig.add_gridspec(2, 4, left=.065, right=.97, bottom=.11, top=.95, wspace=.33, hspace=.5)
     out = {}
     for k, n in enumerate(pf.NAMES):

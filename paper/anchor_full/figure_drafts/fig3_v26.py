@@ -47,11 +47,12 @@ def image(fig, name, x, y, w, h, crop=None):
 def main():
     v.use_times()
     fig = plt.figure(figsize=(W, H)); bg = fig.add_axes([0, 0, 1, 1]); bg.set_xlim(0, W); bg.set_ylim(0, H); bg.axis('off')
+    # visual style of the collaborator's 11/9 workflow figure: rounded light-blue panels, blue header bands
+    PANEL_EC, HEAD_FC = '#8DB5E8', '#A9CBF5'
     for x, w, head, new in COLS:
-        ec = NEWEDGE if new else EDGE; lw = 1.0 if new else .6
-        bg.add_patch(Rectangle((x, BOT), w, TOP - BOT, fc='none', ec=ec, lw=lw))
-        bg.add_patch(Rectangle((x, TOP - HH), w, HH, fc=NEW if new else HEAD, ec=ec, lw=lw))
-        bg.text(x + w / 2, TOP - HH / 2, head, ha='center', va='center', fontsize=7.2, fontweight='bold', color=INK)
+        bg.add_patch(FancyBboxPatch((x + .01, BOT), w - .02, TOP - BOT, boxstyle='round,pad=0,rounding_size=0.06', fc='white', ec=PANEL_EC, lw=.8))
+        bg.add_patch(FancyBboxPatch((x + .01, TOP - HH), w - .02, HH, boxstyle='round,pad=0,rounding_size=0.06', fc=HEAD_FC, ec=PANEL_EC, lw=.8))
+        bg.text(x + w / 2, TOP - HH / 2, head, ha='center', va='center', fontsize=7.2, fontweight='bold', color='#10263F')
     for (x, w, *_), (x2, *__) in zip(COLS[:-1], COLS[1:]):
         bg.add_patch(FancyArrowPatch((x + w + .005, 1.75), (x2 - .005, 1.75), arrowstyle='-|>', mutation_scale=7, lw=1.0, color=BLUE))
     y0 = TOP - HH - .04
@@ -65,7 +66,7 @@ def main():
             fontsize=5.6, linespacing=1.1)
     # (2) new: bounds
     x2 = 2.28
-    bg.text(x2 + .54, y0 - .1, r'from $T$, $q$, $W$ only', ha='center', va='center', fontsize=6.2, color=NEWEDGE)
+    bg.text(x2 + .54, y0 - .1, r'from $T$, $q$, $W$ only', ha='center', va='center', fontsize=6.2, color='#1F5FA8')
     rows = [(r'$\nu^*(T,q)$', 'exact tree'), (r'$\mathcal{B}_w(T,q,W)$', 'finite widths'), (r'$C_\eta(T,q)$', r'merge error $\leq\eta$')]
     for k, (a, b) in enumerate(rows):
         yy = y0 - .32 - k * .2

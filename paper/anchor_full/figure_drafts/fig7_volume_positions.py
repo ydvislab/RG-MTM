@@ -1,4 +1,4 @@
-"""Fig. 7 (v33): feature positions on Tangaroa and Cylinder, redrawn in the layout of the collaborator's v30 figure so that
+"""Fig. 7 (v33, enlarged and relabelled in v34: one figure of merit per panel, reference shown in every panel): feature positions on Tangaroa and Cylinder, redrawn in the layout of the collaborator's v30 figure so that
 every axis, including the colour bar, labels both of its ends (2026-11-09).
 
 Data (read only): ../figdata/volume_gallery20261108/{tangaroa,cylinder}.json (volume_gallery_data.py: displayed positions of
@@ -20,15 +20,16 @@ HERE = Path(__file__).resolve().parent
 DATA = HERE.parent / 'figdata/volume_gallery20261108'
 OUT = HERE.parents[1] / 'pvis2027/latex_v30/figures'
 ROWS = [('tangaroa', 'Tangaroa'), ('cylinder', 'Cylinder')]
-COLS = [('reference', 'Reference $q$'), ('TMTM', 'TMTM'), ('ST-MTM', 'ST-MTM'), ('eps=0', 'AnchorMTM, 0%'), ('eps=0.05', '5%'), ('eps=0.2', '20%')]
-MS = {'tangaroa': .5, 'cylinder': .8}
+COLS = [('reference', 'Reference $q$ (target)'), ('TMTM', 'TMTM'), ('ST-MTM', 'ST-MTM'), ('eps=0', r'AnchorMTM, $\varepsilon$=0'), ('eps=0.05', r'$\varepsilon$=5%'), ('eps=0.2', r'$\varepsilon$=20%')]
+MS = {'tangaroa': .7, 'cylinder': 1.}
 LIM = .3
+TINT = '#F1F4F8'; FAINT = '#D5DAE0'
 
 
 def main():
     v.use_times()
-    fig = plt.figure(figsize=(7.05, 2.42))
-    g = fig.add_gridspec(2, 7, width_ratios=[1] * 6 + [.045], left=.075, right=.955, top=.91, bottom=.185, wspace=.16, hspace=.78)
+    fig = plt.figure(figsize=(7.05, 3.7))
+    g = fig.add_gridspec(2, 7, width_ratios=[1] * 6 + [.05], left=.075, right=.925, top=.935, bottom=.205, wspace=.13, hspace=.68)
     norm = TwoSlopeNorm(0, -LIM, LIM)
     cmap = LinearSegmentedColormap.from_list('dev', ['#3b1d6e', '#7a5ba8', '#5b6066', '#c98a2b', '#8a4b06'])   # grey = on its reference
     for r, (f, name) in enumerate(ROWS):
@@ -38,27 +39,30 @@ def main():
         for c, (key, title) in enumerate(COLS):
             ax = fig.add_subplot(g[r, c])
             if key == 'reference':
-                ax.scatter(t, qn, s=MS[f], lw=0, color='#5b6066', rasterized=True)
+                ax.set_facecolor(TINT); ax.scatter(t, qn, s=MS[f], lw=0, color='#5b6066', rasterized=True)
+                ax.text(.97, -.235, 'NPE', transform=ax.transAxes, ha='right', va='top', fontsize=9, fontweight='bold')
+                ax.text(.97, -.40, 'merge error', transform=ax.transAxes, ha='right', va='top', fontsize=8.5)
             else:
+                ax.scatter(t, qn, s=MS[f], lw=0, color=FAINT, rasterized=True, zorder=1)
                 m = d['maps'][key]; X = [(np.asarray(x) - o) / L for x in m['x']]; u = np.concatenate(X); dv = u - qn
                 srt = np.argsort(np.abs(dv))
-                ax.scatter(t[srt], u[srt], c=dv[srt], s=MS[f], lw=0, cmap=cmap, norm=norm, rasterized=True)
-                mean = 100 * np.mean(np.abs(dv)); npe = 100 * np.mean([np.max(np.abs(x - q)) for x, q in zip(X, Q)])
-                note = f'mean {mean:.1f}%, NPE {npe:.1f}%'
-                if key in ('eps=0.05', 'eps=0.2'): note += f'\nmerge {100 * m["NMLE_max"]:.1f}%'
-                ax.text(.5, -.2, note, transform=ax.transAxes, ha='center', va='top', fontsize=6.6, linespacing=1.05)
+                ax.scatter(t[srt], u[srt], c=dv[srt], s=MS[f], lw=0, cmap=cmap, norm=norm, rasterized=True, zorder=2)
+                npe = 100 * np.mean([np.max(np.abs(x - q)) for x, q in zip(X, Q)])
+                ax.text(.5, -.235, f'{npe:.1f}%', transform=ax.transAxes, ha='center', va='top', fontsize=9, fontweight='bold')
+                me = m.get('NMLE_max'); me = 0. if me is None else 100 * me    # TMTM and ST-MTM keep the tree exactly
+                ax.text(.5, -.40, '0' if me < 5e-3 else f'{me:.1f}%', transform=ax.transAxes, ha='center', va='top', fontsize=8.5)
             ax.set_xlim(-1, T); ax.set_ylim(0, 1)
             ax.set_xticks([0, T - 1]); lab = ax.set_xticklabels(['0', f'{T - 1}']); lab[0].set_ha('left'); lab[1].set_ha('right')
             ax.set_yticks([0, .5, 1]); ax.set_yticklabels(['0', '0.5', '1'] if c == 0 else [])
-            ax.tick_params(labelsize=7, length=2, pad=1)
+            ax.tick_params(labelsize=8, length=2, pad=1)
             for sp in ('top', 'right'): ax.spines[sp].set_visible(False)
-            if r == 0: ax.set_title(title, fontsize=8, pad=3)
-            if c == 0: ax.set_ylabel(f'{name}\naxis position', fontsize=7.5, labelpad=2)
+            if r == 0: ax.set_title(title, fontsize=9, pad=3, fontweight='bold' if key == 'reference' else 'normal')
+            if c == 0: ax.set_ylabel(f'{name}\naxis position', fontsize=9, labelpad=2)
     cax = fig.add_subplot(g[:, -1])
-    cb = fig.colorbar(plt.cm.ScalarMappable(norm=norm, cmap=cmap), cax=cax, extend='both', ticks=[-.3, -.2, -.1, 0, .1, .2, .3])
-    cb.ax.set_yticklabels(['-0.3', '-0.2', '-0.1', '0', '0.1', '0.2', '0.3']); cb.ax.tick_params(labelsize=7, length=2, pad=1)
-    cb.set_label('signed displacement $(x-q)/L$', fontsize=7, labelpad=2); cb.outline.set_linewidth(.4)
-    fig.text(.5, .015, 'Time (frame)', ha='center', fontsize=8)
+    cb = fig.colorbar(plt.cm.ScalarMappable(norm=norm, cmap=cmap), cax=cax, extend='both', ticks=[-.3, -.15, 0, .15, .3])
+    cb.ax.set_yticklabels(['-0.3', '-0.15', '0', '0.15', '0.3']); cb.ax.tick_params(labelsize=8, length=2, pad=1)
+    cb.set_label('signed displacement $(x-q)/L$', fontsize=8.5, labelpad=2); cb.outline.set_linewidth(.4)
+    fig.text(.5, .008, 'Time (frame)', ha='center', fontsize=9)
     for ext in ('pdf', 'png'): fig.savefig(OUT / f'volume_gallery.{ext}', dpi=400)
 
 

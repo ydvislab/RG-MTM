@@ -23,8 +23,18 @@ PKG = Path(os.environ.get('ANCHOR_PKG01', '/Users/yudong/Downloads/老师所需�
 HERE = Path(__file__).resolve().parent
 SUMMARY = HERE.parent / 'figdata/budget_her20261109/summary.json'
 OUT = HERE.parents[1] / 'pvis2027/latex_v30/figures'
-SEQ = [('Ring', 'Ring (2D)'), ('Wildfires', 'Wildfires (2D)'), ('Storms', 'Storms (2D)'), ('PM2.5', r'PM$_{2.5}$ (2D)'), ('Tangaroa', 'Tangaroa (3D)'), ('Cylinder', 'Cylinder (3D)')]
+SEQ = [('Gaussian', 'Gaussian (2D)'), ('Ring', 'Ring (2D)'), ('Wildfires', 'Wildfires (2D)'), ('Storms', 'Storms (2D)'), ('PM2.5', r'PM$_{2.5}$ (2D)'), ('Tangaroa', 'Tangaroa (3D)'), ('Cylinder', 'Cylinder (3D)')]
 BLUE = '#0B5CAD'; LIGHT = '#9EC3E6'; GREY = '#555555'; ORANGE = '#C25A00'
+
+
+def gaussian():
+    L = json.loads((PKG / 'Gaussian/metadata.json').read_text())['parameters']['canvas']; o = dict(epsilon=[], median=[], p90=[], max=[], mean=[], used=[])
+    for e, f in ((0., 'Exact'), (.01, 'epsilon_0.01'), (.02, 'epsilon_0.02'), (.05, 'epsilon_0.05'), (.1, 'epsilon_0.1'), (.2, 'epsilon_0.2')):
+        J = json.loads((PKG / f'Gaussian/AnchorMTM_{f}_layouts.json').read_text())
+        E = 100 * np.array([np.max(np.abs(np.array(x['x']) - np.array(x['reference']))) / L for x in J]); M = np.array([x['continuous_NMLE'] for x in J])
+        for k, v in zip(('epsilon', 'median', 'p90', 'max', 'mean', 'used'), (e, np.median(E), np.percentile(E, 90), E.max(), E.mean(), 100 * (M > 1e-5).mean())):
+            o[k].append(float(v))
+    return o
 
 
 def summary():
@@ -37,6 +47,8 @@ def summary():
     out = {}
     for n, _ in SEQ:
         s = d[d.dataset == n]
+        if n == 'Gaussian':   # not in the CSVs: the archived layouts of package 01 (their NPE equals Table 1, 0.0089)
+            out[n] = gaussian(); continue
         if s.empty:   # Wildfires: taken from the saved summary (planar_per_frame records, see its 'wildfires_source')
             out[n] = saved[n]; continue
         E = sorted(s.epsilon.unique()); st = {e: 100 * s[s.epsilon == e].E_max.values for e in E}
@@ -44,14 +56,14 @@ def summary():
                       max=[float(st[e].max()) for e in E], mean=[float(st[e].mean()) for e in E],
                       used=[float(100 * (s[s.epsilon == e].NMLE_max > 1e-5).mean()) for e in E])
     SUMMARY.parent.mkdir(parents=True, exist_ok=True)
-    SUMMARY.write_text(json.dumps(dict(source=f'computed by fig7_budget_her.py from {PKG.name}', unit='percent', data=out), indent=1))
+    SUMMARY.write_text(json.dumps(dict(source=f'computed by fig7_budget_her.py from {PKG.name} (exact; Gaussian from its archived layouts; Wildfires from the planar_per_frame records)', unit='percent', data=out), indent=1))
     return out
 
 
 def main():
     v.use_times(); S = summary()
-    fig = plt.figure(figsize=(7.05, 2.2)); g = fig.add_gridspec(2, 6, height_ratios=[3.2, 1], hspace=.22, wspace=.28,
-                                                                left=.085, right=.995, top=.80, bottom=.19)
+    fig = plt.figure(figsize=(7.05, 2.55)); g = fig.add_gridspec(2, 7, height_ratios=[3.2, 1], hspace=.2, wspace=.3,
+                                                                left=.085, right=.995, top=.79, bottom=.2)
     for k, (n, title) in enumerate(SEQ):
         s = S[n]; E = s['epsilon']; x = np.arange(len(E))
         ax = fig.add_subplot(g[0, k])
@@ -62,23 +74,23 @@ def main():
         ax.plot(x, s['mean'], '--', color=ORANGE, lw=1.0)
         ax.set_yscale('log'); ax.set_ylim(.5, 50); ax.set_xticks(x); ax.set_xticklabels([])
         ax.set_yticks([.5, 1, 10, 50]); ax.set_yticklabels(['0.5', '1', '10', '50']); ax.minorticks_off()
-        ax.set_title(title, fontsize=7.6, pad=3); ax.tick_params(labelsize=6.5, length=2, pad=1)
+        ax.set_title(title, fontsize=8.2, pad=3); ax.tick_params(labelsize=8, length=2, pad=1)
         ax.yaxis.grid(True, color='#EEF0F2', lw=.5); ax.set_axisbelow(True)
         for sp in ('top', 'right'): ax.spines[sp].set_visible(False)
-        if k == 0: ax.set_ylabel('worst displacement\nin a frame (% of axis)', fontsize=6.7)
+        if k == 0: ax.set_ylabel('worst displacement\nin a frame (% of axis)', fontsize=8)
         b = fig.add_subplot(g[1, k])
         b.bar(x, s['used'], width=.6, color=LIGHT, edgecolor=BLUE, lw=.5); b.set_ylim(0, 100); b.set_yticks([0, 100])
-        b.set_xticks(x); b.set_xticklabels([f'{100 * e:g}' for e in E], fontsize=6.5); b.tick_params(labelsize=6.2, length=2, pad=1)
+        b.set_xticks(x); b.set_xticklabels([f'{100 * e:g}' for e in E], fontsize=7); b.tick_params(labelsize=8, length=2, pad=1)
         for sp in ('top', 'right'): b.spines[sp].set_visible(False)
-        if k == 0: b.set_ylabel('frames using\nthe budget (%)', fontsize=6.4)
+        if k == 0: b.set_ylabel('frames using\nbudget (%)', fontsize=8)
         print(n, {f'{100 * e:g}': tuple(round(s[q][i], 2) for q in ('median', 'p90', 'max', 'mean', 'used')) for i, e in enumerate(E)})
-    fig.text(.54, .02, r'merge budget $\varepsilon$ (% of the scalar range)', ha='center', fontsize=7.2)
+    fig.text(.54, .025, r'merge budget $\varepsilon$ (% of the scalar range)', ha='center', fontsize=8.5)
     h = [Line2D([], [], color=BLUE, lw=1.6, marker='o', ms=2.8, label='median frame'),
          Line2D([], [], color=BLUE, lw=1.1, marker='o', ms=2.6, mfc='white', label='90th percentile'),
          Patch(color=LIGHT, alpha=.55, label='between the two'),
          Line2D([], [], color=GREY, lw=.8, marker='^', ms=2.6, label='worst frame'),
          Line2D([], [], color=ORANGE, lw=1, ls='--', label='mean over frames (NPE)')]
-    fig.legend(handles=h, ncol=5, loc='upper center', bbox_to_anchor=(.54, 1.0), fontsize=6.6, frameon=False, handlelength=1.6, columnspacing=1.4)
+    fig.legend(handles=h, ncol=5, loc='upper center', bbox_to_anchor=(.54, 1.0), fontsize=8, frameon=False, handlelength=1.6, columnspacing=1.2)
     for ext in ('pdf', 'png'): fig.savefig(OUT / f'budget_response_v30.{ext}', dpi=300)
 
 

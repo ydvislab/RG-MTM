@@ -13,11 +13,11 @@ Ordering the children of every node by the midpoints of their hulls attains $\nu
 Two sibling blocks must take one orientation, and each orientation inverts some references: placing $X$ first costs $[M_X-m_Y]^+/2$, placing $Y$ first $[M_Y-m_X]^+/2$, and midpoint order chooses the smaller. Every inverted pair of leaves is separated at its lowest common ancestor, so the midpoint order has no larger inversion. Any order error above $\nu^*$ is therefore chosen by the layout, not forced by the tree; we call it \emph{not forced}.
 
 \subsection{Finite Widths}
-Set $H_i=\rho W_i/2$, $\ell_i=q_i-W_i/2-H_i$, $h_i=q_i+W_i/2+H_i$ and $s_i=W_i+g$. For a set $S$ of leaves, the packing summaries
+Set $H_i=\rho W_i/2$, $\ell_i=q_i-W_i/2-H_i$, $r_i=q_i+W_i/2+H_i$ and $s_i=W_i+g$. For a set $S$ of leaves, the packing summaries
 \begin{equation}\label{eq:packing}
 \begin{split}
 A(S)&=\max_{a\in S}\bigl(\ell_a+\sum_{i\in S:\ell_i\ge\ell_a}s_i\bigr),\\
-B(S)&=\max_{b\in S}\bigl(\sum_{i\in S:h_i\le h_b}s_i-h_b\bigr)
+B(S)&=\max_{b\in S}\bigl(\sum_{i\in S:r_i\le r_b}s_i-r_b\bigr)
 \end{split}
 \end{equation}
 bound how far right the intervals of $S$ must reach and, negated, how far left they must begin, given their references and anchor slack. Define $\omega(X,Y)=\tfrac12\min\{A(X)+B(Y),A(Y)+B(X)\}-g/2$ for two disjoint leaf sets, and the canvas term $E_\partial=\max\{0,B(\mathcal F)-g,A(\mathcal F)-g-L\}$ for the set $\mathcal F$ of all leaves.
@@ -32,7 +32,7 @@ where $\mathcal P_0$ is the set of pairs of sibling subtrees, taken as leaf sets
 The first and last anchors of a block must enclose its intervals and gaps, up to the anchor slack, and the two canvas ends add $E_\partial$. Ordering alone therefore no longer determines the positional cost: even an order that attains the point bound may need further displacement to fit its intervals. $\mathcal B_w$ is in coordinate units, whereas $\nu^*$ is normalized by $L$. The construction therefore evaluates the exact packing cost $\tau$ of each candidate order before it places the anchors.
 
 \subsection{Bounded Merge Error}
-In a profile with $\dtop\le\eta$, if leaf $k$ lies between descendants $i,j$ of node $u$, the interval between $i$ and $k$ lies inside that between $i$ and $j$, so $V_{ik}^{\psi}\le V_{ij}^{\psi}$ and hence $V_{ik}\le h(u)+2\eta$. Let $A_\eta(u)$ be the highest ancestor of $u$ with $h(A_\eta(u))-h(u)\le2\eta$. Form $\mathcal P_\eta$ from the pairs $(\mathcal D(u),\{k\})$ with $k\notin\mathcal D(A_\eta(u))$, and the pairs $(\mathcal D(u),\mathcal D(w))$ of internal nodes $u,w$ in which each set is disjoint from the other's $\mathcal D(A_\eta(\cdot))$.
+In a profile with $\dtop\le\eta$, if leaf $k$ lies between descendants $i,j$ of node $u$, the interval between $i$ and $k$ lies inside that between $i$ and $j$, so $V_{ik}^{\psi}\le V_{ij}^{\psi}$ and hence $V_{ik}\le h(u)+2\eta$. Let $\mathrm{Anc}_\eta(u)$ be the highest ancestor of $u$ with $h(\mathrm{Anc}_\eta(u))-h(u)\le2\eta$. Form $\mathcal P_\eta$ from the pairs $(\mathcal D(u),\{k\})$ with $k\notin\mathcal D(\mathrm{Anc}_\eta(u))$, and the pairs $(\mathcal D(u),\mathcal D(w))$ of internal nodes $u,w$ in which each set is disjoint from the other's $\mathcal D(\mathrm{Anc}_\eta(\cdot))$.
 \begin{proposition}[Bounded-merge-error bound]\label{thm:chain}
 If $\dtop\le\eta$, then for every pair $(X,Y)\in\mathcal P_\eta$ the leaves of $X$ all precede or all follow those of $Y$. Thus
 \begin{equation}\label{eq:chainbounds}

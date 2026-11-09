@@ -33,7 +33,8 @@ def main():
     norm = TwoSlopeNorm(0, -LIM, LIM)
     cmap = LinearSegmentedColormap.from_list('dev', ['#3b1d6e', '#7a5ba8', '#5b6066', '#c98a2b', '#8a4b06'])   # grey = on its reference
     for r, (f, name) in enumerate(ROWS):
-        d = json.loads((DATA / f'{f}.json').read_text()); L = d['canvas']; o = d['origin']
+        v35 = DATA.parent / f'volumes_v35/{f}_x_gallery.json'   # v35: Tangaroa along the streamwise x axis (Cylinder already is)
+        d = json.loads((v35 if v35.exists() else DATA / f'{f}.json').read_text()); L = d['canvas']; o = d['origin']
         Q = [(np.asarray(q) - o) / L for q in d['q']]; T = len(Q)
         t = np.concatenate([[i] * len(q) for i, q in enumerate(Q)]); qn = np.concatenate(Q)
         for c, (key, title) in enumerate(COLS):

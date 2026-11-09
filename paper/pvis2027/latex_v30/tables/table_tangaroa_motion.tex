@@ -1,0 +1,22 @@
+\begin{table}[!h]
+\centering
+\caption{Tangaroa with the reference along its motion direction (Eq.~2) instead of the streamwise axis. TD and ME as in Table~\ref{tab:temporal}.}
+\label{tab:tangaroa-motion}
+\footnotesize
+\setlength{\tabcolsep}{3pt}
+\begin{tabular}{@{}lccccc@{}}
+\toprule
+Method & SNS$\downarrow$ & TW$\uparrow$ & NPE$\downarrow$ & TD & ME (\%)$\downarrow$ \\
+\midrule
+Reference, $x=q$ & 0.3409 & 0.7130 & 0 & 24.5 & 30 \\
+Hilbert & 0.3429 & 0.9222 & 0.5897 & -- & -- \\
+Morton & 0.3627 & 0.8893 & 0.5924 & -- & -- \\
+TMTM & 0.5255 & 0.6701 & 0.3063 & 64.9 & 97 \\
+ST-MTM & 0.1655 & 0.8137 & 0.3418 & 138.6 & 70 \\
+AnchorMTM, Exact & 0.3621 & 0.7260 & 0.1118 & 173.8 & 52 \\
+AnchorMTM, Balanced (10\%) & 0.3408 & 0.7540 & 0.0615 & 140.3 & 41 \\
+\bottomrule
+\end{tabular}
+\vspace{2pt}
+\begin{minipage}{0.94\columnwidth}\footnotesize On this axis the Balanced rule selects 10\% (attained merge error 9.97\%). SNS, TW, TD and ME of TMTM, ST-MTM and the curves do not depend on the axis.\end{minipage}
+\end{table}

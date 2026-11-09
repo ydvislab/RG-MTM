@@ -9,7 +9,7 @@ Lele Wang¹²\*　Yu Dong¹\*　Yuxiang Meng¹²　Guan Li¹²　Zhe Wang¹²　
 ³ 国科大杭州高等研究院，杭州
 
 \* Lele Wang 与 Yu Dong 对本文贡献相同。　† 通讯作者，liujun@sccas.cn。  
-邮箱：lelewang@cnic.cn；dongyu@cnic.cn；yxmeng@cnic.cn；liguan@sccas.cn；wangzhe@sccas.cn；shanghuihua@sccas.cn；liujun@sccas.cn
+邮箱：lelewang@cnic.cn；dongyu@cnic.cn；yxmeng@cnic.cn；liguan@sccas.cn；wangzhe@sccas.cn；sgh@sccas.cn；liujun@sccas.cn
 
 > 译稿说明：由 `main_zh.tex` 自动转换；公式保留原文写法；图、表、节、定理、式和参考文献编号与英文 PDF 一致。排版以 `paper/1037_v24_zh.pdf` 为准。
 

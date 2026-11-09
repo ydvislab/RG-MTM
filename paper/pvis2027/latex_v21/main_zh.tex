@@ -1,4 +1,4 @@
-% 论文 1037 中文译稿：与 main.tex（v24）逐段、逐句对应；图片沿用英文原图，图注与表格已译。
+% 论文 1037 中文译稿：与 main.tex（v25，2026-11-09）逐段、逐句对应；图片沿用英文原图，图注与表格已译。
 % 编译：tectonic -X compile main_zh.tex（XeLaTeX；中文字体为 Fandol，由 TeX 发行版提供）。
 % 仅供阅读核对；投稿以英文 main.tex 为准。
 \documentclass{vgtc_zh}
@@ -67,261 +67,243 @@ Jun~Liu$^{1,2}$\thanks{通讯作者。邮箱：liujun@sccas.cn。}
 \includegraphics[width=\linewidth]{figures/teaser_storms_compare.pdf}
 \par\vskip\abovecaptionskip
 \refstepcounter{figure}\label{fig:storms_overview}%
-{\captionfonts\leftskip=0pt\rightskip=0pt\parfillskip=0pt plus 1fil\noindent 图~\thefigure：三种合并树地图绘制的同一个风暴。(a)--(e)~1999 年 12 月 16 日至 19 日北大西洋和欧洲上空的海平面气压距平；标出的低压中心从大西洋洋面移动到斯堪的纳维亚。下方，TMTM、ST-MTM 和 AnchorMTM 绘制相同的 106 个逐小时帧。虚线是风暴位置在参考方向上的投影，即若地图的轴编码位置，风暴应当被绘制的地方；刻度 a--e 标出快照时刻。TMTM 和 ST-MTM 始终把风暴保持在轴的中部附近。AnchorMTM 以精确拓扑（$\varepsilon=0$；平均偏差为轴长的 1.5\%）和 10\% 的合并预算（1.0\%）跟随它。逐小时 Storms 数据，与表~\ref{tab:quantitative-final} 分开准备。\par}
+{\captionfonts\leftskip=0pt\rightskip=0pt\parfillskip=0pt plus 1fil\noindent 图~\thefigure：四张合并树地图中的同一个风暴。(a)--(e)~1999 年 12 月 16--19 日北大西洋和欧洲上空的海平面气压距平。标出的低压从大西洋洋面移到斯堪的纳维亚，也就是沿参考方向 $a^*$ 从左向右移动。下方四张地图绘制相同的 106 个逐小时帧；虚线是风暴位置的投影，即轴若表示位置、风暴应当画在的地方。TMTM 和 ST-MTM 把风暴保持在轴的中部附近。AnchorMTM 以精确的树（$\varepsilon=0$；平均偏差为轴长的 1.5\%）和 10\% 的合并误差预算（1.0\%）跟随它。\par}
 }
 
-\abstract{合并树地图用一张静态图像概括时变标量场。每个时间步变为其合并树的一维剖面，剖面沿时间堆叠，使嵌套的特征呈现为嵌套的条带。已有地图在排列剖面时力求保持层级完整、条带在时间上连贯，因此条带的纵向位置没有固定的空间含义，分析人员无法读出一个特征位于何处、向哪个方向移动。我们把这条轴锚定到一个空间方向，并把每个特征绘制在其位置的投影附近。锚定与合并树相冲突：精确剖面把每棵子树放在一个连续的块中，而兄弟子树的投影位置可能相互交错。我们证明，这一冲突造成的位移是可以计算的。我们把包括 TMTM 和 ST-MTM 在内的合并树地图表述为同一布局问题的实例，并推导出三个位移下界，分别给出在精确拓扑、有限特征宽度和有界合并层级变化下每个实例都必须接受的位移。这些下界不需要布局，因此能把树强迫的误差与布局选择的误差区分开。AnchorMTM 逼近这些下界，只暴露一个参数，即合并误差预算。在 614 个基准帧中有 606 个达到下界；TMTM 和 ST-MTM 的排序误差有 31--95\% 并非由树强迫。在零合并误差下，AnchorMTM 在 ST-MTM 基准的四个平面输入和一个逐小时 PM$_{2.5}$ 序列上将平均最坏位移降低 73--96\%，在两组体数据上降低 63--67\%，而 ST-MTM 的邻域保持更好。}
-\keywords{时变标量场，合并树地图，拓扑保持，空间保真，下界，约束布局。}
+\abstract{合并树地图用一张静态图像概括时变标量场。每个时间步变为其合并树的一维剖面，剖面沿时间堆叠，使嵌套的特征呈现为嵌套的条带。然而，这些地图的纵轴没有空间含义：分析人员能看到特征如何嵌套，却看不出它们在哪里、往哪里移动。我们提出 AnchorMTM，一种纵轴为固定空间方向的合并树地图，每个极值都绘制在其位置的投影附近。在这样的轴上保持树需要付出代价。精确剖面让每棵子树占据一个连续的块，而兄弟子树的投影位置可能相互交错。我们推导出这一冲突所迫使的位移的三个下界，分别对应精确的树、有限宽度的特征和有界的合并层级变化。这些下界只依赖数据，因此在画出任何地图之前就已知道。AnchorMTM 直接从场序列和一个参数计算地图，这个参数是合并误差预算，它限定可以拿多少合并层级的保真度去换取位置。它在 614 个基准帧中的 606 个上达到下界。这些下界还表明，已有合并树地图的排序误差有 31--95\% 并非由树所迫使。在精确保持树的条件下，AnchorMTM 把 TMTM 和 ST-MTM 的平均最坏位移在五个平面序列上降低 73--96\%，在两组体数据上降低 63--67\%，而 ST-MTM 的邻域保持更好。}
+\keywords{时变标量场，合并树地图，拓扑保持，空间保真度，下界，约束布局。}
 \begin{document}
 \firstsection{引言}
 \maketitle
 \raggedbottom
 \setlength{\emergencystretch}{1.5em}
-时变标量场记录海平面气压、气溶胶浓度或涡度等物理量如何在空间域上演化。分析人员通过特征来研究这些场，例如低压系统、污染过程或涡旋，并提出三类问题：存在哪些特征、它们如何相互关联；它们位于何处；以及它们如何移动。动画在空间语境中显示每个时间步，但使相隔较远的时刻难以比较~\cite{Tversky:2002:Animation,Robertson:2008:Animation}。静态概览则把一条显示轴分配给时间，把空间域压缩到另一条轴上，使整个序列能够一目了然地比较~\cite{Bach:2017:STC}。在大气科学中，Hovm\"oller 图是标准的例子：它的第二条轴是经度等物理坐标，天气系统的东移呈现为一条倾斜的条纹~\cite{Hovmoller:1949}。
+时变标量场记录海平面气压、气溶胶浓度或涡量等量在空间区域上的演变。分析人员借助特征来研究它们，例如低压系统、污染过程或涡旋，并对每个特征提出三个问题：它与其他特征是什么关系，它在哪里，它如何移动。动画让每个时间步保留其空间语境，但难以比较相隔较远的时刻~\cite{Tversky:2002:Animation,Robertson:2008:Animation}。因此，静态总览把一条显示轴分给时间，把空间压缩到另一条轴上，使整个序列放进一张图中~\cite{Bach:2017:STC}。大气科学中的 Hovm\"oller 图是经典例子：它的第二条轴是经度等物理坐标，向东移动的系统表现为一条斜的条纹~\cite{Hovmoller:1949}。为得到这条轴，该图沿其余坐标对场取平均，位于同一经度的特征会混成一个。
 
-拓扑提供了一种更有结构的概览。合并树记录随阈值升高，场的下水平集如何连通；其叶子是极值点，其内部节点是区域合并的层级~\cite{Heine:2016:Survey}。时序合并树地图（TMTM）把每个时间步的合并树绘制为一维剖面（其极小值为极值点，其隔墙为合并层级），并把这些剖面堆叠成一张图像~\cite{Koepp:2023:TMTM}。时空合并树地图（ST-MTM）还按特征之间的两两距离放置特征~\cite{STMTM:2026}。两者都在一张图像中显示所有特征的嵌套关系和合并阈值，这是动画和 Hovm\"oller 图都无法提供的。
+合并树地图回答第一个问题，而这正是 Hovm\"oller 图做不到的。合并树记录随阈值升高下水平集分量如何连接：叶子是极值，内部节点是区域合并的层级~\cite{Heine:2016:Survey}。时间合并树地图（TMTM）把每个时间步的树绘制成一维剖面，其极小值是极值、屏障是合并层级，并把剖面堆叠成一张图~\cite{Koepp:2023:TMTM}。时空合并树地图（ST-MTM）还按特征之间的两两距离来排列它们~\cite{STMTM:2026}。第二个问题仍未解决。这些地图的纵轴遵循树和时间连贯性，或遵循相对距离，二者都没有在空间中固定原点或方向。图~\ref{fig:storms_overview} 展示了其后果。一个风暴在三天内横穿北大西洋，两张地图却始终把它画在轴的中部附近；读者看得到风暴如何与相邻低压相连，却看不出它在哪里、向哪边移动。
 
-然而，这些地图缺少一条空间轴。TMTM 按树和时间对齐排列特征，ST-MTM 保持相对距离，而相对距离既不确定原点也不确定方向。图~\ref{fig:storms_overview} 显示了这对一个风暴意味着什么。1999 年 12 月 16 日至 19 日，该风暴从大西洋洋面移动到斯堪的纳维亚，但两张地图在整个时段内都把它的条带画在轴的中部附近。读者可以跟踪这个风暴及其与相邻低压的联系，却读不出它的位置和运动方向。Hovm\"oller 图能显示这一运动，但它平均掉的恰恰是合并树地图首先要呈现的层级。
+我们让纵轴具有空间含义。我们在区域中固定一个方向，并给每个极值一个参考位置，即其位置在该方向上的投影；一张表示位置的地图应当把每个极值画在其参考位置上。障碍来自树本身。剖面只有在每棵子树占据一个连续块时才能精确地显示树，但两棵兄弟子树的参考位置可能相互交错（图~\ref{fig:projection_conflict}）。这时，无论用什么算法绘制，都没有精确剖面能把每个特征放在其参考位置上。这一冲突引出三个问题：树迫使多少位移，这些位移源自树的哪里，以及要放弃多少合并层级的保真度才能消除它。没有这些答案，就无法判断一张地图的位置误差来自数据还是来自布局，分析人员也无法判断一条空间轴是否值得其代价。
 
-为合并树地图赋予空间轴，比看上去更难。把每个极值点投影到一个参考方向上，可以得到一个目标位置，但合并树限制了哪些位置是允许的：精确显示树的剖面必须把每棵子树保持在一个连续的块中。当两棵兄弟子树的投影位置交错时，如图~\ref{fig:projection_conflict} 所示，没有任何精确剖面能把所有特征都放在其目标位置上。这一冲突是数据的性质，而非某个布局算法的性质；它提出了已有工作尚未回答的三个问题：树强迫了多大的位移，这些位移源自树的何处，以及必须放弃多少合并层级保真才能消除它。没有这些答案，就无法判断一张地图的位置误差是固有的还是其布局的弱点，也无法决定一条空间轴是否值得其代价。
+AnchorMTM 回答这些问题并绘制地图。它以场序列和一个数，即合并误差预算 $\varepsilon$，为输入，直接计算地图；它不是对另一张地图布局的后处理。参考方向由极值的运动估计，或由分析人员选定。仅凭树和参考位置，三个下界就给出精确的树、有限的特征宽度和有界的合并误差所迫使的位移，因此在计算任何布局之前，空间轴的代价就已知道。随后，AnchorMTM 逐帧在符合预算的叶序中选出可达位移最小的一个，在该叶序允许的范围内把极值尽量放在参考位置附近，并填充剖面。当 $\varepsilon=0$ 时，地图精确显示每一棵树；当 $\varepsilon>0$ 时，它把特征移得更靠近参考位置，并报告每一帧实际花掉的合并误差。
 
-我们分三步回答这些问题。我们首先把已有的合并树地图表述为同一布局问题的实例，使它们的轴和误差可以相互比较。然后，我们推导每个实例都必须接受的位移下界，分别针对精确拓扑、有限宽度的特征和有界的合并层级变化。这些下界只依赖树、投影位置和宽度；它们可以在绘制任何地图之前计算，并可用于任何已有地图。最后，我们提出 AnchorMTM，一种逼近这些下界的空间锚定合并树地图构造。单个参数——合并误差预算 $\varepsilon$——决定可以用多少合并层级保真换取位置。$\varepsilon=0$ 时，地图精确保持树；$\varepsilon>0$ 时，每一帧报告它实际花费的合并误差。
-
-总之，我们的贡献包括：
+本文的贡献如下。
 \begin{itemize}
 \setlength{\itemsep}{2pt}
 \setlength{\parsep}{0pt}
-\item 把合并树地图表述为一个约束布局问题，TMTM 和 ST-MTM 是其拓扑精确的实例；并给出位置与拓扑之间冲突所造成位移的三个与布局无关的下界（第~\ref{sec:formulation}~节和第~\ref{sec:bounds}~节）；
-\item AnchorMTM，一种逼近这些下界、以单个合并误差预算控制权衡的空间锚定合并树地图（第~\ref{sec:method}~节）；
-\item 在五个平面序列和两个体数据序列上的评估，表明下界是紧的、已有地图的位置误差大部分可以避免，并展示预算如何改变地图（第~\ref{sec:experiments}~节）。
+\item 我们提出 AnchorMTM，一种纵轴为固定空间方向的合并树地图。它根据极值位置的投影构建每一帧的叶序和极值位置，使条带的高度读作位置、条带的漂移读作沿该方向的运动，同时剖面保留树的嵌套和合并层级。
+\item 我们形式化了保持树与保持位置之间的冲突，并推导出它所迫使的位移的三个下界，分别对应精确的树、有限的特征宽度和有界的合并误差。这些下界不需要布局；它们在树中定位冲突，并能衡量任何合并树地图，包括已有的地图。
+\item 我们引入合并误差预算 $\varepsilon$，限定可以拿多少合并层级的保真度去换取位置。一个闭式检验判定一个叶序是否符合预算，并给出它的最优合并屏障，于是一个参数就控制了整个构建，每个渲染帧都按它核验。
+\item 在五个平面序列和两组体数据上，下界在 614 个平面帧中的 606 个上达到，已有地图的大部分排序误差被证明是可以避免的，并且在相同的拓扑保证下，AnchorMTM 把特征画得离其位置近得多。
 \end{itemize}
 
 \section{相关工作}\label{sec:related}
-\subsection{空间数据的时间概览}
-动画保留每个时间步的空间语境，而静态概览让观者直接比较相隔较远的时刻；哪一种更合适取决于任务~\cite{Tversky:2002:Animation,Robertson:2008:Animation}。Bach 等人把二者以及二者之间的操作描述为时空立方体的变换~\cite{Bach:2017:STC}。静态概览必须把空间线性化。Hovm\"oller 图保留一个物理坐标，并在其余坐标上取平均~\cite{Hovmoller:1949}。地理排序、稠密像素显示和空间填充曲线遍历整个定义域~\cite{Guo:2006:SpatialOrder,Dafner:2000:CSFC,Rauscher:2025:1DO}，体积线和数据驱动曲线把这类遍历推广到体数据~\cite{Weissenboeck:2019:DVL,Zhou:2021:DSF}。对于移动对象，一维投影以及 MotionRugs、稳定视觉摘要和 MoReVis 等摘要按位置或稳定性对对象排序~\cite{Franke:2021:1DP,Buchmueller:2019:MR,Wulms:2021:SVS,Valdrighi:2024:MRV}。每一种此类线性化都会扭曲某些空间关系~\cite{Nonato:2019:MP,Aupetit:2007:VD}。它们保留一个空间坐标，但没有特征层级；我们的地图保留合并树，并量化空间坐标由此带来的代价。
+\subsection{空间数据的时间总览}
+动画保留每个时间步的空间语境，静态总览则让观察者直接比较相隔较远的时刻；哪一种更好取决于任务~\cite{Tversky:2002:Animation,Robertson:2008:Animation}。Bach 等人把两者及其相互转换描述为时空立方体的变换~\cite{Bach:2017:STC}。静态总览必须把空间线性化。Hovm\"oller 图保留一个物理坐标并对其余坐标取平均~\cite{Hovmoller:1949}。地理排序、稠密像素显示和空间填充曲线遍历整个区域~\cite{Guo:2006:SpatialOrder,Dafner:2000:CSFC,Rauscher:2025:1DO}，体线和数据驱动曲线把这类遍历扩展到体数据~\cite{Weissenboeck:2019:DVL,Zhou:2021:DSF}。对于运动对象，一维投影以及 MotionRugs、稳定视觉摘要和 MoReVis 等摘要按位置或稳定性对对象排序~\cite{Franke:2021:1DP,Buchmueller:2019:MR,Wulms:2021:SVS,Valdrighi:2024:MRV}。任何线性化都会扭曲部分空间关系~\cite{Nonato:2019:MP,Aupetit:2007:VD}。这些总览保留了空间坐标，却没有特征层级；AnchorMTM 保留合并树，并说明此时空间坐标的代价。
 
 \subsection{时变标量场的拓扑}
-合并树和等值线树概括水平集如何连通，基于持续性的简化控制其规模~\cite{Heine:2016:Survey,Edelsbrunner:2002:TPS,Tierny:2018:TTK}。特征通过区域重叠或属性相似性在时间上追踪~\cite{Silver:1997:Tracking,Saikia:2017:GFT}，并显示为追踪图和嵌套追踪图~\cite{Widanagamaachchi:2012:DTG,Lukasczyk:2017:NTG,Lukasczyk:2020:DNTG}。时变合并树已借助 Wasserstein 距离和几何感知的 interleaving 距离进行计算和比较~\cite{Oesterling:2017:TVMT,Pont:2022:WMT,Yan:2022:GAMT,Yan:2021:Survey}，此类流程已被用于跟踪热带气旋和大气河~\cite{Yan:2024:TROPHY,Lan:2024:AR}。我们所约束的合并误差是一种标记 interleaving 距离~\cite{Munch:2019:LINF,Gasparovic:2024:IID,Morozov:2013:IDMT}，并与有序合并树之间的距离相关~\cite{Beurskens:2025:OMT}。追踪图显示特征如何出现、分裂与合并，但不显示它们位于何处；合并树地图还显示每个时间步的数值与嵌套。
+合并树和等值线树概括水平集如何连接，基于持续性的简化控制其规模~\cite{Heine:2016:Survey,Edelsbrunner:2002:TPS,Tierny:2018:TTK}。特征通过区域重叠或属性相似性在时间上被追踪~\cite{Silver:1997:Tracking,Saikia:2017:GFT}，并显示为追踪图和嵌套追踪图~\cite{Widanagamaachchi:2012:DTG,Lukasczyk:2017:NTG,Lukasczyk:2020:DNTG}。时变合并树已用 Wasserstein 距离和几何感知交错距离计算与比较~\cite{Oesterling:2017:TVMT,Pont:2022:WMT,Yan:2022:GAMT,Yan:2021:Survey}，这类流程被用于跟踪热带气旋和大气河~\cite{Yan:2024:TROPHY,Lan:2024:AR}。我们所界定的合并误差是一种带标签的交错距离~\cite{Munch:2019:LINF,Gasparovic:2024:IID,Morozov:2013:IDMT}，并与有序合并树之间的距离相关~\cite{Beurskens:2025:OMT}。追踪图显示特征如何出现、分裂和合并，却不显示它们在哪里；合并树地图还显示每个时间步的数值和嵌套，AnchorMTM 再加上它们的位置。
 
-\subsection{一维中的层级绘制}
-拓扑地形把合并树绘制为地形，或绘制为一维剖面，其极小值为极值点，其隔墙为合并层级~\cite{Weber:2007:TL,Oesterling:2013:TLP}；已有保持几何和保持时间一致的变体~\cite{Beketayev:2012:GPTL,Herick:2020:TCTL}，等值线树也有平面绘制和联合布局~\cite{Heine:2011:DCT,Lohfink:2020:FCT}。时序树图沿时间排布演化的层级~\cite{Koepp:2019:TT}。TMTM 把相继合并树的剖面对齐为一张静态地图~\cite{Koepp:2023:TMTM}，ST-MTM 加入相对空间距离和时间稳定性~\cite{STMTM:2026}。故事线布局在实体分组上面临相关问题，需在交叉、摆动与分组连续性之间权衡~\cite{Tanahashi:2012:Storyline,Liu:2013:SF}。据我们所知，TMTM 和 ST-MTM 是仅有的生成我们所研究的输出——合并树剖面随时间排列的静态地图——的方法，因此是我们的直接基线。表~\ref{tab:family} 将它们与仅考虑树的排序和仅考虑空间的线性化联系起来，第~\ref{sec:experiments}~节对它们全部进行测量。
+\subsection{一维绘制层级}
+拓扑地形把合并树绘制成地形，或绘制成一维剖面，其极小值是极值、屏障是合并层级~\cite{Weber:2007:TL,Oesterling:2013:TLP}；也有保持几何和时间连贯的变体~\cite{Beketayev:2012:GPTL,Herick:2020:TCTL}，等值线树还被绘制在平面上或联合布局中~\cite{Heine:2011:DCT,Lohfink:2020:FCT}。时间树图沿时间布局演化的层级~\cite{Koepp:2019:TT}。TMTM 把相继合并树的剖面对齐成一张静态地图~\cite{Koepp:2023:TMTM}，ST-MTM 加入相对空间距离和时间稳定性~\cite{STMTM:2026}。故事线布局对实体分组面临相关的问题，在交叉和摆动与分组连续性之间权衡~\cite{Tanahashi:2012:Storyline,Liu:2013:SF}。在所有这些布局中，轴上的位置编码的是树的遍历、时间对齐或相对距离。AnchorMTM 让它编码位置。
 
-\subsection{受外部顺序约束的层级}
-每当一棵树必须服从一个外部顺序时，我们研究的冲突就会出现。最优叶序为树状图选择一个与树一致、使相似叶子相邻的顺序~\cite{BarJoseph:2001:OLO,Eisen:1998:CA}，树重排寻找最接近目标顺序的、与树一致的排列~\cite{Bulteau:2022:RT}。空间有序树图和数据—空间网格地图在层级或数据布局与地理位置之间权衡~\cite{Wood:2008:SOT,vanBeusekom:2023:DSL}，系统发育地理图把叶序与地图位置联系起来~\cite{Klawitter:2025:GP}，切线图布局最小化两棵树之间的交叉或位移~\cite{Fernau:2010:CTC,Huson:2026:DOT}。分离约束使布局对象互不重叠~\cite{Dwyer:2006:IPSEP,Li:2019:SOI}，最大范数下的超度量拟合与我们的最优隔墙密切相关~\cite{Farach:1995:RM}，合并失真和拓扑保持投影度量一个映射保留了多少层级~\cite{Eldridge:2015:MD,Doraiswamy:2021:TM}。这些方法针对给定实例优化交叉、总和或应力。我们则给出每个与树一致的布局都必须接受的最坏位移的下界（对点模型为闭式），以及消除它的合并误差。
+\subsection{层级与外部顺序}
+只要树必须遵从一个外部顺序，就会出现我们研究的冲突。最优叶序为树状图选择与树一致、并让相似叶子相邻的顺序~\cite{BarJoseph:2001:OLO,Eisen:1998:CA}，树重排寻找与树一致且最接近目标顺序的排列~\cite{Bulteau:2022:RT}。空间有序树图和数据--空间网格图在层级或数据布局与地理位置之间权衡~\cite{Wood:2008:SOT,vanBeusekom:2023:DSL}，地理系统发育把叶序与地图位置联系起来~\cite{Klawitter:2025:GP}，缠结图布局最小化两棵树之间的交叉或位移~\cite{Fernau:2010:CTC,Huson:2026:DOT}。分离约束使布局对象互不重叠~\cite{Dwyer:2006:IPSEP,Li:2019:SOI}，最大范数下的超度量拟合与我们的最优屏障密切相关~\cite{Farach:1995:RM}，合并失真和拓扑保持投影衡量一个映射保留了多少层级~\cite{Eldridge:2015:MD,Doraiswamy:2021:TM}。这些方法针对给定实例优化交叉、总和或应力。我们则给出每一种与树一致的布局都必须接受的最坏位移的下界（对点为闭式），以及消除它所需的合并误差。
 
 \section{空间锚定的合并树地图}\label{sec:formulation}
-我们先用一个涵盖已有方法的表述来描述合并树地图，然后赋予显示轴一个空间参考，并说明它在何处与树冲突。
+本节定义地图以及描述其每一帧的两种误差，确定空间参考，并说明参考在哪里与树冲突。
 
 \subsection{合并树与一维剖面}\label{sec:background}
-对于二维或三维定义域上的标量场 $f_t$，合并树 $T_t$ 记录随着阈值升高，下水平集的连通分量如何在极小值处出现、在鞍点处合并；将场取负即得分裂树~\cite{Heine:2016:Survey,Tierny:2018:TTK}。持续性简化先于布局进行，所有陈述均针对简化后的树~\cite{Edelsbrunner:2002:TPS}。每片叶子 $i$ 是位于 $p_i^t$ 的一个极值点；其支撑 $S_i^t$ 为其叶弧上的样本集合，测度为 $m_i^t$。两片叶子在其最低公共祖先的层级 $V_{ij}^t=h_t(\lca(i,j))$ 合并，$V_{ii}^t$ 为极值点的数值；同层级的合并构成一个多叉节点。
+对于二维或三维区域上的标量场 $f_t$，合并树 $T_t$ 记录阈值升高时下水平集分量如何在极小值处出现、在鞍点处合并；对场取负即得分裂树~\cite{Heine:2016:Survey,Tierny:2018:TTK}。我们在布局前用持续性简化每棵树，并始终指简化后的树~\cite{Edelsbrunner:2002:TPS}。每个叶子 $i$ 是位于 $p_i^t$ 的极值。它的支撑 $S_i^t$ 是其叶弧上的样本集合，测度为 $m_i^t$；两个叶子在其最低公共祖先的层级 $V_{ij}^t=h_t(\lca(i,j))$ 合并；$V_{ii}^t$ 是极值的数值，等层级的合并构成一个多叉节点。
 
-一维剖面按选定的叶序把叶子绘制为极小值，每个极小值位于一个按其支撑确定大小的区间内，并依据树填充空隙，使两个极小值之间剖面的最大值显示它们的合并层级~\cite{Weber:2007:TL,Oesterling:2013:TLP,Koepp:2023:TMTM}。只有当每棵子树都占据连续的一段叶子时，剖面才精确地显示这棵树。沿时间堆叠剖面即得到时序合并树地图；相邻帧的叶子按支撑重叠以一对一分配进行匹配，$\mu_t(i)$ 表示叶子 $i$ 匹配到的前驱~\cite{STMTM:2026}。
+一维剖面按选定的叶序把叶子画成极小值，每个叶子位于一个按其支撑确定大小的区间内，并按树填充其间的空间，使两个极小值之间的剖面最大值显示它们的合并层级~\cite{Weber:2007:TL,Oesterling:2013:TLP,Koepp:2023:TMTM}。只有当每棵子树占据一个连续的叶子块时，剖面才能精确地显示树。把剖面沿时间堆叠即得地图。相邻帧的叶子按支撑重叠做一对一匹配，$\mu_t(i)$ 表示叶子 $i$ 匹配到的前驱~\cite{STMTM:2026}。
 
-\subsection{统一表述}\label{sec:common}
-一个地图帧由叶序 $\pi$、中心为 $z_i$ 且宽度为 $W_i$ 的区间、极值点的显示锚点 $x_i$ 以及剖面 $\psi$ 组成。布局集合 $\mathcal{L}(\pi;W)$ 包含如下摆放：其区间在画布 $[0,L]$ 上按 $\pi$ 排列，彼此不相交且间隔至少为 $g$，并使每个锚点距其中心不超过 $\rho W_i/2$。两种误差描述一个帧。\emph{合并误差}比较固定标签下显示的与真实的合并层级，
+\subsection{两种保真度}\label{sec:common}
+地图的一帧由叶序 $\pi$、每个叶子的区间（中心 $z_i$，宽度 $W_i$）、绘制极值所在的锚点 $x_i$ 以及剖面 $\psi$ 组成。区间按 $\pi$ 排在画布 $[0,L]$ 上，间隔至少为 $g$，并让每个锚点距其中心不超过 $\rho W_i/2$；$\mathcal{L}(\pi;W)$ 表示这些放置。一帧可能在两方面出错。第一，剖面可能错报合并层级。\emph{合并误差}对固定标签比较显示的层级和真实层级，
 \begin{equation}\label{eq:dtop}
  \dtop(\psi,T)=\max_{i,j}\bigl|V_{ij}^{\psi}-V_{ij}\bigr|,
 \end{equation}
-其中 $V_{ij}^{\psi}$ 为 $i$ 与 $j$ 的锚点之间剖面的最大值。它为零当且仅当剖面显示了这棵树；对于完整标签，它等于标记 interleaving 距离，后者是 interleaving 距离和 bottleneck 距离的上界~\cite{Munch:2019:LINF,Gasparovic:2024:IID,Morozov:2013:IDMT}。\emph{位置误差}比较锚点与空间目标 $q_i$（第~\ref{sec:reference}~节）；每帧报告其最坏值 $\|x-q\|_\infty$。两个叶序层面的版本单独考察叶序的作用：
+其中 $V_{ij}^{\psi}$ 是 $i$ 与 $j$ 的锚点之间的剖面最大值。它恰在剖面显示树时为零；在标签完整时，它等于带标签的交错距离，后者是交错距离和瓶颈距离的上界~\cite{Munch:2019:LINF,Gasparovic:2024:IID,Morozov:2013:IDMT}。第二，一帧可能把极值画得偏离其参考位置 $q_i$（定义见下）。我们用每帧的最坏值 $\|x-q\|_\infty$ 度量这一\emph{位移}。
+
+位移中有多少仅由叶序决定？以下两个量回答这个问题：
 \begin{equation}\label{eq:nroe}
 \begin{aligned}
  \nroe(\pi)&=\frac{1}{2L}\max_{j\le k}\bigl[q_{\pi(j)}-q_{\pi(k)}\bigr]^+,\\
  \tau(\pi)&=\min_{(x,z)\in\mathcal{L}(\pi;W)}\|x-q\|_\infty .
 \end{aligned}
 \end{equation}
-NROE 是按顺序 $\pi$ 放置的点的最小最坏位移（相对于 $L$）；$\tau$ 加入区间，对固定叶序可精确计算。
+\emph{排序误差} NROE 是按叶序 $\pi$ 绘制的点所能达到的最小最坏位移，以 $L$ 归一：若一个叶子排在另一个参考位置比它低 $\Delta$ 的叶子之前，两者之一至少要移动 $\Delta/2$。区间代价 $\tau$ 是同一个量在给定宽度区间下的版本；对固定的叶序可以精确计算。
 
-我们考虑的每种地图，都逐帧求解下述问题的一个实例：
+两种误差相互竞争，空间锚定的地图必须决定如何平衡它们。因此，我们把每一帧的构建表述为一个问题：在合并误差不超过声明的限度 $\eta$ 的条件下，让锚点靠近参考位置并在时间上保持稳定，
 \begin{equation}\label{eq:family}
 \begin{aligned}
- \min_{\pi\in\Pi,\;(x,z)\in\mathcal{L}(\pi;W)}\;&\lambda_R E_R+\lambda_G E_G+\lambda_M E_M+\lambda_C E_C\\
+ \min_{\pi,\;(x,z)\in\mathcal{L}(\pi;W)}\;&\lambda_R E_R+\lambda_G E_G+\lambda_M E_M+\lambda_C E_C\\
  \mathrm{s.t.}\;&\dtop(\psi,T)\le\eta .
 \end{aligned}
 \end{equation}
-其中 $E_R$ 为锚点到其参考位置的均方距离，$E_G$ 为锚点间距与支撑质心距离之间的应力，$E_M$ 为到由匹配的前一锚点导出的时间目标 $\hat x_i$ 的均方距离，$E_C$ 为锚点相对区间中心的偏移。一种方法即是对叶序规则 $\Pi$、权重 $\lambda$、时间目标 $\hat x$、宽度含义 $W$ 和容许量 $\eta$ 的一组选择（表~\ref{tab:family}）。TMTM 和 ST-MTM 保持树不变（$\eta=0$）且不含参考项（$\lambda_R=0$）：TMTM 按帧间子树重叠贪心地排列子节点，并按样本数打包区间~\cite{Koepp:2023:TMTM}；ST-MTM 在树内选取时间一致的顺序或最优叶序，并拟合相对距离~\cite{STMTM:2026}。因此，它们的轴编码树的遍历或相对距离，而非位置。投影和空间填充曲线位于另一端：它们跟随空间而忽略树~\cite{Franke:2021:1DP}。AnchorMTM 加入参考项和一个声明的容许量 $\eta$，由一个数 $\varepsilon$ 控制（第~\ref{sec:method}~节）。这种对应关系涉及每种方法所求解的问题；求解器在尺度和其他细节上不同，第~\ref{sec:experiments}~节评估的是已发表方法的实现，而非以其权重运行我们的求解器。
-
-\input{tables_zh/table_family.tex}
+其中 $E_R$ 是锚点到参考位置的平均平方距离，$E_G$ 是锚点间距与支撑质心距离之间的应力，$E_M$ 是到时间目标 $\hat x_i$ 的平均平方距离（$\hat x_i$ 由匹配到的上一帧锚点导出），$E_C$ 是锚点偏离区间中心的量。限度 $\eta$ 让权衡变得明确：$\eta=0$ 要求精确的树，更大的 $\eta$ 容许更贴近参考位置的叶序。已有的合并树地图求解的是 $\eta=0$ 且没有参考项的这类问题。TMTM 按时间重叠排列子节点、按样本数打包区间~\cite{Koepp:2023:TMTM}，ST-MTM 选择时间一致或最优的叶序并拟合相对距离~\cite{STMTM:2026}。没有 $E_R$，就没有任何东西把它们的轴与位置联系起来。补充材料把每个对比方法与式~\ref{eq:family} 一一对应。
 
 \subsection{空间参考}\label{sec:reference}
-参考赋予轴以含义：$q_i^t=\langle a,p_i^t\rangle-o$，其中 $a$ 为一个单位方向，$o$ 为一个原点，$o$ 和范围 $L$ 来自定义域角点的投影。默认情况下，$a$ 取匹配极值点运动最大的方向，
+参考赋予轴以含义。对一个单位方向 $a$，叶子 $i$ 的参考位置为 $q_i^t=\langle a,p_i^t\rangle-o$，其中原点 $o$ 和长度 $L$ 由区域角点的投影确定。默认情况下，$a$ 取匹配极值运动最多的方向，
 \begin{equation}\label{eq:autodirection}
  a^*\in\arg\max_{\|a\|=1}\;a^\top\Bigl(\sum_{t,i}\Delta p_i^t(\Delta p_i^t)^\top\Bigr)a,
 \end{equation}
-其中 $\Delta p_i^t=p_i^t-p_{\mu_t(i)}^{t-1}$，
-对有效匹配求和，并取使投影运动总和非负的符号；分析人员选定的方向可以替代它。方向、原点和范围对整个序列和所有预算固定不变，不逐帧重新居中，因此沿 $a$ 移动的特征沿轴移动。按支撑重叠匹配可能遗漏快速移动的特征，这些特征不贡献运动样本。
+其中 $\Delta p_i^t=p_i^t-p_{\mu_t(i)}^{t-1}$ 是一个匹配极值的运动，符号取使总投影运动非负的方向；分析人员也可以自行选定方向。方向、原点和长度在整个序列和所有预算下保持不变，不逐帧重新居中。因此，沿 $a$ 移动的特征就沿轴移动，原地不动的特征保持其高度。
 
-\subsection{拓扑与空间在何处冲突}\label{sec:conflict}
+\subsection{拓扑与空间在哪里冲突}\label{sec:conflict}
 \begin{figure}[t]
 \centering
 \includegraphics[width=\columnwidth]{figures/anchor_conflict_v23.pdf}
-\caption{参考—拓扑冲突。合并树要求块 $\{A,B\}$ 和 $\{C,D\}$，但参考位置的顺序为 $A,C,B,D$。因此，每个精确剖面都必须使部分锚点离开其参考位置（箭头）。两棵子树参考范围的重叠（灰色）决定了最小位移（定理~\ref{thm:order}）。位置为示意。}
+\caption{参考与拓扑的冲突。合并树要求块 $\{A,B\}$ 和 $\{C,D\}$，但参考位置的顺序是 $A,C,B,D$，因此每个精确剖面都必须把某些锚点移离其参考位置（箭头）。两棵子树参考范围的重叠（灰色）决定最小位移（定理~\ref{thm:order}）。位置为示意。}
 \label{fig:projection_conflict}
 \end{figure}
-精确剖面使每棵子树保持连续，但兄弟子树的参考位置可能交错。在图~\ref{fig:projection_conflict} 中，参考位置按 $A,C,B,D$ 的顺序出现：$C$ 位于 $A$ 与 $B$ 之间，$B$ 位于 $C$ 与 $D$ 之间。块 $\{A,B\}$ 和 $\{C,D\}$ 的两种排列都不符合这一顺序，因此没有任何精确剖面能把四个锚点都放在其参考位置上；有限宽度还会加入装箱约束。第~\ref{sec:bounds}~节确定位移必须有多大、出现在何处，以及多少合并误差能消除它。答案只依赖 $T$、$q$、$W$ 和 $\eta$，因此对式~(\ref{eq:family}) 的每个实例同时成立。
+图~\ref{fig:projection_conflict} 给出冲突的最小实例。树把 $A$ 与 $B$、$C$ 与 $D$ 合并，因此精确剖面必须把 $\{A,B\}$ 和 $\{C,D\}$ 画成两个连续块。而参考位置的顺序是 $A,C,B,D$：$C$ 位于 $A$ 和 $B$ 之间，$B$ 位于 $C$ 和 $D$ 之间。两个块的任何一种顺序都不匹配，因此某些锚点必须离开参考位置，有限宽度还会带来额外的排布约束。它们必须移动多远只取决于树、参考位置、宽度和允许量，与绘制地图的算法无关。下一节计算这个量。
 
 \section{保持树的位置代价}\label{sec:bounds}
-下面的三个下界涉及树、参考位置、宽度和容许量，但不涉及叶序规则和权重，因此对表~\ref{tab:family} 的每一行都成立。第一个针对精确拓扑，第二个加入宽度，第三个允许合并误差。完整证明见补充材料；在一帧之内我们省略 $t$，记 $[v]^+=\max(v,0)$，并取空集上的最大值为零。
+现在我们依次回答引言中的三个问题：特征为点时精确的树迫使什么，有限宽度又增加什么，合并允许量能释放什么。每个下界只涉及 $T$、$q$、$W$ 和 $\eta$，因此无论权重或排序规则如何，它对式~\ref{eq:family} 的每个解都成立。补充材料给出完整证明。在一帧之内我们省略 $t$，记 $[v]^+=\max(v,0)$，并约定空集的最大值为零。
 
 \subsection{精确拓扑}
-在约简树上（同层级的合并构成一个节点），精确拓扑使每棵子树连续。令 $[m_X,M_X]$ 为子树 $X$ 的叶子的参考范围。
+考虑两棵兄弟子树 $X$ 和 $Y$，在等层级合并归为一个节点的约简树上，它们叶子的参考位置分别落在 $[m_X,M_X]$ 和 $[m_Y,M_Y]$。精确剖面必须把一个块完整地画在另一个之前。若 $X$ 在前，它的最高参考位置 $M_X$ 排在 $Y$ 的最低参考位置 $m_Y$ 之前，按 NROE 背后的论证，两个叶子之一至少移动 $[M_X-m_Y]^+/2$；另一种朝向的代价是 $[M_Y-m_X]^+/2$。即便是代价较小的朝向，也要付出剩余重叠的一半，而树中最坏的一对兄弟决定这个代价。
 \begin{theorem}[精确拓扑位置下界]\label{thm:order}
 每个满足 $\dtop=0$ 的剖面都有 $\nroe(\pi)\ge\nu^*(T,q)$，其中
 \begin{equation}\label{eq:nu}
  \nu^*(T,q)=\frac{1}{2L}\max_v\max_{\substack{X,Y\in\mathrm{ch}(v)\\X\ne Y}}
  \bigl[\min(M_X-m_Y,\,M_Y-m_X)\bigr]^+ .
 \end{equation}
-按子节点参考范围的中点递归地排序，可在 $O(n\log n)$ 时间内达到 $\nu^*$。
+把每个节点的子节点按其参考范围的中点排序，可在 $O(n\log n)$ 时间内达到 $\nu^*$。
 \end{theorem}
-\begin{proof}[证明要点]
-两个兄弟块必须取两种方向之一，其逆序代价分别为 $[M_X-m_Y]^+/2$ 和 $[M_Y-m_X]^+/2$；中点排序取较小者，而每一对逆序的叶子都在其最低公共祖先处被兄弟块隔开。
+\begin{proof}[证明概要]
+中点排序为每对兄弟选择代价较小的朝向；而每对逆序的叶子都在其最低公共祖先处被两个兄弟块隔开，所以没有一个逆序的代价超过定义 $\nu^*$ 的那一对。
 \end{proof}
-取得最大值的节点和兄弟对把代价定位在参考范围相互重叠的两棵子树的合并处，其数值为较优方向上剩余重叠量的一半。在图~\ref{fig:projection_conflict} 中，$\{A,B\}$ 与 $\{C,D\}$ 的范围重叠 $q_B-q_C$，因此每个精确剖面的排序误差至少为 $(q_B-q_C)/2L$。
+定理~\ref{thm:order} 对点回答了前两个问题。精确的树的代价是最坏一对兄弟参考重叠的一半，取最大值的节点指出这份代价在树中出现的位置。在图~\ref{fig:projection_conflict} 中，$\{A,B\}$ 与 $\{C,D\}$ 的范围重叠 $q_B-q_C$，因此每个精确剖面的排序误差至少为 $(q_B-q_C)/2L$。
 
-\paragraph{强迫的误差与选择的误差。} 由于中点排序在同一棵树上达到 $\nu^*$，任何拓扑精确地图的排序误差都可拆分为由树强迫的 $\nu^*(T,q)$，以及由其叶序规则选择、可在不改变树的情况下消除的 $\nroe(\pi)-\nu^*(T,q)$。NROE 不涉及宽度，因此该拆分同样适用于区间大小遵循不同规则的 TMTM 和 ST-MTM。
+由于同一棵树的中点叶序达到 $\nu^*$，这个下界还把任何拓扑精确地图的排序误差分成两部分：树迫使的 $\nu^*$，以及地图的排序规则所选择、换用同一棵树的另一种叶序即可去掉的 $\nroe(\pi)-\nu^*$。NROE 不考虑宽度，因此这一划分同样适用于区间遵循不同规则的地图。
 
 \subsection{有限宽度}
-区间需要空间：一组叶子至少占据其宽度与间隔之和。对互不相交的叶子集合 $X$ 和 $Y$，令 $\omega(X,Y)$ 为将 $X$ 全部置于 $Y$ 之前（或相反，取较小者）对其锚点强迫的最小最坏位移，令 $E_\partial$ 为将所有区间放进画布两端之间的代价。二者均可由排序后的参考端点和累积宽度得出（补充材料）。
+特征不是点。一个叶子块至少占据其宽度与间隔之和，所以即使两个兄弟块处于较好的朝向，也可能不得不把锚点推离参考位置，画布两端也带来同样的压力。对两个不相交的叶子集 $X$ 和 $Y$，令 $\omega(X,Y)$ 为把 $X$ 全部画在 $Y$ 之前（或相反）迫使其锚点承受的最小最坏位移，令 $E_\partial$ 为把所有区间放进画布两端之间所需的最小位移。两者都由排序后的参考端点和累积宽度得到。
 \begin{theorem}[宽度感知位置下界]\label{thm:width}
-令 $\mathcal{P}_0$ 包含两个兄弟节点的后代叶子集合所构成的每一对。每个拓扑精确的区间布局满足
+令 $\mathcal{P}_0$ 包含两个兄弟节点的后代叶子集构成的每一对。每个拓扑精确的区间布局满足
 \begin{equation}\label{eq:widthbound}
 \begin{aligned}
  \|x-q\|_\infty\ge\tau(\pi)&\ge\mathcal{B}_w(T,q,W)\\
  &=\max\Bigl\{E_\partial,\max_{(X,Y)\in\mathcal{P}_0}\omega(X,Y)\Bigr\}.
 \end{aligned}
 \end{equation}
-当宽度和间隔为零时，$\mathcal{B}_w=L\,\nu^*(T,q)$。
+宽度和间隔为零时，$\mathcal{B}_w=L\,\nu^*(T,q)$。
 \end{theorem}
-\begin{proof}[证明要点]
-一个块的首尾锚点必须（在锚点偏移范围内）包住其区间与间隔，这相对于参考间距产生一个缺口；精确拓扑为每对兄弟固定一种方向，画布两端给出单侧代价。
+\begin{proof}[证明概要]
+一个块的首尾锚点必须在锚点松弛范围内包住其区间和间隔，这相对于它们的参考间距留下了缺口；精确的树为每对兄弟固定一种朝向，画布两端给出单侧代价。
 \end{proof}
-$\mathcal{B}_w$ 是每个拓扑精确叶序的下界，不一定能达到；$\tau(\pi)$ 是给定叶序下可达到的最小值。
+与 $\nu^*$ 不同，宽度下界 $\mathcal{B}_w$ 不一定能达到。当一张地图的区间代价超过它时，超出部分可能有一部分在下界本身。
 
 \subsection{有界合并误差}
-合并容许量可以释放一个块，但仍限制交错。若叶子 $k$ 位于节点 $u$ 的两个后代 $i,j$ 之间，则它与 $i$ 显示的合并层级不能超过 $i,j$ 的，因此 $V_{ik}\le h(u)+2\eta$。因此，叶子 $k$ 仅当是 $A_\eta(u)$ 的后代时才能进入 $u$ 的块，$A_\eta(u)$ 为层级与 $h(u)$ 相差不超过 $2\eta$ 的 $u$ 的最高祖先。令 $\mathcal{P}_\eta$ 包含该规则保持分开的叶子集合对：对 $\mathcal{D}(A_\eta(u))$ 之外的叶子 $k$，取 $(\mathcal{D}(u),\{k\})$；对内部节点 $u,w$，若 $\mathcal{D}(w)$ 与 $\mathcal{D}(A_\eta(u))$ 不相交且 $\mathcal{D}(u)$ 与 $\mathcal{D}(A_\eta(w))$ 不相交，取 $(\mathcal{D}(u),\mathcal{D}(w))$，其中 $\mathcal{D}(\cdot)$ 表示后代叶子。
+假设剖面可以把合并层级错报至多 $\eta$。这是否让它可以随意交错子树？不能。若叶子 $k$ 画在节点 $u$ 的两个后代 $i$ 与 $j$ 之间，$i$ 与 $j$ 之间的剖面经过 $k$，所以 $i$ 与 $k$ 的显示合并层级不能超过 $i$ 与 $j$ 的；两者误差都不超过 $\eta$，于是 $V_{ik}\le h(u)+2\eta$。因此，叶子 $k$ 只有在属于 $A_\eta(u)$ 的后代时才能进入 $u$ 的块，$A_\eta(u)$ 是层级与 $h(u)$ 相差不超过 $2\eta$ 的 $u$ 的最高祖先。令 $\mathcal{P}_\eta$ 包含这一规则保持分开的叶子集对：$\mathcal{D}(A_\eta(u))$ 之外的叶子 $k$ 构成的 $(\mathcal{D}(u),\{k\})$，以及满足 $\mathcal{D}(w)$ 与 $\mathcal{D}(A_\eta(u))$ 不相交、$\mathcal{D}(u)$ 与 $\mathcal{D}(A_\eta(w))$ 不相交的内部节点 $u,w$ 构成的 $(\mathcal{D}(u),\mathcal{D}(w))$，其中 $\mathcal{D}(\cdot)$ 表示后代叶子。
 \begin{theorem}[有界拓扑位置下界]\label{thm:chain}
-在每个满足 $\dtop\le\eta$ 的剖面中，$\mathcal{P}_\eta$ 中的每一对都整体处于一种方向。因此
+在每个满足 $\dtop\le\eta$ 的剖面中，$\mathcal{P}_\eta$ 的每一对都完整地以一种朝向绘制。因此
 \begin{equation}\label{eq:chainbounds}
-\begin{aligned}
- \nroe(\pi)&\ge C_\eta=\max_{(X,Y)\in\mathcal{P}_\eta}\frac{[\min(M_X-m_Y,M_Y-m_X)]^+}{2L},\\
- \tau(\pi)&\ge\max\Bigl\{E_\partial,\max_{(X,Y)\in\mathcal{P}_\eta}\omega(X,Y)\Bigr\}.
-\end{aligned}
+ \nroe(\pi)\ge C_\eta=\max_{(X,Y)\in\mathcal{P}_\eta}\frac{[\min(M_X-m_Y,M_Y-m_X)]^+}{2L},
 \end{equation}
+且 $\tau(\pi)$ 以定理~\ref{thm:width} 的表达式为下界，只需把 $\mathcal{P}_0$ 换成 $\mathcal{P}_\eta$。
 \end{theorem}
-该定理还说明了什么能解除冲突。一旦 $2\eta$ 达到一棵子树自身合并层级与其父节点层级之间的间隙，该子树就可以与其兄弟交错，因此深层合并处的冲突仍然代价高昂。将每个不超过 $2\eta$ 的父节点间隙展平，可得到第二个有效下界；两者互不包含，我们报告较大者。反过来读，该定理还为表~\ref{tab:family} 的另一端定价：排序误差低于 $C_\eta$ 的地图（例如排序误差为零的投影），必然显示超过 $\eta$ 的合并误差。
+定理~\ref{thm:chain} 回答了第三个问题。一旦 $2\eta$ 达到一棵子树自身合并层级与其父节点层级之间的差距，它就可以与兄弟交错。因此，在父节点之下不远处合并的子树之间的冲突很容易释放，而深处合并的冲突仍然代价高昂。把所有不超过 $2\eta$ 的父节点差距压平，可得到第二个有效下界；两者互不支配，我们报告较大者。反过来读，该定理也给另一端定价：排序误差低于 $C_\eta$ 的地图，例如排序误差为零的投影，其合并误差必然超过 $\eta$。
 
-\section{AnchorMTM：逼近下界}\label{sec:method}
+\section{AnchorMTM}\label{sec:method}
 \begin{figure*}[t]
 \centering
 \includegraphics[width=\textwidth]{figures/anchor_framework.pdf}
-\caption{AnchorMTM 的构造（示意；$F(x,t)$ 表示位置 $x$、时间 $t$ 处的场）。(1) 提取与参考：每一帧的合并树、跨帧匹配的叶子支撑，以及一个固定方向 $d$（即式~(\ref{eq:autodirection}) 的 $a^*$），它为每个极值点给出参考位置 $q$。(2) 拓扑预算布局：搜索预算 $\eta$ 允许的叶序，然后在位移上限下放置锚点 $x$；$\eta=0$ 时叶序保持子树块，锚点离开其参考位置，而 $\eta>0$ 时允许一个跟随参考位置的叶序。(3) 拓扑到一维的映射：将区间与隔墙填入每个剖面 $\psi_t$，并沿时间堆叠剖面，得到地图 $I^\varepsilon(t,u)=\psi^\varepsilon_t(u)$。}
+\caption{AnchorMTM 的构建（$F(x,t)$：位置 $x$、时间 $t$ 处的场）。(1) 提取与参考：每帧的合并树、跨帧匹配的叶支撑，以及一个固定方向 $d$（式~\ref{eq:autodirection} 的 $a^*$），它给每个极值一个参考位置 $q$。(2) 拓扑预算布局：允许量 $\eta$ 所容许的叶序，然后在位移上限下放置锚点 $x$；$\eta=0$ 时叶序保持子树块、锚点离开参考位置，$\eta>0$ 时可以容许跟随参考位置的叶序。(3) 拓扑到一维的映射：区间和屏障填充每个剖面 $\psi_t$，剖面组成地图 $I^\varepsilon(t,u)=\psi^\varepsilon_t(u)$。图为示意。}
 \label{fig:framework}
 \end{figure*}
-AnchorMTM 是式~(\ref{eq:family}) 中带有参考项、容许量为 $\eta=(\varepsilon_0+\varepsilon)\Delta_F$ 的实例，其中 $\Delta_F$ 为序列的标量范围，$\varepsilon_0=10^{-7}$ 为固定的数值容差，$\varepsilon\ge0$ 为唯一的控制量。\emph{精确模式}（$\varepsilon=0$）在 $\varepsilon_0\Delta_F$ 以内的平局之外保持树不变；\emph{预算模式}（$\varepsilon>0$）以声明的合并误差换取位置。由于式~(\ref{eq:family}) 将离散的叶序与连续的摆放耦合在一起，AnchorMTM 分两个阶段求解，二者均遵循下界（图~\ref{fig:framework} 第 2 部分）：它按下界所约束的量 $\tau$ 选择叶序，然后在 $\tau$ 的上限内放置锚点。区间宽度为 $W_i=s\,m_i$，比例 $s$ 固定；其余所有设置构成一组固定配置，列于补充材料。
+AnchorMTM 为序列的每一帧求解式~\ref{eq:family}，带参考项，允许量为 $\eta=(\varepsilon_0+\varepsilon)\Delta_F$。其中 $\Delta_F$ 是序列的标量范围，$\varepsilon_0=10^{-7}$ 是固定的数值容差，$\varepsilon\ge0$ 是预算，也是唯一的控制量。\emph{精确模式}（$\varepsilon=0$）在 $\varepsilon_0\Delta_F$ 之内的并列以外保持树，\emph{预算模式}（$\varepsilon>0$）以声明的合并误差换取位置。图~\ref{fig:framework} 给出三个阶段。第一阶段按上文计算树、匹配和参考，并给每个叶子宽度 $W_i=s\,m_i$，$s$ 是一个固定的尺度。式~\ref{eq:family} 把离散的叶序与连续的放置耦合在一起，第二阶段按下界所提示的方式把它们分开：先按下界所约束的量 $\tau$ 选择叶序，再放置锚点。第三阶段绘制并核验剖面。
 
 \subsection{预算内的叶序}
-对每一帧，叶序按字典序选取，
-\begin{equation}\label{eq:orderobjective}
- \pi^\varepsilon\in\underset{\pi\in\mathcal{C}}{\arg\min}\bigl(\tau(\pi),\nroe(\pi)\bigr)
- \quad\mathrm{s.t.}\quad\delta^*(\pi)\le\eta ,
-\end{equation}
-候选池 $\mathcal{C}$ 是有限的：按中点排序的原树（达到 $\nu^*$）、树的阈值展平和冲突驱动展平，以及对其中最优者进行宽度感知块移动时访问到的叶序。每个候选都对照原始合并矩阵评估。候选池是启发式的，因此选出的叶序并非对所有排列的认证最优；第~\ref{sec:experiments}~节测量它多常达到下界。准入采用一个叶序所能显示的最小合并误差。
-\begin{proposition}[最优隔墙]\label{prop:barriers}
-对固定叶序，令 $C_k=\min_{i\le k<j}V_{\pi(i)\pi(j)}$ 为跨越第 $k$ 个空隙的最低合并层级，$F_k$ 为其两个相邻极值点数值中的较大者。可达到的最小合并误差为
+一帧可以用哪些叶序？如果锚点之间的某种剖面能把合并误差保持在 $\eta$ 之内，这个叶序就是可容许的。这可以精确判定，因为对固定叶序，最优屏障有闭式解。
+\begin{proposition}[最优屏障]\label{prop:barriers}
+对固定叶序，令 $C_k=\min_{i\le k<j}V_{\pi(i)\pi(j)}$ 为跨越第 $k$ 个间隙的最低合并，$F_k$ 为其两侧极值中的较大者。可达到的最小合并误差为
 \begin{equation}\label{eq:delta}
-\begin{split}
+ \begin{split}
  \delta^*(\pi)=\max\Bigl\{&0,\;\max_k(F_k-C_k),\\
  &\tfrac12\max_{i<j}\bigl(V_{\pi(i)\pi(j)}-\max_{i\le k<j}C_k\bigr)\Bigr\},
-\end{split}
+ \end{split}
 \end{equation}
-由隔墙 $b_k=C_k+\delta^*(\pi)$ 取得。
+由屏障 $b_k=C_k+\delta^*(\pi)$ 达到。
 \end{proposition}
-因此，一个叶序满足预算当且仅当 $\delta^*(\pi)\le\eta$，准入由此成为一个闭式检验。
+命题~\ref{prop:barriers} 把预算变成一个检验 $\delta^*(\pi)\le\eta$，并在叶序选定后确定屏障。正因如此，一个数就能控制整个构建。AnchorMTM 针对原始合并矩阵评估一个有限的候选叶序池：按中点排序的精确树（达到 $\nu^*$）；在阈值处和冲突合并处压平的树；以及宽度感知的块移动在细化其中最好者时经过的叶序。在可容许的候选中，它选出区间代价 $\tau$ 最小的一个，并以 NROE 打破平局。候选池是启发式的，所以所选叶序并未被证明在所有排列中最优；评估部分衡量它多频繁地达到下界。
 
 \subsection{锚点放置}
-对选定的叶序，AnchorMTM 以默认权重 $(\lambda_R,\lambda_G,\lambda_M,\lambda_C)=(4,1,0.5,0.1)$ 求解式~(\ref{eq:family})，时间目标为 $\hat x_i^t=x_{\mu_t(i)}^{t-1}+(q_i^t-q_{\mu_t(i)}^{t-1})$，它跟随投影运动并使 $x-q$ 保持连续，另加上限 $\|x-q\|_\infty\le\tau(\pi)+\beta_0$，$\beta_0$ 为固定余量。由于 $\tau$ 是可达到的，该上限是可行的，且对固定叶序该问题是一个凸二次规划。该规划不能替换选定的叶序，因此上限把叶序的位置保证传递给锚点。没有匹配前驱的叶子没有时间项。
+叶序固定后，式~\ref{eq:family} 成为一个凸二次规划。AnchorMTM 使用权重 $(\lambda_R,\lambda_G,\lambda_M,\lambda_C)=(4,1,0.5,0.1)$ 和时间目标 $\hat x_i^t=x_{\mu_t(i)}^{t-1}+(q_i^t-q_{\mu_t(i)}^{t-1})$，它让锚点随其投影运动而移动，并使位移 $x-q$ 在时间上连续；没有匹配前驱的叶子没有时间项。该规划还满足上限 $\|x-q\|_\infty\le\tau(\pi)+\beta_0$，$\beta_0$ 是固定的松弛量。因为 $\tau$ 是可达的，这个上限可行，并把叶序的位置保证传给锚点：其他项塑造布局，却不能抵消叶序已取得的结果。
 
 \subsection{剖面重建与核验}
-剖面沿用合并树地图的叶弧采样以及沿最低公共祖先路径的填充~\cite{Koepp:2023:TMTM,STMTM:2026}；极值点保持在其锚点处，随后每个空隙被截断或抬升至其隔墙 $b_k$，放松后的叶序需要这一步。所有帧共享方向、原点、范围和像素比例，不逐帧重新居中。由于栅格取整和严格极值的留空可能改变显示的合并层级，每个渲染帧都对照原始合并矩阵进行核验，记录中保存所请求的预算、$\tau$、$\delta^*$ 以及实测误差。容量、输入和求解器的失败如实报告，而不是通过重新缩放来修补。
+剖面沿用早期合并树地图的叶弧采样和沿通往最低公共祖先路径的填充~\cite{Koepp:2023:TMTM,STMTM:2026}。极值留在其锚点上，随后每个间隙被削平或抬高到其屏障 $b_k$。所有帧共用方向、原点、长度和像素尺度，因此位置在不同时间和不同预算之间可比。栅格取整和严格极值间隙仍可能改变显示的合并层级，所以每个渲染帧都按原始合并矩阵核验，每一帧都记录所请求的预算、$\tau$、$\delta^*$ 和测得的误差。容量、输入和求解器的失败被报告出来，而不是通过重新缩放来修补。
+
+\paragraph{计算。} AnchorMTM 不需要事先的布局：给定场和 $\varepsilon$，上述每一步都是确定的。在 Apple M2 Pro 上，下界每帧至多需要 5.5\,ms。在 Apple M4 上，对一个基准序列的完整运行需要 0.5--63\,s，其中排序和放置占 0.15--3.3\,s，其余是树的提取、匹配、栅格化和核验。744 帧的逐小时 PM$_{2.5}$ 序列在 $\varepsilon=5\%$ 时需要 231\,s。
 
 \section{评估}\label{sec:experiments}
 \input{tables_zh/table1_comparison.tex}
 \begin{figure}[t]
 \centering
 \includegraphics[width=\columnwidth]{figures/anchor_controlled_bounds.pdf}
-\caption{受控四叶树，配置与图~\ref{fig:projection_conflict} 相同（插图；参考位置见第~\ref{sec:bounds-eval}~节）。(a) 兄弟范围重叠 $d$ 增大会强迫位移；定理~\ref{thm:width} 的宽度下界（圆点）等于全部 24 个叶序中的最优值。(b) 在 $d=24\%$ 时，14\% 的位移恰在合并预算达到父节点间隙 $h$ 的一半时消失，四种间隙均如此，正如定理~\ref{thm:chain} 所预测。百分比相对于单位画布或单位标量范围。}
+\caption{图~\ref{fig:projection_conflict} 构型下的受控四叶树（插图）。(a) 兄弟范围的重叠 $d$ 增大会迫使位移；定理~\ref{thm:width} 的宽度下界（圆点）等于全部 24 种叶序中的最优值。(b) 在 $d=24\%$ 时，当合并预算达到父节点差距 $h$ 的一半时，14\% 的位移恰好消失，四种差距都如此，正如定理~\ref{thm:chain} 所预言。百分比相对于单位画布或单位标量范围。}
 \label{fig:controlled}
 \end{figure}
 \begin{figure*}[t]
 \centering
 \includegraphics[width=\textwidth]{figures/plane_compact.pdf}
-\caption{下界组的位置—拓扑平面，包括五个平面序列和两组体数据。每张地图为一个点：横轴为其各帧中最大的合并误差（平方根刻度），纵轴为其平均排序误差。任何地图都不能进入下界以下的灰色区域（定理~\ref{thm:chain} 与展平下界；合并误差为零时为定理~\ref{thm:order}）。TMTM、ST-MTM 和 OLO 保持树不变，位于零合并误差处并远高于下界；在 Storms 上，它们的排序误差有 76--79\% 并非由树强迫。空间填充曲线和投影跟随空间而破坏了树。AnchorMTM（蓝色，$\varepsilon$ 从 0 到 100\%）沿边界分布；在 Storms、OLR、逐日 PM$_{2.5}$ 和 Ring 上，穷举所有叶序表明它在每个测试预算下都是精确最优，仅 Storms 的一帧例外。TMTM、ST-MTM 和 OLO 以与参考更一致的镜像显示。所有标记均位于其实测值处，因此零合并误差处的标记可能重合；圆点为 $\varepsilon=0$ 时的 AnchorMTM，Storms 中的色条把保持树的地图的排序误差分为 $\nu^*$（黑色）与其余部分（灰色）。}
+\caption{七个下界组序列的位置--拓扑平面。每张地图是一个点，横坐标为其各帧中的最坏合并误差（平方根刻度），纵坐标为其平均排序误差。没有地图能进入下界之下的阴影区域（定理~\ref{thm:chain} 与压平下界；零合并误差处为定理~\ref{thm:order}）。TMTM、ST-MTM 和 OLO 保持树，位于零合并误差处、远高于下界；虚线段是它们未被树迫使的排序误差，标注给出其占比。空间填充曲线和投影跟随空间、破坏树。AnchorMTM（蓝线，$\varepsilon$ 从 0 到 100\%；圆点，$\varepsilon=0$）沿该区域的边缘延伸。TMTM、ST-MTM 和 OLO 取与参考更一致的镜像。}
 \label{fig:plane}
 \end{figure*}
-我们在两组序列上评估下界和地图（第~\ref{sec:data}~节）。我们先检验下界是否是紧的（第~\ref{sec:bounds-eval}~节），再用它们测量已有地图的位置误差中有多少由树强迫（第~\ref{sec:eval-forced}~节）。接着，我们比较在相同拓扑保证下各方法把特征放在何处（第~\ref{sec:eval-placement}~节），考察合并预算逐帧改变了什么（第~\ref{sec:eval-budget}~节），最后以一个空气污染案例研究结束（第~\ref{sec:reading}~节）。
+我们检验四个论断，每个对应一小节：下界是紧的；已有地图的大部分位置误差并非由树迫使；在相同的拓扑保证下，AnchorMTM 把特征画在它们所在的位置；预算在冲突较浅之处换来位置。
 
+\subsection{数据与度量}\label{sec:data}
+\input{tables_zh/table_data.tex}
+\paragraph{数据。} 表~\ref{tab:data} 列出两组序列，每组各有其用途。\emph{下界组}由七个序列组成，它们的树、匹配和参考由同一个早期流程保存。由于这些树是固定的，我们用它们计算下界、枚举小帧的全部叶序，并逐帧度量每张对比地图。\emph{布局组}从场重新计算树，比较完整的地图。它重建 ST-MTM 基准的四个平面输入~\cite{STMTM:2026}，使 AnchorMTM 在最接近的已有工作的数据上接受比较，并加入华北地区的逐小时 PM$_{2.5}$ 序列~\cite{Kong:2021:CAQRA}和 TMTM 的两组体数据~\cite{Koepp:2023:TMTM,Weinkauf:SquareCylinder}。Ring、Storms、Wildfires 和体数据在两组中都出现，但预处理不同；逐日和逐小时的 PM$_{2.5}$ 序列是不同的数据。ST-MTM 基准的作者处理数组无法获得，因此布局组是公开说明的重建，而非相同输入的复现；补充材料给出每个序列的预处理。
+
+\paragraph{度量。} NMLE 是渲染剖面的合并误差 $\dtop$ 除以标量范围，NROE 是式~\ref{eq:nroe} 的排序误差。NPE 是一帧的最坏位移除以长度 $L$ 后在各帧上的平均；它是读轴的人所感受到的误差。为体现 ST-MTM 的目标，我们还报告锚点距离相对支撑质心距离的尺度归一化应力（SNS）~\cite{Smelser:2025:Scale,STMTM:2026}和可信度（TW）~\cite{Venna:2001:NP}。基线是我们对已发表方法的实现，使用相同的树、标识和参考。在四个基准输入上，TMTM 和 ST-MTM 的 SNS 和 TW 引自 ST-MTM 论文（表~\ref{tab:quantitative-final} 中灰色），不与本地数值排名。TMTM 和 ST-MTM 都不固定其轴的方向，因此每个基线在每个序列上翻转一次，使之与参考一致。
+
+\paragraph{模式。} Exact 即精确模式。Balanced 是预算模式，其预算在每个序列前四分之一的时间段上从 1--10\% 中选定一次后冻结：Gaussian、Ring、Wildfires 和 Storms 分别为 1、1、5 和 10\%。逐小时 PM$_{2.5}$ 使用固定的 5\% 预算。表~\ref{tab:volume-comparison} 中的体数据使用存储的配置和 $+x$ 参考；图~\ref{fig:volume-gallery} 和图~\ref{fig:budget-distribution} 使用下界组的默认配置。补充材料列出全部设置和预算选择。
+
+\subsection{下界是紧的}\label{sec:bounds-eval}
+\emph{受控树。} 我们先在已知最优值的情形下检验下界。两对兄弟 $\{A,B\}$ 和 $\{C,D\}$ 在 $0.4$ 处合并，根在 $1$，叶子数值为 $0$，单位画布上的参考位置为 $(0.2,0.5,0.5-d,0.8-d)$；$0<d<0.3$ 时这正是图~\ref{fig:projection_conflict} 的顺序 $A,C,B,D$。在 $d$ 从 $-0.12$ 到 $0.30$ 的 43 个重叠和四种宽度下，我们把下界与全部 24 种叶序比较，每种叶序由一个独立的极小极大线性规划放置。仅拓扑就恰好迫使 $\nu^*=\max(0,d)/2$。当宽度为 $0.06$、间隔为 $0.01$、$\rho=0.5$ 时，宽度下界、我们的搜索与穷举最优值在 $\tau=\max(0,(d+0.04)/2)$ 处重合（图~\ref{fig:controlled}a）：在 $d=0.24$ 时，点为 12\%，区间为 14\%。合并预算恰好在定理~\ref{thm:chain} 容许交错之处消除冲突，对全部四个父节点差距 $h$ 都在 $2\varepsilon=h$ 处（图~\ref{fig:controlled}b）。
+
+\emph{真实树。} 同样的吻合在真实数据上也成立。在精确模式下，所选叶序的区间代价 $\tau$ 在下界组 614 个平面帧中的 606 个上等于 $\mathcal{B}_w$，因此在这些帧上没有拓扑精确的叶序有更小的最坏位移；在 $\varepsilon=10\%$ 时，有界拓扑下界在 596 帧上达到。在 Storms、OLR、逐日 PM$_{2.5}$ 和 Ring 上，每帧至多八个叶子，枚举全部叶序证实 AnchorMTM 在每个测试预算下都达到最小排序误差，只有 Storms 的一帧在 $\varepsilon=31.6\%$ 时例外（1.9 个百分点）。体数据更难：宽度下界在 102 个 Cylinder 帧中的 81 个、201 个 Tangaroa 帧中的 27 个上达到，其余差距可能在下界中，也可能在启发式搜索中。
+
+\subsection{已有地图付出的超过树的要求}\label{sec:eval-forced}
+定理~\ref{thm:order} 不需要布局，因此它能度量每张保持树的地图。在七个下界组序列上，TMTM 排序误差的 53--95\% 和 ST-MTM 的 31--95\% 高于 $\nu^*$；换用同一棵树的另一种叶序即可去掉这一部分。最优叶序（OLO）只在树内让相似叶子相邻，表现相同（32--95\%）。因此，超出的部分来自在没有空间参考的情况下选择叶序，而不是某一种特定方法。图~\ref{fig:plane} 把每张地图放进由两种误差张成的平面。保持树的地图位于零合并误差处、远高于下界。投影只有在合并误差达到 5.6--59\% 时才达到零排序误差，空间填充曲线也破坏树（8--40\%）。AnchorMTM 沿不可达区域的边缘延伸，这条边缘显示预算能释放什么。在冲突子树于父节点之下不远处合并的地方，1\% 的预算把 Wildfires 上被迫使的排序误差减半（5.80\% 到 2.77\%），几乎消除 Cylinder 上的（12.24\% 到 0.23\%）；Tangaroa 的深层冲突使其在 $\varepsilon=5\%$ 之前一直高于 7\%。被迫使的误差还取决于方向，并能在画图之前算出：在 400 个方向上，它在 Tangaroa 上为 4.70--10.14\%，在 Cylinder 上为 5.49--28.15\%。
+
+\subsection{特征位于它们所在的位置}\label{sec:eval-placement}
+\input{tables_zh/table_volume.tex}
 \begin{figure*}[t]
 \centering
 \includegraphics[width=\textwidth]{figures/volume_gallery.pdf}
-\caption{各方法把两组体数据的特征绘制在何处。每个点是某一帧中的一个特征在轴上的位置（画布比例），颜色为其相对参考位置的有符号位移；灰点位于其参考位置上。第一列显示参考位置，即把位置读作地点时地图应当显示的内容。所有方法使用相同的树和特征；TMTM 和 ST-MTM 是已发表方法的实现，各自以与参考更一致的镜像显示。AnchorMTM 使用下界组的默认配置，方向为匹配运动方向（Tangaroa）或流向 $x$ 轴（Cylinder）。每个面板下方：各帧的平均位移和平均最坏位移；对于正预算，还给出实际达到的合并误差。}
+\caption{各方法把两组体数据的特征画在哪里。每个点是一帧中的一个特征，位于其在轴上的位置（画布的比例），颜色表示它相对参考的有符号位移；灰点位于参考位置上。第一列给出参考位置，即把地图读作位置时应当看到的内容。所有方法使用相同的树和特征，TMTM 和 ST-MTM 取与参考更一致的镜像。AnchorMTM 使用默认配置，参考取匹配运动方向（Tangaroa）或顺流 $x$ 轴（Cylinder）。每个面板下方：各帧上的平均位移和平均最坏位移，以及正预算下实际达到的合并误差。}
 \label{fig:volume-gallery}
 \end{figure*}
-\subsection{数据与协议}\label{sec:data}
-\input{tables_zh/table_data.tex}
-表~\ref{tab:data} 列出两组序列。\emph{下界组}带有早期基准保存的树，以同一个提取器、匹配规则和参考估计器以及一组默认配置准备；我们在其上评估下界、小帧的全部叶序以及每张对比地图的逐帧结果（第~\ref{sec:bounds-eval}~节和第~\ref{sec:eval-forced}~节）。\emph{布局组}重建 ST-MTM 基准的四个平面输入，使 AnchorMTM 在最相近的已有工作的数据上进行比较，并加入该基准之外的一个逐小时 PM$_{2.5}$ 序列和 TMTM 的两组体数据~\cite{Koepp:2023:TMTM,Weinkauf:SquareCylinder}（第~\ref{sec:eval-placement}~节和第~\ref{sec:eval-budget}~节）。逐小时 PM$_{2.5}$ 序列覆盖 2017 年 1 月的华北地区（东经 110--120$^\circ$，北纬 32--41$^\circ$），共 744 个再分析场~\cite{Kong:2021:CAQRA}，插值到 $160\times144$；极大值以取负场的 join tree 提取，持续性阈值为每帧范围的 5\%。Ring、Storms、Wildfires 和两组体数据在两组中都出现，但预处理不同（补充材料）；两个 PM$_{2.5}$ 序列是不同的数据，下界组为逐日，布局组为逐小时。作者处理后的数组无法获得，因此布局组是一个公开说明的重建，其中 ST-MTM 的持续性数值按每帧范围的比例理解（0.1、0.1、15 和 10.5\%），而非输入完全相同的复现。
+\emph{平面输入。} 在精确保持树的条件下，Exact 在表~\ref{tab:quantitative-final} 的全部五个平面输入上把 NPE 相对 TMTM 和 ST-MTM 降低 73--96\%（PM$_{2.5}$ 上为 73.5 和 75.1\%），也低于破坏树的 Hilbert 和 Morton 曲线。Balanced 的预算至多 10\%，它相对 Exact 进一步把 NPE 在 Ring 上降低 16.2\%、在 Wildfires 上降低 11.6\%、在 Storms 上降低 64.9\%；在 Gaussian 上地图不变，在 PM$_{2.5}$ 上固定的 5\% 预算把 NPE 降低 66.3\%。这些结果表明的是与所选参考的对齐，而不是质量的全面提升。ST-MTM 在全部四个基准输入上报告了更高的 TW。在所有分数都在本地测得的 PM$_{2.5}$ 上，ST-MTM 的 SNS 也低于、TW 也高于 Exact（0.1897 和 0.8224 对 0.1964 和 0.7884）。与曲线相比，Balanced 在 Gaussian、Wildfires 和 Storms 上改进了 SNS 和 TW；Hilbert 在 Ring 上更好（SNS 0.1252、TW 0.9048 对 0.1334、0.8571，TW 只来自一个合格帧），两条曲线在 PM$_{2.5}$ 上的 TW 都高于 5\% 地图。
 
-\paragraph{指标。} NMLE 为渲染剖面实际达到的合并误差 $\dtop$（式~(\ref{eq:dtop})）除以标量范围，NROE 为式~(\ref{eq:nroe}) 的排序误差。NPE 为一帧的最坏位移 $\max_i|x_i^t-q_i^t|$ 除以物理范围并对帧取平均。SNS 为支撑质心距离与锚点距离之间的尺度归一化应力~\cite{Smelser:2025:Scale,STMTM:2026}，TW 度量邻域~\cite{Venna:2001:NP}，取 $k=(1,3,5,3)$，只使用满足 $0<k<n_t/2$ 的帧（64/64、1/40、4/32 和 11/744），并在全部 744 个 PM$_{2.5}$ 帧上取 $k=1$。在四个基准输入上，表~\ref{tab:quantitative-final} 中 TMTM 和 ST-MTM 的 SNS 与 TW 引自 ST-MTM（时间模式，作者输入），不与本地值共同排名。其余所有基线值均在我们对已发表方法的实现上，以相同的树、标识和参考位置测得，PM$_{2.5}$ 上采用 ST-MTM 的 Storms 参数。表~\ref{tab:quantitative-final} 中的每张基线地图，若其锚点与参考位置在二者首次都有变化的帧上负相关，则对整个序列翻转一次；图~\ref{fig:plane} 和图~\ref{fig:volume-gallery} 采用与参考更一致的全局镜像。Hilbert 和 Morton 曲线保持固定的网格朝向~\cite{Franke:2021:1DP}。体数据表采用由离线位移规则选出的 $+x$ 轴和保存的调优配置（补充表~S4），而图~\ref{fig:volume-gallery} 和图~\ref{fig:budget-distribution} 采用下界组的默认配置。
+\emph{一个风暴。} 图~\ref{fig:storms_overview} 展示这些平均值对单个特征意味着什么。风暴从大西洋移向斯堪的纳维亚时，它的参考位置从轴的 0.08 升到 0.86。TMTM 按时间重叠对齐子树，ST-MTM 按相对距离放置它们，所以两者都把风暴保持在中部附近，它的条带既不传达位置也不传达运动方向。在精确的树下，AnchorMTM 把风暴画得离参考位置平均为轴长的 1.5\%，10\% 的预算把它降到 1.0\%。这些地图使用 Storms 场的逐小时档案；基线在相同的 744 个场和树上运行。
 
-\paragraph{模式。} Exact 即精确模式（$\varepsilon=0$）。Balanced 为预算模式，其正预算在时间顺序的前四分之一上，从 1--10\% 中按 $J=0.5\,\mathrm{NPE}_{norm}+0.5\,\mathrm{SNS}_{norm}$ 在满足预算的候选中选出，在与最小值相差 0.01 以内时偏向较小的预算，并在完整运行之前冻结：1、1、5 和 10\%（补充图~S4）。此前已观察过早期输出，因此这不是盲测。PM$_{2.5}$ 是后来加入的，采用固定的 $\varepsilon=5\%$，该规则并未选出它，因此按其预算而非作为 Balanced 报告。
+\emph{运动的读取。} 空间轴还应显示两个特征是在靠近还是在分离。在下界组含此类事件的四个平面序列上（Storms、Wildfires、OLR 和 Ring；56--124 个事件，事件指两个被追踪特征之间的距离在两帧内变化超过区域对角线的 2\%），精确模式的 AnchorMTM 把 5--35\% 的事件显示为方向错误或没有显示，TMTM 为 39--65\%，ST-MTM 为 21--41\%，且两个基线在任何序列上都没有错读更少的事件。由于我们放置中的运动项奖励这一行为，这一结果说明的是该轴支持运动的读取，而不是提供独立证据。
 
-\paragraph{实现。} 在 Apple M4 上，一次冷启动的 Balanced 运行耗时 0.5--63\,s，其中排序和放置占 0.15--3.3\,s；其余为预处理、树提取、匹配、栅格化和核验。744 帧 PM$_{2.5}$ 在 5\% 下的运行耗时 231\,s，其中排序和放置占 200\,s。补充表~S3 和 S4 列出全部设置，补充图~S8 给出 Ring 上引导—拓扑的联合扫描及源数据快照。
+\emph{体数据。} 在表~\ref{tab:volume-comparison} 的存储配置和 $+x$ 参考下，Exact 在零合并误差时把 NPE 在 Cylinder 上从 0.477 降到 0.177，在 Tangaroa 上从 0.387 降到 0.129，Balanced 在全部三项度量上都优于 TMTM；Tangaroa 的 33.33\% 预算和以几何为主的权重限制了归因。图~\ref{fig:volume-gallery} 在默认配置下展示这些数字背后的位置。TMTM 和 ST-MTM 把 Cylinder 的涡集中在轴的中部附近（平均最坏位移 47.7\% 和 51.6\%），而 Exact 已经再现了参考位置所呈现的脱落模式（9.2\%），5\% 的预算几乎去掉了其余部分（1.2\%）。Tangaroa 的冲突位于树的深处：Exact 把 30.6\%（TMTM）和 34.2\%（ST-MTM）降到 11.2\%，参考位置的模式只在 $\varepsilon=20\%$ 附近才出现（1.9\%）。
 
+\emph{预算得到遵守。} Exact 在每个输入上测得的合并误差都为零，Balanced 至多达到 0、0.982、4.421 和 9.985\%，均在其预算之内。所有运行都通过连续和栅格核验，没有锚点塌缩；Ring 在 26 个 Exact 帧和 21 个 Balanced 帧中需要经过核验的联合整数取整。在体数据的扫描中，全部 1,515 个渲染帧都按其叶子的合并矩阵重新核验，没有违规。核验覆盖极值，而非增广树的每个内部标签。
+
+\subsection{预算在哪里起作用}\label{sec:eval-budget}
 \begin{figure*}[t]
 \centering
 \includegraphics[width=\textwidth]{figures/budget_per_frame.pdf}
-\caption{完整序列上 AnchorMTM 的每帧最坏位移随合并预算 $\varepsilon$ 的变化（对数刻度）：两个平面输入采用表~\ref{tab:quantitative-final} 的配置，两组体数据采用默认配置。箱体：四分位数；须线：第 5 至第 95 百分位；圆点：须线以外的全部帧，按其数值绘制；菱形：均值，即表中的 NPE；深色：Exact；橙色：表~\ref{tab:quantitative-final} 的预算。底行给出实际合并误差为正的帧所占比例；没有任何帧超出其预算。在 Storms 上，预算缩短了上尾；在 PM$_{2.5}$ 和体数据中，几乎每一帧都用到预算，整个分布随之移动。Wildfires、Ring 和逐帧合并误差：补充图~S1--S3。}
+\caption{完整序列上 AnchorMTM 每帧最坏位移随合并预算 $\varepsilon$ 的变化（对数刻度）：两个平面输入使用表~\ref{tab:quantitative-final} 的配置，两组体数据使用默认配置。箱体：四分位数；须：第 5--95 百分位；点：须之外的所有帧；菱形：均值，即表中的 NPE；深色：Exact；橙色：表~\ref{tab:quantitative-final} 的预算。底行给出实际合并误差为正的帧所占比例；没有帧超出其预算。}
 \label{fig:budget-distribution}
 \end{figure*}
-\subsection{下界的紧性}\label{sec:bounds-eval}
-\emph{受控树。} 我们固定两对兄弟 $\{A,B\}$ 与 $\{C,D\}$，它们在根节点 $1$ 之下 $0.4$ 处合并，叶子数值为 $0$，参考位置在单位画布上为 $(0.2,0.5,0.5-d,0.8-d)$；当 $0<d<0.3$ 时，这正是图~\ref{fig:projection_conflict} 中的顺序 $A,C,B,D$。我们让有符号重叠 $d$ 从 $-0.12$ 变化到 $0.30$，并在 43 个重叠值和四种宽度下，将下界与全部 24 个叶序比较，每个叶序都由一个独立的极小极大线性规划放置。仅拓扑就恰好强迫 $\nu^*=\max(0,d)/2$。当宽度为 $0.06$、间隔为 $0.01$、$\rho=0.5$ 时，宽度下界、我们的搜索和穷举最优在 $\tau=\max(0,(d+0.04)/2)$ 处重合（图~\ref{fig:controlled}a）：$d=0.24$ 时点为 12\%，区间为 14\%。合并预算恰在定理~\ref{thm:chain} 允许交错之处消除冲突，对全部四种父节点间隙 $h$ 都在 $2\varepsilon=h$ 处（图~\ref{fig:controlled}b）。
-
-\emph{真实树。} 在精确模式下，选出叶序的区间代价 $\tau$ 在下界组 614 个平面帧中的 606 个上等于 $\mathcal{B}_w$，因此在这些帧上，没有任何拓扑精确的叶序有更小的最坏位移；在 $\varepsilon=10\%$ 时，有界拓扑下界在 596 帧上达到。在 Storms、OLR、逐日 PM$_{2.5}$ 和 Ring 上，每帧至多有八片叶子，穷举所有叶序表明，AnchorMTM 的叶序在每个测试预算下都达到最小排序误差，仅 Storms 的一帧在 $\varepsilon=31.6\%$ 时例外（1.9 个百分点）。体数据更难：宽度下界在 102 个 Cylinder 帧中的 81 个和 201 个 Tangaroa 帧中的 27 个上达到，其余的差距可能在于下界，也可能在于启发式搜索。
-
-\subsection{已有地图中强迫的误差与选择的误差}\label{sec:eval-forced}
-定理~\ref{thm:order} 不需要布局，因此能度量每一张拓扑精确的地图，而中点排序在同一棵树上达到 $\nu^*$。在下界组的七个序列上，TMTM 排序误差的 53--95\% 和 ST-MTM 排序误差的 31--95\% 位于 $\nu^*$ 之上，因而由它们的叶序规则所选择（补充表~S2）；只在树内优化相邻关系的 OLO 情况类似（32--95\%）。图~\ref{fig:plane} 把每张地图置于位置—拓扑平面上。保持树的地图位于零合并误差处，远高于下界。投影只有在合并误差为 5.6--59\% 时才达到零排序误差，空间填充曲线同样破坏了树（8--40\%）。AnchorMTM 沿二者之间的边界分布，这条边界显示了预算释放了什么。在冲突子树于略低于其父节点处合并的地方，1\% 使 Wildfires 上被强迫的排序误差减半（5.80\% 降至 2.77\%），并在 Cylinder 上几乎将其消除（12.24\% 降至 0.23\%），而 Tangaroa 的深层冲突使其在 $\varepsilon=5\%$ 之前一直高于 7\%。被强迫的代价还取决于方向，并能在绘制任何地图之前算出：在 400 个方向上，它在 Tangaroa 上为 4.70--10.14\%，在 Cylinder 上为 5.49--28.15\%（补充图~S6）。
-
-\subsection{相同拓扑保证下的位置}\label{sec:eval-placement}
-\input{tables_zh/table_volume.tex}
-\emph{平面输入。} 在同为零的合并误差下，Exact 在表~\ref{tab:quantitative-final} 的全部五个输入上将 NPE 相对 TMTM 和 ST-MTM 降低 73--96\%（PM$_{2.5}$ 上为 73.5\% 和 75.1\%），并且也低于破坏树的 Hilbert 和 Morton 曲线。Balanced 的预算至多为 10\%，相对 Exact 进一步将 NPE 降低：Ring 上 16.2\%，Wildfires 上 11.6\%，Storms 上 64.9\%；Gaussian 不变，固定的 5\% 预算在 PM$_{2.5}$ 上将其降低 66.3\%。这些结果支持的是与选定参考的对齐，而非一般意义上的质量提升。ST-MTM 在全部四个基准输入上报告了更高的 TW，而其已发表的 SNS 与 TW 来自作者的输入和覆盖范围，我们不将其与本地值共同排名。在每个分数都为本地测量的 PM$_{2.5}$ 上，ST-MTM 的 SNS 也低于、TW 也高于 Exact（0.1897 和 0.8224，对比 0.1964 和 0.7884）。与曲线相比，Balanced 在 Gaussian、Wildfires 和 Storms 上改善了 SNS 和 TW，但 Hilbert 在 Ring 上更好（SNS 0.1252、TW 0.9048，对比 0.1334 和 0.8571，TW 来自一个合格帧），Balanced 使 Wildfires 上的 SNS 由 0.0426 升至 0.0447，并且两条曲线在 PM$_{2.5}$ 上的 TW 都高于 5\% 地图。
-
-\emph{一个风暴。} 图~\ref{fig:storms_overview} 显示了这些平均值对单个特征意味着什么。随着风暴从大西洋移向斯堪的纳维亚，它的参考位置从轴的 0.08 升至 0.86。TMTM 按时间重叠对齐子树，ST-MTM 按相对距离放置子树，因此二者都把风暴的条带保持在轴的中部附近，条带既不传达风暴的位置，也不传达其运动方向。在精确拓扑下，AnchorMTM 绘制的风暴平均距其参考位置为轴长的 1.5\%，10\% 的预算将其降至 1.0\%。这些地图采用与表~\ref{tab:quantitative-final} 分开准备的逐小时 Storms 数据。基线是在相同的 744 个场和增广树上运行的本地实现；真正的多路鞍点由同层级分隔符（TMTM）或同层级二叉细化（ST-MTM，其叶子合并矩阵经过核验）处理。
-
-\emph{运动的读取。} 空间轴还应显示两个特征是在相互靠近还是在分离。在下界组中含此类事件的四个平面序列上（Storms、Wildfires、OLR 和 Ring；56--124 个事件，事件指两个被追踪特征之间的距离在两帧内变化超过定义域对角线的 2\%），锚定的拓扑精确布局误读 5--32\% 的事件，TMTM 误读 39--65\%，ST-MTM 误读 21--41\%，且两个基线在任何序列上都没有误读更少的事件。该任务涉及相对距离，ST-MTM 直接拟合相对距离，它也与我们放置中的运动项相关，因此它支持运动的读取，而非提供独立证据。
-
-\emph{体数据。} 采用表~\ref{tab:volume-comparison} 的调优配置和 $+x$ 参考，在零合并误差下，Exact 将 Cylinder 的 NPE 从 0.477 降至 0.177，将 Tangaroa 的从 0.387 降至 0.129，Balanced 在全部三项指标上都优于 TMTM；Tangaroa 的 33.33\% 预算和以几何为主的权重限制了归因。图~\ref{fig:volume-gallery} 在默认配置下显示了这些数字背后的位置。TMTM 和 ST-MTM 把 Cylinder 的涡旋聚集在轴的中部附近（平均最坏位移 47.7\% 和 51.6\%），而 Exact 已经再现了参考位置的涡脱落模式（9.2\%），5\% 的预算几乎消除了其余部分（1.2\%）。Tangaroa 的冲突位于深层：Exact 将 30.6\%（TMTM）和 34.2\%（ST-MTM）降至 11.2\%，参考位置的模式只在 $\varepsilon=20\%$ 附近出现（1.9\%）。
-
-\emph{预算。} Exact 在每个输入上的实测合并误差均为零。Balanced 至多达到 0、0.982、4.421 和 9.985\%，均在其预算之内，所有运行都通过了连续和栅格检查，无锚点重合；Ring 在 26 个 Exact 帧和 21 个 Balanced 帧上需要经过核验的联合整数取整。在体数据的扫描中，全部 1,515 个渲染帧都对照固定叶子的合并矩阵重新核验，未发现违反。这些检查覆盖对角线上的极值，而非每个增广的内部标签。
-
-\subsection{合并预算的逐帧效果}\label{sec:eval-budget}
-图~\ref{fig:budget-distribution} 逐帧展示预算。它的效果取决于有多少帧含有它能释放的冲突。在 Storms 上，$\varepsilon=10\%$ 时有 35\% 的帧使用容许量，集中在少数几段连续帧中（补充图~S2），因此预算缩短了上尾：每帧位移的中位数只从 1.10\% 变为 0.84\%，而第 90 百分位从 10.7\% 降至 2.5\%，最坏帧从 44.8\% 降至 11.5\%。在 Wildfires 上，每个预算下都是 32 帧中相同的 7 帧使用容许量；在 Ring 上，中位数从 3.9\% 降至 1.0\%，而最后一帧在预算达到 63\% 之前一直保持在 10.0\%（补充图~S1）。在逐小时 PM$_{2.5}$ 上，97\% 的帧使用 5\% 的预算，整个分布随之移动：中位数从 14.5\% 降至 2.1\%。体数据亦是如此。在 2\% 的预算下，201 个 Tangaroa 帧中的 200 个和 102 个 Cylinder 帧中的 98 个使用了预算；Cylinder 的中位数在 2\% 时就从 6.8\% 降至 1.0\%，Tangaroa 的中位数在 20\% 时从 11.3\% 降至 1.2\%。预算限制的是合并误差而非位移，因此正预算不一定改变地图，如 Gaussian。
-
-\subsection{案例研究：一次空气污染过程}\label{sec:reading}
-\begin{figure}[t]
-\centering
-\includegraphics[width=\columnwidth]{figures/pm25_hourly.pdf}
-\caption{逐小时 PM$_{2.5}$ 序列中的一次空气污染过程，2017 年 1 月 22--27 日（北京时间），由 AnchorMTM 以 $\varepsilon=5\%$ 绘制。上：133 个逐小时列；虚线 a--e 标出下方快照的时刻。下：华北地区的源数据场。高于 400\,$\mu$g/m$^3$ 的浓度饱和显示。}
-\label{fig:pm25-hourly}
-\end{figure}
-图~\ref{fig:pm25-hourly} 显示分析人员如何仅凭地图读出一次污染过程，并在源数据场中加以确认。1 月 22 日空气清洁（a）。1 月 23 日，橙色条带出现在地图的上半部分，源数据场显示出几个分离的污染极大值（b）。到 1 月 25 日，污染区域覆盖了该区域的大部分，条带随之变宽（c）。污染过程在 1 月 26 日达到峰值：最高浓度位于一条狭窄的带中（d），最深色的条带在地图上下移，即最强的极大值向较低的参考位置移动。到 1 月 27 日，空气已大体转为清洁（e）。由于轴是锚定的，保持高度不变的条带是一个沿参考方向位置不变而浓度变化的极大值，而漂移的条带是一个沿该方向移动的极大值；在轴没有空间含义的地图上，二者无法区分。合并误差在全部 744 帧上都保持在预算之内（至多 4.998\%）。
+预算限制的是合并误差而非位移，所以它对地图的作用取决于有多少帧含有它能释放的冲突（图~\ref{fig:budget-distribution}）。在 Storms 上，$\varepsilon=10\%$ 时 35\% 的帧用到允许量，集中在几段连续的帧中。因此预算缩短了上尾：每帧位移的中位数只从 1.10\% 变到 0.84\%，而第 90 百分位从 10.7\% 降到 2.5\%，最坏帧从 44.8\% 降到 11.5\%。在逐小时 PM$_{2.5}$ 上，97\% 的帧用到 5\% 的预算，整个分布下移：中位数从 14.5\% 降到 2.1\%。体数据表现相同。在 $\varepsilon=2\%$ 时，201 个 Tangaroa 帧中的 200 个和 102 个 Cylinder 帧中的 98 个用到预算；Cylinder 的中位数在 2\% 时就从 6.8\% 降到 1.0\%，Tangaroa 的中位数在 20\% 时从 11.3\% 降到 1.2\%。在 Wildfires 上，同样的 32 帧中的 7 帧在每个预算下用到允许量；在 Ring 上，中位数从 3.9\% 降到 1.0\%，而最后一帧在预算达到 63\% 之前一直停在 10.0\%。在 Gaussian 上，预算不改变任何一帧。补充材料给出所有序列的这些分布，以及一个从地图读出的逐小时 PM$_{2.5}$ 污染过程。
 
 \section{讨论与局限}
-\paragraph{下界的使用。} 下界把任何地图的误差分为由树强迫的部分和由其布局选择的部分。高于 $\nu^*$ 的排序误差总能在不改变树的情况下消除，因为中点排序达到 $\nu^*$。宽度感知下界和有界拓扑下界不一定能达到，因此高出它们的部分可能部分在于下界本身。由于下界只需要树、投影位置和宽度，它们可以在绘制地图之前计算，用于选择方向或决定某个预算是否值得花费，并且这一类方法中的任何新布局都可以以它们来衡量。
+\paragraph{下界的用途。} 下界把任何合并树地图的位置误差分成树迫使的部分和布局选择的部分。高于 $\nu^*$ 的排序误差总能在不改变树的情况下去掉，因为中点排序达到 $\nu^*$。宽度感知下界和有界拓扑下界不一定能达到，因此超出它们的部分可能有一部分在下界本身。由于下界只需要树、参考位置和宽度，分析人员可以在画图之前算出它们，用来比较候选方向或判断一份预算是否值得花，并且任何这类新布局都可以拿来与它们比较。
 
-\paragraph{位置与邻域。} 固定的空间参考和以几何为导向的嵌入回答的是不同的问题。AnchorMTM 支持沿选定方向读取位置和运动；ST-MTM 报告的更高 TW 显示了保持局部邻域的价值，两种性质互不保证。我们的结果支持这一针对特定任务的结论，而非在空间或时间保真上的普遍优越。一条轴也只承载一个坐标：读取二维位置需要沿另一个方向的第二张地图，以及其自身的下界。
+\paragraph{位置与邻域。} 固定的空间参考和面向几何的嵌入回答不同的问题。AnchorMTM 支持沿所选方向读取位置和运动，而 ST-MTM 更高的 TW 说明了保持局部邻域的价值；两种性质互不保证。我们的结果支持这一面向任务的论断，而不是空间或时间保真度上的全面优势。一条轴也只承载一个坐标。要读取二维位置，需要沿另一方向再画一张地图，并有其自身的下界。
 
-\paragraph{局限。} 作者处理后的场及其小样本 TW 协议无法完全获得，因此已发表的 SNS 与 TW 不能支持输入完全相同的显著性检验，且两组数据的预处理不同。参考方向和轨迹由整个序列离线计算，支撑重叠是对应关系的代理，而非物理身份。叶序搜索是启发式的，连续的证书无法消除栅格取整，因此我们核验渲染的合并矩阵，但不核验每个增广的内部标签。运动的读取假定身份已知。我们没有测量感知可读性、人对运动判断的准确性或在未见数据上的泛化；这些需要用户研究。
+\paragraph{局限。} 作者处理的场及其小样本 TW 协议无法完全获得，因此已发表的 SNS 和 TW 不能支持相同输入的显著性检验，两组数据的预处理也不同。默认参考和轨迹由整个序列离线计算，因此在线使用需要事先选定方向；支撑重叠只是对应关系的代理，而非物理身份。叶序搜索是启发式的，连续的证书也不能消除栅格取整；因此我们核验渲染出的合并矩阵，但并非增广树的每个内部标签。我们尚未测量感知上的可读性或人对运动判断的准确性；这些需要用户研究。
 
 \section{结论}
-将合并树地图的轴锚定到空间，有一份无法避免的位置代价。通过把合并树地图写成一个布局问题，并以 TMTM 和 ST-MTM 为其拓扑精确的实例，我们为每个实例给出了这份代价的下界。在 614 个平面基准帧中有 606 个达到下界，TMTM 和 ST-MTM 的排序误差有 31--95\% 并非由树强迫。AnchorMTM 只比这份代价多付出少许：在同为零的合并误差下，它在四个 ST-MTM 基准输入和逐小时 PM$_{2.5}$ 上将平均最坏位移降低 73--96\%；一个在每个渲染帧上都经过核验的声明合并预算，在冲突较浅之处换来更多的位置。ST-MTM 已发表的邻域保持指标仍然更高，这标示了读取位置与读取邻域之间的权衡。
+给合并树地图一条空间轴有一份无法避免的位置代价，而这份代价可以在画图之前由数据算出。AnchorMTM 只比这份代价多付出少许。在精确保持树的条件下，它的叶序在 614 个平面帧中的 606 个上达到下界，并在五个平面输入上把 TMTM 和 ST-MTM 的平均最坏位移降低 73--96\%；它们的排序误差大部分并非由树迫使。一个在每个渲染帧上都经过核验的合并误差预算，在冲突较浅之处换来更多的位置，而下界事先指出它会在哪里起作用。
 \FloatBarrier
 \begingroup
 \interlinepenalty=10000

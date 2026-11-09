@@ -11,3 +11,9 @@ Changes against her version:
 - Fig. 8 (Storms budget maps): "Improvement 1/2" boxes replaced by a tikz overlay ("Relative geometry + pairwise distances", "Fixed spatial axis + merge budget"); caption rewritten. The edited PPT is `figure_sources/fig10_storms_v30.pptx`.
 - Pending data from the collaborator: plane figure on her seven sequences (replaces the budget-response figure), anchored Cylinder phase figure, PM2.5 baselines, raw Storms columns.
 Build: `tectonic -X compile main.tex`, `tectonic -X compile supplementary.tex`.
+
+## v32 (2026-11-09)
+Decisions and details: `notes/2026-11-09-v32-revisions.md`. Title on one line; Theorems 1-3 and Proposition 1 are now Propositions 1-4 with full proofs in supplement S1; abstract (no number list), introduction (one claim softened) and conclusion rewritten; Fig. 6 is `figures/forced_plane.pdf` (`fig6_forced_plane.py`); Fig. 8 relabelled (`fig7_budget_her.py`, summary data in `anchor_full/figdata/budget_her20261109/`); supplement rewritten without repeating the paper (S1 proofs, S2 construction, S3 protocol, S4 verification, S5 results).
+
+## v33 (2026-11-09)
+Two-line title (method and scope); supplement rewritten by paper section (S1-S4, 4 pages) with no repeated text; submission package `paper/1037_v33_submission.zip`. See the v33 part of `notes/2026-11-09-v32-revisions.md`.

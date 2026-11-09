@@ -1,0 +1,22 @@
+{
+ "dataset": "Gaussian",
+ "frames": 64,
+ "nu_strict": 0.0,
+ "anchor_nroe": 0.0,
+ "TMTM": 0.26979673229925816,
+ "ST-MTM": 0.12808857252151531,
+ "unit": "percent of the axis (mean order error NROE over frames)",
+ "frames_with_order_error": {
+  "TMTM": 12,
+  "ST-MTM": 7
+ },
+ "check": {
+  "TMTM_NPE": 0.11177217182615834,
+  "ST_MTM_NPE": 0.11539618244834783,
+  "table1": {
+   "TMTM": 0.1118,
+   "ST_MTM": 0.1154
+  }
+ },
+ "source": "Recomputed 2026-11-09 by figure_drafts/gaussian_baselines_recompute.py: the collaborator's pipeline (experiments_ratio_p_20261104/source/run.py, load + baseline_npe, unmodified) on her Gaussian preparation (preparation.zip from WeChat, sha256 272dd449a46a89ffb72b1f69d940ac65873197e7104cab681d910b846b4cc099); the recomputed NPE equals Table 1 for both baselines."
+}

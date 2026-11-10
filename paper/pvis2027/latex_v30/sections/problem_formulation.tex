@@ -13,7 +13,7 @@ The default direction maximizes squared matched-extremum motion:
 \begin{equation}\label{eq:autodirection}
 a^*\in\arg\max_{\|a\|=1}a^\top\Bigl(\sum_{t,i}\Delta p_i^t(\Delta p_i^t)^\top\Bigr)a,
 \end{equation}
-where $\Delta p_i^t=p_i^t-p_{\mu_t(i)}^{t-1}$ over valid links. Its sign makes total projected motion nonnegative; the longest domain axis handles zero motion energy. An analyst may supply a physical direction instead. For nearly zero signed motion, the largest-magnitude direction component is made positive; repeated leading eigenvalues can be resolved using a chosen physical axis. This separates reference estimation from the layout search: a budget changes the admissible map, while the coordinate being approximated stays fixed. Projected domain corners define one origin $o$ and extent $L$, giving
+where $\Delta p_i^t=p_i^t-p_{\mu_t(i)}^{t-1}$ over valid links. Its sign makes total projected motion nonnegative; the longest domain axis handles zero motion energy. An analyst may supply a physical direction instead. This separates reference estimation from the layout search: a budget changes the admissible map, while the coordinate being approximated stays fixed. Projected domain corners define one origin $o$ and extent $L$, giving
 \begin{equation}\label{eq:reference}
 q_i^t=\langle a^*,p_i^t\rangle-o\in[0,L].
 \end{equation}
@@ -24,10 +24,11 @@ Each leaf occupies an interval of width $W_i=s\,m_i$ and center $z_i$, where $m_
 \begin{equation}\label{eq:nroe}
 \begin{aligned}
 \nroe(\pi)&=\frac{\max_{j\le k}[q_{\pi(j)}-q_{\pi(k)}]^+}{2L},\\
-\tau(\pi)&=\min_{(x,z)\in\mathcal{L}(\pi;W)}\|x-q\|_\infty .
+\tau(\pi)&=\min_{(x,z)\in\mathcal{L}(\pi;W)}\|x-q\|_\infty ,\\
+\mathrm{NPE}&=\frac1T\sum_{t}\frac{\|x^t-q^t\|_\infty}{L}.
 \end{aligned}
 \end{equation}
-The normalized reference-order error NROE is the smallest worst displacement, relative to the axis length, of point anchors kept in order $\pi$; we call it the \emph{order error} of $\pi$. The fixed-order cost $\tau$ adds the intervals; it is the optimum of a minimax linear program and has a closed form (Supplementary Section~S1). The merge error measures how far the displayed hierarchy departs from the tree:
+The normalized reference-order error NROE is the smallest worst displacement, relative to the axis length, of point anchors kept in order $\pi$; we call it the \emph{order error} of $\pi$. The fixed-order cost $\tau$ adds the intervals; it is the optimum of a minimax linear program and has a closed form (Supplementary Section~S1). The normalized position error NPE, which we propose here, is the worst displacement a drawn map actually has, relative to the axis length and averaged over frames. It takes the worst displacement of a frame because that is what the bounds of Section~\ref{sec:bounds} constrain, so the two can be compared directly. The merge error measures how far the displayed hierarchy departs from the tree:
 \begin{equation}\label{eq:dtop}
 \dtop(\psi,T)=\max_{i,j}|V_{ij}^{\psi}-V_{ij}|.
 \end{equation}
@@ -50,6 +51,6 @@ E_M&=\tfrac{1}{|M_t|}\textstyle\sum_{i\in M_t}(x_i-\hat x_i)^2, & E_C&=\tfrac{1}
 with the temporal target $\hat x_i$ of Section~\ref{sec:method}. The allowance $\eta$, in scalar units, makes the tradeoff explicit: $\eta=0$ demands the exact tree, and a larger $\eta$ admits orders that follow the references more closely. Section~\ref{sec:method} sets $\eta$ from a merge budget $\varepsilon$ given as a fraction of the scalar range. TMTM packs tree-compatible blocks and aligns them by overlap, so its layout follows from the leaf order alone; ST-MTM fits relative geometry with temporal constraints, which corresponds to $\lambda_R=0$ and a stationary temporal target. Both keep the tree ($\eta=0$) and have no reference term, so nothing ties their axes to location. AnchorMTM adds $E_R$ and a declared allowance. Eq.~\ref{eq:family} states what each method optimizes; it does not rank them. A setting that gives position the largest weight is not expected to match, on relative distances, a method that optimizes only those.
 
 \subsection{Conflict Between Topology and Spatial Position}
-A projection can follow every $q_i$, but a profile that shows the tree exactly must keep each subtree in one block. In the exact panel of Fig.~\ref{fig:framework}, the tree joins $A$ with $D$ and $C$ with $B$, while the references occur in the order $A,C,B,D$: block $\{C,B\}$ lies inside the span of block $\{A,D\}$, so some extrema must leave their references. Sibling blocks can also interleave, as when the references run $A,C,B,D$ and the tree joins $A$ with $B$ and $C$ with $D$. Keeping the blocks displaces anchors; allowing some merge error may admit an order closer to the references. How far the anchors must move depends only on the tree, the references, the widths and the allowance, not on the algorithm that draws the map.
+A projection can follow every $q_i$, but a profile that shows the tree exactly must keep each subtree in one block. In the exact panel of Fig.~\ref{fig:framework}, the tree joins $A$ with $B$ and $C$ with $D$, while the references occur in the order $A,C,D,B$: block $\{C,D\}$ lies inside the span of block $\{A,B\}$, so some extrema must leave their references. Keeping the blocks displaces anchors; allowing some merge error may admit an order closer to the references. How far the anchors must move depends only on the tree, the references, the widths and the allowance, not on the algorithm that draws the map.
 
 We address three questions: how much displacement exact topology forces (RQ1), how finite feature widths and interval constraints increase that cost (RQ2), and which conflicts can be released by bounded merge-level error (RQ3). The next section answers them in this order; the construction then uses the same quantities to select and place a map.

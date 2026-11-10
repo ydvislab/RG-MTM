@@ -26,8 +26,8 @@
 - 图 4 的斜线区域用的是 PowerPoint 的图案填充，可在“设置形状格式”里修改。
 
 ## 版本说明
-- `Fig1`、`Fig2`、`Fig3`、`Fig7`、`FigS2`、`FigS3`、`FigS5` 是合作者 v34 zip 里的最新版，尚未替换进 `paper/pvis2027/latex_v30/figures/`。
-- `Fig4`、`Fig5`、`Fig6` 已按 v35（2026-11-09，Tangaroa 改为沿流向 x 轴）重新生成，与 `paper/1037_v35.pdf` 一致。其余图在 v35 没有变化。
+- `Fig1`、`Fig2`、`Fig3`、`Fig7`、`FigS2`、`FigS3`、`FigS5` 是合作者 v34 zip 里的最新版，v36 已替换进 `paper/pvis2027/latex_v30/figures/`。
+- `Fig4`、`Fig5`、`Fig6` 已按 v36 重新生成，与 `paper/1037_v36.pdf` 一致：Tangaroa 沿流向 x 轴，不含 Gaussian；图 4 加了 NPE 一行，图 5 用柱状图报告误差。
 
 重新生成：
 ```bash

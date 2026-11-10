@@ -23,7 +23,7 @@ PKG = Path(os.environ.get('ANCHOR_PKG01', '/Users/yudong/Downloads/老师所需�
 HERE = Path(__file__).resolve().parent
 SUMMARY = HERE.parent / 'figdata/budget_her20261109/summary.json'
 OUT = HERE.parents[1] / 'pvis2027/latex_v30/figures'
-SEQ = [('Gaussian', 'Gaussian (2D)'), ('Ring', 'Ring (2D)'), ('Wildfires', 'Wildfires (2D)'), ('Storms', 'Storms (2D)'), ('PM2.5', r'PM$_{2.5}$ (2D)'), ('Tangaroa', 'Tangaroa (3D)'), ('Cylinder', 'Cylinder (3D)')]
+SEQ = [('Ring', 'Ring (2D)'), ('Wildfires', 'Wildfires (2D)'), ('Storms', 'Storms (2D)'), ('PM2.5', r'PM$_{2.5}$ (2D)'), ('Tangaroa', 'Tangaroa (3D)'), ('Cylinder', 'Cylinder (3D)')]
 BLUE = '#0B5CAD'; LIGHT = '#9EC3E6'; GREY = '#555555'; ORANGE = '#C25A00'
 
 
@@ -64,7 +64,7 @@ def main():
     v.use_times(); S = summary()
     v35 = HERE.parent / 'figdata/volumes_v35/tangaroa_x_budget.json'   # v35: Tangaroa along the streamwise x axis (no 1% run)
     if v35.exists(): S['Tangaroa'] = json.loads(v35.read_text())
-    fig = plt.figure(figsize=(7.05, 2.55)); g = fig.add_gridspec(2, 7, height_ratios=[3.2, 1], hspace=.2, wspace=.3,
+    fig = plt.figure(figsize=(7.05, 2.4)); g = fig.add_gridspec(2, 6, height_ratios=[3.2, 1], hspace=.2, wspace=.3,
                                                                 left=.085, right=.995, top=.79, bottom=.2)
     for k, (n, title) in enumerate(SEQ):
         s = S[n]; E = s['epsilon']; x = np.arange(len(E))

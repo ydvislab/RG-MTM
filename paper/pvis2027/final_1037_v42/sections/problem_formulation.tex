@@ -1,0 +1,56 @@
+\section{Problem Formulation}\label{sec:formulation}\label{sec:background}
+\subsection{Merge Trees, Profiles, and Feature Identity}
+For a sampled field $f_t$, the merge tree $T_t$ records sublevel components created at minima and joined at saddles; negating the field handles maxima~\cite{Tierny:2018:TTK}. Extraction and persistence simplification precede layout. A leaf $i$ has extremum location $p_i^t$ and support $S_i^t$, comprising the samples on its leaf arc. Augmented internal arcs retain samples for filling the profile (Supplementary Fig.~S2). Write $h_t(v)$ for a node's scalar level and $\mathcal{D}_t(v)$ for its descendant leaves. The fixed-label merge matrix is
+\begin{equation}\label{eq:merge}
+V_{ij}^t=h_t(\lca(i,j)),\quad i\ne j;\qquad V_{ii}^t=f_t(p_i^t).
+\end{equation}
+Equal-level merges form one multifurcation. A one-dimensional profile $\psi_t$ places the extrema in leaf order $\pi_t$; the largest profile value between anchors $i,j$ gives their displayed merge level $V_{ij}^{\psi_t}$. We call a profile \emph{exact} if every displayed merge level equals that of the tree; this requires the leaves of every subtree to form one contiguous block.
+
+On a fixed grid, one-to-one Hungarian matching maximizes $|S_i^{t-1}\cap S_j^t|$ and discards zero-overlap pairs~\cite{STMTM:2026}; a matched leaf inherits its track identity, and $\mu_t(i)$ denotes its predecessor. These links supply the temporal targets and the motion samples below, and the same matching is reused for every budget (Supplementary Fig.~S3).
+
+\subsection{Fixed Spatial Reference}\label{sec:reference-model}
+The default direction maximizes squared matched-extremum motion:
+\begin{equation}\label{eq:autodirection}
+a^*\in\arg\max_{\|a\|=1}a^\top\Bigl(\sum_{t,i}\Delta p_i^t(\Delta p_i^t)^\top\Bigr)a,
+\end{equation}
+where $\Delta p_i^t=p_i^t-p_{\mu_t(i)}^{t-1}$ over valid links. Its sign makes total projected motion nonnegative; the longest domain axis handles zero motion energy. An analyst may supply a physical direction instead. This separates reference estimation from the layout search: a budget changes the admissible map, while the coordinate being approximated stays fixed. Projected domain corners define one origin $o$ and extent $L$, giving
+\begin{equation}\label{eq:reference}
+q_i^t=\langle a^*,p_i^t\rangle-o\in[0,L].
+\end{equation}
+Direction, origin and extent remain fixed across frames and budgets. Relative geometry uses support-centroid distances $d_{ij}^t$; the targets $q_i^t$ use extremum locations. Thus support growth can change relative-distance terms without moving a feature's spatial target.
+
+\subsection{A Unified Layout Formulation}\label{sec:common}
+Each leaf occupies an interval of width $W_i=s\,m_i$ and center $z_i$, where $m_i$ is its support measure and $s$ is fixed. The layout set $\mathcal{L}(\pi;W)$ places these intervals in order $\pi$ inside $[0,L]$, with gap at least $g$ and anchor slack $|x_i-z_i|\le\rho W_i/2$. Two order costs distinguish point ordering from packing, and NPE measures the drawn map:
+\begin{equation}\label{eq:nroe}
+\begin{aligned}
+\nroe(\pi)&=\frac{\max_{j\le k}[q_{\pi(j)}-q_{\pi(k)}]^+}{2L},\\
+\tau(\pi)&=\min_{(x,z)\in\mathcal{L}(\pi;W)}\|x-q\|_\infty ,\\
+\mathrm{NPE}&=\frac1T\sum_{t}\frac{\|x^t-q^t\|_\infty}{L}.
+\end{aligned}
+\end{equation}
+The normalized reference-order error NROE is the smallest worst displacement, relative to the axis length, of point anchors kept in order $\pi$; we call it the \emph{order error} of $\pi$. The fixed-order cost $\tau$ adds the intervals; it is the optimum of a minimax linear program and has a closed form (Supplementary Section~S1). The normalized position error NPE, which we propose here, is the worst displacement a drawn map actually has, relative to the axis length and averaged over frames. It takes the worst displacement of a frame because that is what the bounds of Section~\ref{sec:bounds} constrain, so the two can be compared directly. The merge error measures how far the displayed hierarchy departs from the tree:
+\begin{equation}\label{eq:dtop}
+\dtop(\psi,T)=\max_{i,j}|V_{ij}^{\psi}-V_{ij}|.
+\end{equation}
+The diagonal includes extremum values. Under complete fixed labelling this cophenetic error equals the labelled interleaving distance and bounds the unlabelled interleaving and bottleneck distances~\cite{Munch:2019:LINF,Gasparovic:2024:IID,Morozov:2013:IDMT}.
+
+These variables separate layout priorities in the common model
+\begin{equation}\label{eq:family}
+\begin{aligned}
+\min_{\pi\in\Pi,\,(x,z)\in\mathcal{L}(\pi;W)}\;&\lambda_RE_R+\lambda_GE_G+\lambda_ME_M+\lambda_CE_C\\
+\mathrm{s.t.}\;&\dtop\le\eta.
+\end{aligned}
+\end{equation}
+Each term is a mean squared residual over the $n_t$ leaves, the ordered pairs $P_t$ or the matched leaves $M_t$ of a frame:
+\begin{equation}\label{eq:terms}
+\begin{aligned}
+E_R&=\tfrac{1}{n_t}\textstyle\sum_i(x_i-q_i)^2, & E_G&=\tfrac{1}{|P_t|}\textstyle\sum_{(i,j)\in P_t}(x_j-x_i-d_{ij})^2,\\
+E_M&=\tfrac{1}{|M_t|}\textstyle\sum_{i\in M_t}(x_i-\hat x_i)^2, & E_C&=\tfrac{1}{n_t}\textstyle\sum_i(x_i-z_i)^2,
+\end{aligned}
+\end{equation}
+with the temporal target $\hat x_i$ of Section~\ref{sec:method}. The allowance $\eta$, in scalar units, makes the tradeoff explicit: $\eta=0$ demands the exact tree, and a larger $\eta$ admits orders that follow the references more closely. Section~\ref{sec:method} sets $\eta$ from a merge budget $\varepsilon$ given as a fraction of the scalar range. TMTM packs tree-compatible blocks and aligns them by overlap, so its layout follows from the leaf order alone; ST-MTM fits relative geometry with temporal constraints, which corresponds to $\lambda_R=0$ and a stationary temporal target. Both keep the tree ($\eta=0$) and have no reference term, so nothing ties their axes to location. AnchorMTM adds $E_R$ and a declared allowance. It does not solve Eq.~\ref{eq:family} jointly: it first chooses the leaf order and then solves a capped quadratic program for the anchors (Section~\ref{sec:method}). Eq.~\ref{eq:family} states what each method optimizes; it does not rank them. A setting that gives position the largest weight is not expected to match, on relative distances, a method that optimizes only those.
+
+\subsection{Conflict Between Topology and Spatial Position}
+A projection can follow every $q_i$, but a profile that shows the tree exactly must keep each subtree in one block. In the exact panel of Fig.~\ref{fig:framework}, the tree joins $A$ with $B$ and $C$ with $D$, while the references occur in the order $A,C,D,B$: block $\{C,D\}$ lies inside the span of block $\{A,B\}$, so some extrema must leave their references. Keeping the blocks displaces anchors; allowing some merge error may admit an order closer to the references. How far the anchors must move depends only on the tree, the references, the widths and the allowance, not on the algorithm that draws the map.
+
+We address three questions: how much displacement exact topology forces (RQ1), how finite feature widths and interval constraints increase that cost (RQ2), and which conflicts can be released by bounded merge-level error (RQ3). The next section answers them in this order; the construction then uses the same quantities to select and place a map.

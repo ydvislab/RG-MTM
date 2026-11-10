@@ -1,0 +1,240 @@
+% Paper 1037: supplementary material (final submission, v42).
+% Build: pdflatex supplementary; bibtex supplementary; pdflatex supplementary x2   (or: tectonic -X compile supplementary.tex)
+\documentclass[preprint]{vgtc}
+\usepackage[T1]{fontenc}
+\usepackage{mathptmx}
+\usepackage{cite}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{placeins,float}
+\usepackage{booktabs,multirow,colortbl}
+\makeatletter
+\setlength{\@dblfptop}{0pt}
+\setlength{\@dblfpsep}{12pt}
+\setlength{\@dblfpbot}{0pt plus 1fil}
+\makeatother
+\setcounter{secnumdepth}{3}
+\newtheorem{lemma}{Lemma}
+\renewcommand{\qedsymbol}{}% no end-of-proof square: every proof is introduced by its own heading
+\newcommand{\dtop}{d_{\mathrm{top}}}
+\newcommand{\lca}{\operatorname{lca}}
+\newcommand{\nroe}{\mathrm{NROE}}
+\title{AnchorMTM: Spatially Anchored Merge Tree Maps with\\Topology--Position Tradeoffs}
+\author{%
+Lele~Wang$^{1,2}$\thanks{%
+Affiliations:
+$^{1}$ Advanced Interactive Technology and Application Laboratory, Computer Network Information Center, Chinese Academy of Sciences, Beijing, China;
+$^{2}$ University of Chinese Academy of Sciences, Beijing, China;
+$^{3}$ Hangzhou Institute for Advanced Study, UCAS, Hangzhou, China.
+E-mails: lelewang@cnic.cn; dongyu@cnic.cn; yxmeng@cnic.cn;
+liguan@sccas.cn; wangzhe@sccas.cn; sgh@sccas.cn;
+liujun@sccas.cn.
+Lele Wang and Yu Dong contributed equally to this work.
+Jun Liu is the corresponding author.}%
+\quad
+Yu~Dong$^{1,*}$%
+\quad
+Yuxiang~Meng$^{1,2}$%
+\quad
+Guan~Li$^{1,2}$%
+\quad
+Zhe~Wang$^{1,2}$%
+\quad
+Guihua~Shan$^{1,2,3}$%
+\quad
+Jun~Liu$^{1,2}$\thanks{Corresponding author. E-mail: liujun@sccas.cn.}
+}
+\preprinttext{Online Submission ID: 1037 --- Supplementary Material}
+\onlineid{1037}
+\vgtccategory{Research}
+\vgtcinsertpkg
+\hypersetup{pdftitle={Supplementary Material: AnchorMTM: Spatially Anchored Merge Tree Maps with Topology-Position Tradeoffs},pdfauthor={Lele Wang, Yu Dong, Yuxiang Meng, Guan Li, Zhe Wang, Guihua Shan, Jun Liu}}
+\linespread{0.95}
+\setlength{\textfloatsep}{7pt}
+\setlength{\floatsep}{6pt}
+\setlength{\dbltextfloatsep}{7pt}
+\setcounter{dbltopnumber}{2}
+\renewcommand{\dbltopfraction}{0.9}
+\renewcommand{\textfraction}{0.07}
+\renewcommand{\thefigure}{S\arabic{figure}}\renewcommand{\thetable}{S\arabic{table}}\renewcommand{\thesection}{S\arabic{section}}
+\renewcommand{\theequation}{S\arabic{equation}}\renewcommand{\thelemma}{S\arabic{lemma}}
+\begin{document}\raggedbottom\firstsection{Background and Problem Formulation (Sections 2 and 3)}\label{sec:formulation}\maketitle
+Sections~S1--S4 follow Sections~2--6 of the paper and contain only material the paper refers to but does not include. Unprefixed equation, figure, table and section numbers refer to the paper.
+
+\subsection{Three Ways to Linearize a Field}
+Figure~\ref{fig:linearize} contrasts the three families discussed in Section~2 of the paper on one small field.
+\begin{figure*}[!htb]
+\centering
+\includegraphics[width=.86\textwidth]{figures/anchor_related_work_mapping.png}
+\caption{Mapping strategies on a common 35-sample field. (a) Domain traversal keeps samples~\cite{Franke:2021:1DP}; (b) a 22-sample feature summary keeps selected structures~\cite{Lukasczyk:2017:NTG}; (c) a topology-based profile, the construction of TMTM~\cite{Koepp:2023:TMTM}, keeps the hierarchy, but its axis has no spatial meaning.}
+\label{fig:linearize}
+\end{figure*}
+
+\subsection{From an Augmented Tree to a Profile}
+Figure~\ref{fig:node-mapping} shows the profile construction that AnchorMTM inherits from TMTM and ST-MTM~\cite{Koepp:2023:TMTM,STMTM:2026}.
+\begin{figure}[!htb]
+\centering
+\includegraphics[width=\columnwidth]{figures/anchor_node_mapping.png}
+\caption{An augmented merge tree and its profile. Extrema and the regular samples of their leaf arcs fill each leaf interval; the gaps between leaves are filled from the paths to their lowest common ancestor (grey), so the largest value between two extrema shows their merge level. These gap fillings are what a relaxed order changes: AnchorMTM raises or lowers each gap to an optimal barrier (Proposition~4) instead of the original LCA level.}
+\label{fig:node-mapping}
+\end{figure}
+
+\subsection{Leaf Correspondence}
+\begin{figure*}[!htb]
+\centering
+\includegraphics[width=.72\textwidth]{figures/anchor_leaf_correspondence.png}
+\caption{Leaf correspondence between frames $t$ and $t+1$. Colored regions are leaf-arc supports, and hatching marks the samples a support shares with the previous frame. $A$ and $B$ continue their tracks, $C_t$ has no successor and $D_{t+1}$ starts a track. Birth and death are matching states, not detected physical events.}
+\label{fig:leaf_correspondence}
+\end{figure*}
+Supports are compared as sets of sample identifiers that denote the same spatial sample in every frame; on a fixed grid the identifier is the sample index. When overlaps suggest one-to-many, many-to-one or ambiguous relations, only the links chosen by the assignment survive (Fig.~\ref{fig:leaf_correspondence}); split and merge events are not reconstructed, and no link bridges a missing frame. A feature whose supports in consecutive frames share no sample loses its link, so it contributes neither a temporal target nor a motion sample to Eq.~2.
+
+\subsection{Numerical Conventions of the Direction}
+The signed projected motion counts as zero below $10^{-12}$, and the motion energy as zero below $10^{-20}$; if several domain axes are equally long, the first is used. The relative gap between the two leading eigenvalues of the motion scatter is reported with every direction, so that a nearly isotropic motion, for which the direction is ill-defined, is visible.
+
+\subsection{Closed Form of the Fixed-Order Cost}\label{sec:tau}
+For a fixed order write $w_k=W_{\pi(k)}$, $Q_k=q_{\pi(k)}$ and $H_k=\rho w_k/2$, and let
+\begin{equation*}
+D_k=\sum_{j<k}w_j+\tfrac{w_k}{2}+(k-1)g,\qquad R_k=\sum_{j>k}w_j+\tfrac{w_k}{2}+(n-k)g
+\end{equation*}
+be the distances of the $k$th center from the left and right canvas ends when all intervals are packed. If $\sum_kw_k+(n-1)g\le L$,
+\begin{equation}\label{eq:fixedtau}
+\begin{split}
+\tau(\pi)=\max\Bigl\{&0,\ \max_k(D_k-Q_k-H_k),\ \max_k(Q_k-H_k-L+R_k),\\
+&\max_{j<k}\tfrac12(Q_j-Q_k+D_k-D_j-H_j-H_k)\Bigr\}.
+\end{split}
+\end{equation}
+\emph{Necessity.} An anchor lies within $H_k$ of a center that is at least $D_k$ from the left end and at least $R_k$ from the right end, and two centers in order $j<k$ are at least $D_k-D_j$ apart; each family of terms follows from one of these facts. \emph{Sufficiency.} Write the centers as $z_{\pi(k)}=D_k+y_k$. The interval constraints become $0\le y_1\le\dots\le y_n\le L-\sum_kw_k-(n-1)g$, and an anchor within distance $t$ of its reference exists exactly when $Q_k-D_k-H_k-t\le y_k\le Q_k-D_k+H_k+t$. A nondecreasing $y$ inside these windows exists if and only if every prefix maximum of the lower ends stays below the corresponding upper end; expanding this condition gives Eq.~\ref{eq:fixedtau}, and the prefix maxima themselves are feasible centers. The implementation evaluates Eq.~\ref{eq:fixedtau} directly.
+
+\section{Proofs (Section 4 and Proposition 4)}\label{sec:proofs}
+Since equal-level merges are single nodes, levels increase strictly from every node to its parent. Leaf $k$ lies \emph{between} leaves $i$ and $j$ if its anchor does. The proofs use the separation inequality derived at the start of Section~4.3.
+
+\begin{lemma}[Contiguity]\label{lem:contig}
+If the parent of $u$ lies more than $2\eta$ above $u$, the leaves of $u$ are contiguous in every profile with $\dtop\le\eta$. With $\eta=0$ this holds for every node, so an exact profile keeps every subtree contiguous.
+\end{lemma}
+\begin{proof}
+Take $k\notin\mathcal D(u)$ and $i\in\mathcal D(u)$. Their lowest common ancestor is a proper ancestor of $u$, so $V_{ik}\ge h(\mathrm{parent}(u))>h(u)+2\eta$, which the separation inequality forbids if $k$ lay between two leaves of $u$.
+\end{proof}
+
+\begin{lemma}[Point order]\label{lem:nroe}
+For a fixed order $\pi$, the smallest worst displacement of point anchors $x_{\pi(1)}\le\dots\le x_{\pi(n)}$ equals $L\,\nroe(\pi)$.
+\end{lemma}
+\begin{proof}
+For $j\le k$ with $q_{\pi(j)}>q_{\pi(k)}$, ordered anchors give $(q_{\pi(j)}-x_{\pi(j)})+(x_{\pi(k)}-q_{\pi(k)})\ge q_{\pi(j)}-q_{\pi(k)}$, so one of the two displacements is at least half of this inversion. Conversely, let $P_k=\max_{j\le k}q_{\pi(j)}$ and $S_k=\min_{l\ge k}q_{\pi(l)}$ and set $x_{\pi(k)}=\tfrac12(P_k+S_k)$. Both sequences are nondecreasing, so the anchors are ordered, and $x_{\pi(k)}-q_{\pi(k)}=\tfrac12(P_k-q_{\pi(k)})-\tfrac12(q_{\pi(k)}-S_k)$, where both brackets are inversions of the order.
+\end{proof}
+
+\paragraph{Proof of Proposition 1.} \emph{Bound.} Let $X,Y$ be children of $v$. By Lemma~\ref{lem:contig} they occupy disjoint contiguous blocks. If $X$ comes first, its leaf with reference $M_X$ precedes the leaf of $Y$ with reference $m_Y$; by Lemma~\ref{lem:nroe}, $\nroe(\pi)\ge[M_X-m_Y]^+/(2L)$. The opposite placement gives $[M_Y-m_X]^+/(2L)$, so $\nroe(\pi)$ is at least the smaller value for every sibling pair, and therefore at least $\nu^*$.
+\emph{Attainment.} The midpoint order is exact because it keeps every subtree contiguous. Let leaf $a$ precede leaf $b$ with $q_a>q_b$, and let $X\ni a$ and $Y\ni b$ be the children of $\lca(a,b)$. $X$ precedes $Y$, so $m_X+M_X\le m_Y+M_Y$, that is $M_X-m_Y\le M_Y-m_X$. Hence $q_a-q_b\le M_X-m_Y=\min(M_X-m_Y,M_Y-m_X)\le2L\nu^*$, and Lemma~\ref{lem:nroe} gives $\nroe(\pi)\le\nu^*$.
+\emph{Time.} Hulls are merged bottom-up in $O(n)$; sorting the children of all nodes costs $O(\sum_v\deg v\log\deg v)\subseteq O(n\log n)$.
+
+\paragraph{Proof of Proposition 2.} Fix a layout in order $\pi$ with worst displacement $t$; the first inequality of Eq.~10 is the definition of $\tau$.
+\emph{Two ordered sets.} Suppose all leaves of $X$ precede all leaves of $Y$. Choose $S_X\subseteq X$ and $S_Y\subseteq Y$, put $S=S_X\cup S_Y$, and let $a$ and $b$ be the first and last leaves of $S$. The intervals of $S$ lie between the centers of $a$ and $b$ and are separated by gaps of at least $g$, so $z_b-z_a\ge\sum_{k\in S}s_k-g-W_a/2-W_b/2$; with the anchor slack, $x_b-x_a\ge\sum_{k\in S}s_k-g-W_a/2-W_b/2-H_a-H_b$. Averaging $t\ge q_a-x_a$ and $t\ge x_b-q_b$ gives
+\begin{equation*}
+t\ge\tfrac12\Bigl[\ell_a+\sum_{k\in S}s_k-r_b-g\Bigr]\ge\tfrac12\Bigl[\min_{S_X}\ell+\sum_{S_X}s_k+\sum_{S_Y}s_k-\max_{S_Y}r-g\Bigr].
+\end{equation*}
+With $S_X=\{k\in X:\ell_k\ge\alpha\}$ and $S_Y=\{k\in Y:r_k\le\zeta\}$, maximizing over $\alpha$ and $\zeta$ independently yields $t\ge\tfrac12[A(X)+B(Y)-g]$. Sibling subtrees take one of the two placements (Lemma~\ref{lem:contig}), hence $t\ge\omega(X,Y)$.
+\emph{Canvas ends.} If $b$ is the last leaf of $S$, the intervals of $S$ fit in $[0,z_b+W_b/2]$, so $z_b\ge\sum_{k\in S}s_k-g-W_b/2$ and $t\ge x_b-q_b\ge\sum_{k\in S}s_k-g-r_b$. Taking $S=\{k:r_k\le\zeta\}$ over all leaves gives $t\ge B(\mathcal F)-g$; the first leaf and the right end give $t\ge A(\mathcal F)-g-L$ in the same way.
+\emph{Zero widths.} Then $\ell=r=q$ and $s=0$, so $A(X)=M_X$, $B(Y)=-m_Y$ and $\omega(X,Y)=\tfrac12\min(M_X-m_Y,M_Y-m_X)$, while both canvas terms are nonpositive because $q\in[0,L]$.
+
+\paragraph{The steps from the bound to NPE (Section 4).} Proposition~1 gives $\nu^*\le\nroe(\pi)$. Because $\rho\le1$, every anchor of a layout in $\mathcal L(\pi;W)$ stays inside its interval, so the anchors are ordered by $\pi$ and Lemma~\ref{lem:nroe} gives $\nroe(\pi)\le\tau(\pi)/L$. The last step is the definition of $\tau$.
+
+\paragraph{Proof of Proposition 3.} Let $k\notin\mathcal D(\mathrm{Anc}_\eta(u))$ and $i\in\mathcal D(u)$. Then $\lca(i,k)$ is a proper ancestor of $\mathrm{Anc}_\eta(u)$, whose level exceeds $h(u)+2\eta$ by the maximality of $\mathrm{Anc}_\eta(u)$; by the separation inequality, $k$ lies between no two leaves of $u$, which settles the pairs $(\mathcal D(u),\{k\})$. For a pair $(\mathcal D(u),\mathcal D(w))$, the two disjointness conditions give the same statement for every leaf of $w$ relative to $u$ and every leaf of $u$ relative to $w$. If the earliest of these leaves belongs to $u$ and some leaf of $u$ followed a leaf of $w$, that leaf of $w$ would lie between two leaves of $u$; so all leaves of $u$ precede all leaves of $w$. The two possible placements of each pair then give Eq.~11 exactly as in the proofs of Propositions~1 and~2.
+
+\paragraph{The flattened bound.} Contract every internal node $u$ with $h(\mathrm{parent}(u))-h(u)\le2\eta$. By Lemma~\ref{lem:contig}, every node that remains is contiguous whenever $\dtop\le\eta$, so the order keeps every subtree of the contracted tree contiguous, and Propositions~1 and~2 apply to that tree. The two bounds are incomparable. Two leaves of width $0.2$ with equal references under one root give an empty $\mathcal P_\eta$, whereas the contracted tree yields $0.1$ (with $\rho=g=0$). Conversely, a chain of ancestors whose single gaps are at most $2\eta$ but whose accumulated gap exceeds it separates pairs that the contraction merges.
+
+\paragraph{Proof of Proposition 4.} Let $b_k$ be the maximum of $\psi$ on the open interval from the $k$th to the $(k+1)$th anchor. The profile is continuous and both anchors are minima, so $b_k\ge F_k$, and the displayed merge level of the $i$th and $j$th leaf is $\max_{i\le k<j}b_k$. A merge error of at most $\delta$ requires (i) $b_k\le C_k+\delta$, because no pair spanning gap $k$ may be displayed too high; (ii) $\max_{i\le k<j}b_k\ge V_{\pi(i)\pi(j)}-\delta$ for every pair; and (iii) $b_k\ge F_k$. Raising barriers cannot violate (ii) or (iii), so some choice is feasible if and only if $b_k=C_k+\delta$ is. This is the case exactly when $\delta\ge F_k-C_k$ for every $k$ and $2\delta\ge V_{\pi(i)\pi(j)}-\max_{i\le k<j}C_k$ for every $i<j$; the least such $\delta\ge0$ is Eq.~13. Any admissible barriers are realized by a profile with one peak per gap. For an exact order the ultrametric property makes every term of Eq.~13 nonpositive.
+
+A direct evaluation of Eq.~13 costs $O(n^3)$ per order.
+
+\section{Construction (Section 5)}\label{sec:construction}
+\subsection{Candidate Generation and Refinement}
+There is one \emph{threshold flattening} per distinct parent gap up to $2\eta$; it contracts every internal node whose parent gap does not exceed that value. The \emph{selective flattening} starts from the exact tree, finds the sibling pair with the largest order conflict, and tries to release one or both of its internal blocks while respecting accumulated ancestor gaps. Trials must pass the merge-error test and are compared by NROE, then merge error, then the number of released nodes; steps that do not increase NROE may continue the search, and the best strictly improving state is kept. The best admissible midpoint order stays in the pool, so the final choice is never worse than it in $\tau$.
+
+\emph{Refinement} starts from the exact tree and from the four best structures, ranked by $\tau$, then by the sum of squared positive terms of Eq.~\ref{eq:fixedtau}, then by the number of released nodes. A move takes one child block of an internal node and inserts it elsewhere among its siblings: at every position for nodes with at most eight children, otherwise within distance three. In each pass, the internal nodes are visited in traversal order and the first move that improves ($\tau$, squared sum) and passes the merge-error test is applied; refinement stops after eight passes or when no move is accepted. Every visited order enters a deduplicated pool. Exact ties in Eq.~12 are broken by the permutation itself so that runs are reproducible.
+
+\subsection{Placement Solver}
+For the selected order, $\tau$ comes from Eq.~\ref{eq:fixedtau}, and the capped QP is solved by an interior-point conic solver (Clarabel) on the three benchmark inputs and by SciPy SLSQP from an LP-feasible start on the volumes, followed by numerical residual checks. Every valid match enters $E_M$ with unit weight.
+
+\subsection{Reconstruction and Rounding}
+\emph{Leaf intervals.} The regular samples of a leaf arc are resampled to the free pixel positions of its interval and alternate between the two sides of the anchor; an arc without regular samples is interpolated between its end values.
+\emph{Gaps.} The lowest common ancestor of two consecutive leaves decides which internal paths fill the gap between them; direct siblings, a direct and a deep leaf, and two deep leaves differ in how many internal paths contribute, and the ancestor level is inserted between them. After the barrier correction, interior samples may differ from the original samples; the input field itself is unchanged.
+\emph{Rounding.} Anchors and interval ends are converted to pixels by one affine map for the whole sequence. The renderer keeps every extremum strict, which can raise a barrier slightly above its continuous optimum; for this reason the merge error is measured on the rendered column rather than taken from Eq.~13.
+\emph{Failures.} Widths and gaps that exceed the canvas, too few pixels for the intervals, nonfinite values and solver failures are reported for the frame and not repaired. The per-frame records keep the requested budget, the bounds, $\tau$, $\delta^*$, the rendered merge error and the final displacement separately.
+
+\section{Evaluation (Section 6)}\label{sec:evaluation}
+\subsection{Inputs}
+Because the processed arrays of the ST-MTM authors are not available, the three benchmark inputs are reconstructions: Ring uses the archived generator, Wildfires aggregates fire radiative power into 32 grids, and Storms applies the archived moving mean and smoothing to the ERA5 anomalies. The ST-MTM persistence fractions $(0.1,15,10.5)\%$ were checked on all 816 frames. PM$_{2.5}$ is interpolated onto a $160\times144$ grid. For Cylinder, $Q$ is computed from the original $192\times64\times48$ velocities before cropping, and $-Q$ is scaled once for the whole sequence~\cite{Camarri:2005:Cylinder,Weinkauf:SquareCylinder}. For Tangaroa, speed is clipped to $[0,2]$ and values below $10^{-6}$ are replaced by the inflow value~1~\cite{Popinet:2004:Tangaroa}.
+
+\subsection{Measures and Baselines}
+TW uses $k=(3,5,3)$ neighbors on the three benchmark inputs, $k=1$ on PM$_{2.5}$ and on the volumes, with $0<k<n_t/2$; frames with too few features are skipped, which leaves 1, 4 and 11 frames on Ring, Wildfires and Storms. On these three inputs, SNS and TW of TMTM and ST-MTM are computed from the stored anchors of the runs that give their NPE in Table~1, with the formulas used for AnchorMTM; the recomputed NPE equals Table~1 for all six runs. A rerun reproduces these anchors except ST-MTM on Storms, whose chain of 744 frames ends slightly differently (NPE 0.4613 against 0.4579, with SNS and TW unchanged to four decimals). The curves pad the grid to a power of two, skip padded samples, and map the rank of each extremum among all grid samples to the canvas at the raster length of the sequence; they impose neither the tree nor finite widths~\cite{Franke:2021:1DP}. No NPE is reported for them, because a curve index corresponds to no spatial direction. NPE takes the worst displacement of a frame so that it can be compared with the bounds; the mean absolute displacement gives the same picture on the volumes, 25.7\%, 20.5\% and 3.5\% for TMTM, ST-MTM and Exact on Tangaroa and 26.6\%, 24.3\% and 3.8\% on Cylinder. On the volumes they traverse the $300\times180\times120$ and $135\times64\times48$ grids with $x$ varying fastest, and an extremum's rank among all samples, divided by the number of samples minus one, is its position, without raster rounding.
+
+\emph{ST-MTM on the volumes.} ST-MTM was designed for planar inputs; this adaptation is ours. The runs use the general parameters of ST-MTM without any tuning, and its geometric objective takes 3-D Euclidean distances between support centroids. Feature widths are physical volumes on Tangaroa and sample counts elsewhere, and the convex placement problem is solved with OSQP. The implementation needs binary trees, so a multifurcation is refined into binary nodes at the same level with fixed identifiers; this keeps every pairwise merge level but restricts the leaf orders that ST-MTM can choose.
+
+\subsection{Settings}
+The Balanced budget minimizes $J=\tfrac12\widehat{\mathrm{NPE}}+\tfrac12\widehat{\mathrm{SNS}}$ over candidate budgets in 1\% steps, where hats denote min--max normalization over the candidates whose attained maximum merge error stays within their budget; within 0.01 of the minimum, the smaller budget and then the smaller attained error are preferred. Budgets were fixed before the full runs. The full results include the selection frames, and exploratory runs preceded the selection, so the selection is not a held-out test. Table~\ref{tab:anchor-parameters-final} gives the remaining planar settings and the runtimes. On the volumes, $\rho=0.5$, and both flows take their streamwise axis as the reference (Section~\ref{sec:volume-axis}).
+
+\input{tables/table2_parameters_runtime.tex}
+
+\subsection{The Budget Sampled Finely}
+\begin{figure*}[t]
+\centering
+\includegraphics[width=\textwidth]{figures/supp_budget_sweep.png}
+\caption{Ring, Storms and Wildfires at 14 budgets from 0 to 30\%. (a)~NPE; the grey text gives the NPE of TMTM and ST-MTM from Table~1. (b)~Attained merge error of the worst frame (solid) and its frame average (dashed); the dotted diagonal is the budget. (c)~SNS. TW is not drawn because these sequences have too few eligible frames (Table~1).}
+\label{fig:supp-sweep}
+\end{figure*}
+Fig.~\ref{fig:supp-sweep} repeats the sweep of Section~6.4 with finer budget steps on the three benchmark sequences that contain conflicts. Displacement falls in steps, not continuously. Between steps, extra budget is not spent: the attained merge error stays flat and below the diagonal, as on Ring from 8 to 10\% and on Wildfires beyond 5\%. This is consistent with Proposition~3, under which a conflict is released only once twice the budget reaches its merge-level gap. Across all budgets, SNS moves by less than 0.025 on these sequences, so moving features toward their references leaves their relative distances largely intact.
+
+\subsection{Moving within the Common Model}
+\input{tables/table_family.tex}
+Table~\ref{tab:family} moves from the default setting of AnchorMTM toward ST-MTM on the volumes, one change at a time. Removing the reference term alone leaves NPE almost unchanged, because the cap of Eq.~15 still holds the anchors near their references; SNS and TW move by at most 0.016. Removing the cap raises NPE to 28--31\% and improves SNS, with at most a small gain in TW. The leaf order is what moves TW to the level of ST-MTM: with the leaf order that ST-MTM chose and a stationary temporal target, the same placement gives SNS and TW within 0.01 of the ST-MTM run on Cylinder and better than it on Tangaroa. These rows are not proposed configurations. They show that ST-MTM is a setting of Eq.~6 and that the difference from the default lies in what each setting optimizes. The first row is the limit of a map that follows the reference exactly.
+
+\subsection{Temporal Behavior and the Limit of One Axis}
+\input{tables/table_temporal.tex}
+In Table~\ref{tab:temporal}, the column $q$ shows what the data imply along the axis. TW of the references lies below that of ST-MTM on every sequence, so the gap in TW is largely the cost of one spatial axis. TD of AnchorMTM is close to that of the references on Storms, OLR and PM$_{2.5}$, where it mostly records real motion. On Ring, Wildfires and the volumes the Exact map exceeds it by a factor of 2 to 6, because the leaf order changes between frames; a 10\% budget brings Ring, Wildfires and Cylinder close to the references but leaves Tangaroa high, although there even Exact has a smaller TD than ST-MTM. Exact makes fewer motion errors than both baselines everywhere.
+
+\subsection{Reference Axis of the Volumes}\label{sec:volume-axis}
+\input{tables/table_tangaroa_motion.tex}
+Both volumes are flows, and both use the streamwise $x$ axis, along which the wake develops. The direction estimated from the motion of Tangaroa (Eq.~2) points almost along $-y$, across the wake. Along it (Table~\ref{tab:tangaroa-motion}), AnchorMTM still has the lowest NPE and fewer motion errors than either baseline, but ST-MTM has the lower SNS and the higher TW, and the Exact map moves more than ST-MTM. The mean bound $\nu^*$ also depends on the axis: on Tangaroa it is 6.1\% along $x$, 9.6\% along $y$, 12.4\% along $z$ and 9.2\% along the motion direction; on Cylinder it is 7.7\%, 8.2\% and 33.6\% along $x$, $y$ and $z$ at the numerical tolerance used throughout, but 12.2\%, 9.7\% and 34.2\% with no tolerance, because near-equal merge levels in 34 of the 102 frames change which sibling blocks conflict. The streamwise axis therefore has the smallest bound on Tangaroa, and on Cylinder the ranking depends on the tolerance; we do not choose the axis by the bound, so that it has the same meaning in both flows. Tangaroa was first run along its motion direction, and the axis was changed with those results known, so the two axes are not compared on held-out data.
+
+\subsection{Cylinder: A Hierarchy-Guided Variant}
+\begin{figure*}[t]
+\centering
+\includegraphics[width=.92\textwidth]{figures/anchor_cylinder_centered_blue.png}
+\caption{Flow past a square cylinder (102 frames of the $Q$-criterion) in the exploratory central-tree variant ($g=16$), with five source isosurfaces at a common camera and blue scalar scale. Stages I--V mark the early wake, the onset of shedding, regular shedding, a second transition and the late wake. The ordinate is a guided layout position, not the streamwise coordinate.}
+\label{fig:cylinder-centered}
+\end{figure*}
+\begin{figure*}[t]
+\centering
+\includegraphics[width=\textwidth]{figures/supp_cylinder_compare.png}
+\caption{Cylinder, all 102 frames: the central-tree variant of AnchorMTM (guidance weight 16), TMTM and ST-MTM, all three built from identical simplified trees. Each map uses its own layout coordinate; dotted lines mark the snapshot times of Fig.~\ref{fig:cylinder-centered}.}
+\label{fig:supp-cylinder-compare}
+\end{figure*}
+This variant does not use the anchored axis. It takes its leaf order from a compact TMTM layout, keeps it fixed and steers the anchors, with weight $g$, toward that central tree layout, while the reference survives only as a cap of 56\% of the axis; its merge error is zero on every frame. Five stages separate in Fig.~\ref{fig:cylinder-centered}: an early, nearly steady wake (I), a transition (II), regular shedding (III), a second transition (IV) and the late wake (V), each matched by the source isosurfaces. The price is location: the mean absolute streamwise error rises from 21.1\% to 28.1\% of the axis as $g$ grows from 1 to 16, whereas the anchored default keeps NPE at 9.2\% at zero budget (Fig.~5). A TMTM map shows the same stages (Fig.~\ref{fig:supp-cylinder-compare}), whereas ST-MTM spreads the vortices by their relative distances, so its bands drift across the axis as the wake develops.
+
+\subsection{Hourly PM$_{2.5}$, 22--27 January 2017}
+\begin{figure*}[t]
+\centering
+\includegraphics[width=\textwidth]{figures/supp_pm25_compare.png}
+\caption{Hourly PM$_{2.5}$, 22 January 00:00 to 27 January 12:00, 2017 (Beijing time, 133 hours), drawn by TMTM, ST-MTM and AnchorMTM ($\varepsilon=5\%$) on one color scale. The vertical axes differ in meaning, as stated under each title. Dashed lines a--e mark the five snapshots below (110--120\textdegree E, 32--41\textdegree N, with province borders). Concentrations above 400\,$\mu$g/m$^3$ saturate.}
+\label{fig:supp-pm25-compare}
+\end{figure*}
+High-concentration features are the leaves of the join tree of the negated field; the display restores positive values. All three maps in Fig.~\ref{fig:supp-pm25-compare} show the build-up from 23 January and the peak on 26 January, but they place the polluted features by different rules. TMTM and ST-MTM collect them into a compact band near the middle of the axis wherever they are. In AnchorMTM the band is as wide as the polluted area along the reference direction: on 25 January (c), when pollution covers most of the domain, it spans most of the axis, and on 26 January the strongest maxima drop to the lower part of the axis while TMTM keeps them in the middle. The compact bands are therefore not a more faithful picture; they omit where the features are. The vertical stripes of the AnchorMTM map are a real cost. On this sequence nested maxima cross each other along the direction more than on any other (Section~6.2), so the budget is spent in almost every hour (Section~6.4) and the leaf order changes from hour to hour. Over all 744 hours, the map spends at most 4.998\% merge error. TMTM and ST-MTM are rebuilt with their original configurations, and their anchors match the stored table runs frame by frame.
+
+\subsection{Recomputation}\label{sec:recompute}
+\emph{Controlled trees}: a separate minimax LP for each of the 24 orders, compared with all 43 stored overlap records and 364 stored budget records; for widths of 0, 3, 6 and 9\%, the LP optimum equals the width-aware bound to within $10^{-16}$. \emph{Planar sequences}: every map of Ring, Wildfires and Storms passes the per-frame profile and topology checks of its run; per-frame displacement is recomputed from the rendered anchors for all 9,168 frame--budget pairs of Ring, Storms and PM$_{2.5}$; one PM$_{2.5}$ QP at 2\% failed numerically and was solved by a second solver with unchanged objective, constraints and budget, and its KKT certificate is kept with the records. \emph{Volumes}: before the reference was changed, the default-configuration results along the motion direction (Exact and 10\%, TMTM, ST-MTM) were reproduced to four decimals, and along $x$ the default row of Table~\ref{tab:family} reproduces the Exact row of Table~1; feature identities and source merge matrices checked against the baseline input, and every displayed pairwise merge rebuilt from the raster columns, for 1,515 frame--budget columns and 44,785 feature observations; baseline reflection is chosen by the feature-pooled absolute displacement.
+
+\subsection{Exactness on Cylinder}\label{sec:cylinder-exact}
+\input{tables/table_cylinder_exact.tex}
+The merge levels of Cylinder are float32 values. In 55 of its 102 frames two distinct merge levels differ by less than $2\varepsilon_0=2\times10^{-7}$ of the scalar range, by as little as $10^{-12}$; no planar sequence has such near ties, and Tangaroa has one frame with them. The construction does not collapse these levels beforehand. It allows a merge error of $\varepsilon_0$, so they count as equal, and the bound is evaluated at the same tolerance, which lowers it in 34 of these 55 frames. Table~\ref{tab:cylinder-exact} gives both readings. With the levels kept distinct, Exact has zero merge error with respect to the original tree, and its NPE of 13.6\% lies above the strict bound of 12.2\%. With the tolerance, its merge error is $1.0\times10^{-7}$ of the range, its NPE 9.2\% and the bound 7.7\%. Exact has zero merge error on every other sequence.
+
+\subsection{What the Construction Adds}\label{sec:increments}
+\input{tables/table_ablation.tex}
+Table~\ref{tab:ablation} separates the steps for all six sequences, on the same widths, gaps and slack. At zero budget, midpoint ordering of the exact tree is already within 0.3\% of the width-aware bound except on Tangaroa, and the search lowers $\tau$ further on Wildfires (0.70\% to 0.51\%) and Tangaroa (8.19\% to 8.00\%). Under a budget, threshold flattening alone stays well above the bound; selective flattening and the search lower $\tau$ from 4.83\% to 3.86\% on PM$_{2.5}$, from 4.71\% to 3.94\% on Tangaroa, from 0.53\% to 0.34\% on Wildfires and from 0.73\% to 0.64\% on Cylinder. The selected order attains the width-aware bound on 40/40, 31/32, 729/744, 471/744, 81/102 and 68/201 frames of Ring, Wildfires, Storms, PM$_{2.5}$, Cylinder and Tangaroa at zero budget, and on 40, 31, 725, 397, 79 and 5 frames at the Balanced budget. The final NPE exceeds the selected $\tau$ by at most the slack $\beta_0=L/120$ (0.83\% of the axis), which the capped placement spends on the relative-distance and temporal terms. The remaining distance to the bound is therefore $\tau$ minus the bound, plus at most $\beta_0$.
+
+\subsection{Basin Depth under a Budget}\label{sec:basin-depth}
+\input{tables/table_depth.tex}
+The barriers of Proposition~4 may equal the larger adjacent extremum value, $b_k=F_k$, so a leaf can keep its label and value while its basin becomes flat. Table~\ref{tab:depth} counts these leaves in the stored layouts of every budget. None occurs at zero budget. Under a budget they are rare on the benchmark sequences (at most 28 of 2,072 leaves on Storms at 20\%) and most frequent on PM$_{2.5}$, where 329 of 9,703 basins (3.4\%) vanish at 5\%. The renderer lifts each of them to a strict minimum of one raster level, which keeps the leaf count of every column equal to the number of labels but is hardly visible. Requiring a depth $\gamma$ replaces $F_k$ by $F_k+\gamma$ in Eq.~13 and raises the least admissible budget of the affected orders accordingly.
+
+\subsection{Displayed Motion}\label{sec:displayed-motion}
+\input{tables/table_motion.tex}
+For a matched feature with position residual $e_t=x_t-q_t$, the displayed step errs by $e_t-e_{t-1}$, so small residuals do not by themselves guarantee correct motion. Table~\ref{tab:motion} measures the displayed steps directly. Exact reverses or freezes 22\% and 19\% of the clear steps on Tangaroa and Cylinder, against 39--54\% for the baselines, and a 10\% budget lowers this to 8\% and 2\%. On Tangaroa, TMTM has the smallest step error although it reverses most steps: it hardly moves its features, so its error equals the true motion, which is small. In every map the step error is larger, by a factor of 1.5 to 22, in the steps in which the order of matched features on the axis changes, which supports attributing the extra displayed motion of Exact on Cylinder to leaf-order changes. Some order changes are real: features also cross each other along the axis in 37 of the 101 steps of Cylinder and 157 of the 200 steps of Tangaroa.
+
+\bibliographystyle{abbrv-doi-narrow}\bibliography{references}\end{document}

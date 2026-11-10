@@ -3,17 +3,16 @@
 \end{figure*}
 \section{AnchorMTM}\label{sec:method}\label{sec:construction}
 
-Figure~\ref{fig:framework} summarizes the construction. \emph{Extract \& reference} prepares the trees, identities and fixed targets defined in Section~\ref{sec:formulation}. \emph{Topology-budgeted layout} first chooses an admissible leaf order with low $\tau$ and then places the anchors, balancing spatial and temporal objectives within a cap on that order's displacement. \emph{Linearized space} builds the scalar profiles and stacks them along time. The output of each stage fixes the constraints passed to the next. The control is a normalized merge allowance $\varepsilon$, with $\eta=(\varepsilon_0+\varepsilon)\Delta_F$ for sequence scalar range $\Delta_F$ and numerical tolerance $\varepsilon_0=10^{-7}$. Exact Mode sets $\varepsilon=0$; the exact experiments use zero labelled error. Budgeted Mode uses a positive allowance within the same construction. Balanced denotes an experimentally selected positive-budget configuration, not all budgeted maps. Widths, gap, slack and weights stay fixed during a budget sweep; the merge allowance controls hierarchical error rather than directly bounding positional error.
+Figure~\ref{fig:framework} summarizes the construction. \emph{Extract \& reference} prepares the trees, identities and fixed targets defined in Section~\ref{sec:formulation}. \emph{Topology-budgeted layout} first chooses an admissible leaf order with low $\tau$ and then places the anchors, balancing spatial and temporal objectives within a cap on that order's displacement. \emph{Linearized space} builds the scalar profiles and stacks them along time. The output of each stage fixes the constraints passed to the next. The control is a normalized merge allowance $\varepsilon$, with $\eta=(\varepsilon_0+\varepsilon)\Delta_F$ for sequence scalar range $\Delta_F$ and numerical tolerance $\varepsilon_0=10^{-7}$. Exact Mode sets $\varepsilon=0$, so merge levels closer than $2\varepsilon_0\Delta_F$ count as equal; this matters only on Cylinder, where Exact has merge error $10^{-7}$ of the range with respect to the original tree (Supplementary Section~S4.11). Budgeted Mode uses a positive allowance within the same construction. Balanced denotes an experimentally selected positive-budget configuration, not all budgeted maps. Widths, gap, slack and weights stay fixed during a budget sweep; the merge allowance controls hierarchical error rather than directly bounding positional error.
 
 \subsection{Order Selection and Optimal Barriers}
-Order search receives the prepared tree, reference targets, widths and merge allowance. A finite candidate pool $\mathcal C$ starts from midpoint orders of the strict tree, threshold flattenings and selective conflict flattenings. Width-aware block moves refine promising structures. The point bound supplies an exact-topology initialization, while the interval analysis motivates evaluating packing displacement. Each visited order is checked against the original merge matrix, and selection is lexicographic:
+Order search receives the prepared tree, reference targets, widths and merge allowance. A finite candidate pool $\mathcal C$ starts from midpoint orders of the strict tree, threshold flattenings and selective conflict flattenings. Width-aware block moves refine promising structures (Supplementary Section~S3). The point bound supplies an exact-topology initialization, while the interval analysis motivates evaluating packing displacement. Each visited order is checked against the original merge matrix, and selection is lexicographic:
 \begin{equation}\label{eq:orderobjective}
 \pi^\varepsilon\in\arg\min_{\pi\in\mathcal C}\bigl(\tau(\pi),\nroe(\pi)\bigr)
 \quad\mathrm{s.t.}\quad\delta^*(\pi)\le\eta.
 \end{equation}
 The exact tree supplies a feasible strict-topology seed. Selective flattening releases additional permutations while retaining deeper blocks, as illustrated in Fig.~\ref{fig:selective_relaxation}.
 
-\paragraph{Construction sequence.} For each frame, generate and refine candidate orders; compute $\tau$, NROE and $\delta^*$; admit the budget-feasible orders; choose the lexicographic minimum; solve its capped QP; fill and correct the profile; then check the rendered merge matrix and append the temporal column. Supplementary Section~S3 details candidate generation, refinement and rounding.
 
 \begin{figure}[!tb]
 \centering
@@ -30,7 +29,7 @@ With fixed extrema, the least continuous merge error is
 \end{equation}
 attained by $b_k=C_k+\delta^*(\pi)$.
 \end{proposition}
-Indeed, error $\delta$ requires $F_k\le b_k\le C_k+\delta$; choosing the largest permitted barriers meets every pair's lower requirement exactly when $\delta\ge\delta^*$. This gives a closed-form admission test for candidate orders.
+Indeed, error $\delta$ requires $F_k\le b_k\le C_k+\delta$; choosing the largest permitted barriers meets every pair's lower requirement exactly when $\delta\ge\delta^*$. This gives a closed-form admission test for candidate orders. Barriers equal to $F_k$ keep every label and extremum value but can flatten a basin; requiring a basin depth of at least $\gamma$ replaces $F_k$ by $F_k+\gamma$ in Eq.~\ref{eq:delta} by the same argument. Our renderer keeps every extremum a strict minimum, so $\gamma$ is one raster level.
 
 \subsection{Capped Spatiotemporal Placement}
 For the chosen order, the default weights are $(\lambda_R,\lambda_G,\lambda_M,\lambda_C)=(4,1,0.5,0.1)$. Each term in Eq.~\ref{eq:family} is a mean squared residual: anchor-to-reference distance, ordered anchor separation minus support-centroid distance, matched temporal-target error, or anchor-to-center offset. The temporal target follows projected motion:

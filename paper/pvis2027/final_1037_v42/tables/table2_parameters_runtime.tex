@@ -1,0 +1,20 @@
+\begin{table}[!tb]
+\centering
+\caption{Parameter settings and runtime (seconds).}
+\label{tab:anchor-parameters-final}
+\footnotesize
+\setlength{\tabcolsep}{2pt}
+\renewcommand{\arraystretch}{0.95}
+\begin{tabular}{@{}lcccc@{}}
+\toprule
+Parameter & Ring & Wildfires & Storms & PM2.5 \\
+\midrule
+$N_r$ & 196 & 4096 & 4096 & 4096 \\
+$s_w$ & 0.00328 & 0.00053 & 0.01170 & 0.00073 \\
+$t_{opt}$ & 0.150 & 3.324 & 2.600 & 199.975 \\
+$t_{total}$ & 0.486 & 4.424 & 63.447 & 231.177 \\
+\bottomrule
+\end{tabular}
+\vspace{2pt}
+\begin{minipage}{0.94\columnwidth}\footnotesize $s_w$ is the width per unit of support measure and $N_r$ the raster length; $\rho=0.5$ throughout. Times are single runs without a tree cache: $t_{opt}$ covers ordering and placement, $t_{total}$ the full pipeline. Volumes (default weights, $\rho=0.5$): $s_w=4.10$ on Tangaroa (physical volume; 2.88 along its motion direction, as $s_w$ scales with $L$) and $2.71\times10^{-5}$ on Cylinder (sample counts), gaps $L/240$ and $L/300$, slack $\beta_0=L/120$; order search, QP and scoring take 50\,s and 41\,s at $\varepsilon=0$ and at most 78\,s at positive budgets on an Apple M2 Pro (Tangaroa timed along its motion direction).\end{minipage}
+\end{table}

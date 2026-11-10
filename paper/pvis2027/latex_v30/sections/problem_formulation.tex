@@ -20,7 +20,7 @@ q_i^t=\langle a^*,p_i^t\rangle-o\in[0,L].
 Direction, origin and extent remain fixed across frames and budgets. Relative geometry uses support-centroid distances $d_{ij}^t$; the targets $q_i^t$ use extremum locations. Thus support growth can change relative-distance terms without moving a feature's spatial target.
 
 \subsection{A Unified Layout Formulation}\label{sec:common}
-Each leaf occupies an interval of width $W_i=s\,m_i$ and center $z_i$, where $m_i$ is its support measure and $s$ is fixed. The layout set $\mathcal{L}(\pi;W)$ places these intervals in order $\pi$ inside $[0,L]$, with gap at least $g$ and anchor slack $|x_i-z_i|\le\rho W_i/2$. Two order costs distinguish point ordering from packing:
+Each leaf occupies an interval of width $W_i=s\,m_i$ and center $z_i$, where $m_i$ is its support measure and $s$ is fixed. The layout set $\mathcal{L}(\pi;W)$ places these intervals in order $\pi$ inside $[0,L]$, with gap at least $g$ and anchor slack $|x_i-z_i|\le\rho W_i/2$. Two order costs distinguish point ordering from packing, and NPE measures the drawn map:
 \begin{equation}\label{eq:nroe}
 \begin{aligned}
 \nroe(\pi)&=\frac{\max_{j\le k}[q_{\pi(j)}-q_{\pi(k)}]^+}{2L},\\
@@ -32,7 +32,7 @@ The normalized reference-order error NROE is the smallest worst displacement, re
 \begin{equation}\label{eq:dtop}
 \dtop(\psi,T)=\max_{i,j}|V_{ij}^{\psi}-V_{ij}|.
 \end{equation}
-The diagonal includes extremum values. Under complete fixed labelling this cophenetic error equals labelled interleaving distance and bounds the unlabelled interleaving and bottleneck distances~\cite{Munch:2019:LINF,Gasparovic:2024:IID,Morozov:2013:IDMT}.
+The diagonal includes extremum values. Under complete fixed labelling this cophenetic error equals the labelled interleaving distance and bounds the unlabelled interleaving and bottleneck distances~\cite{Munch:2019:LINF,Gasparovic:2024:IID,Morozov:2013:IDMT}.
 
 These variables separate layout priorities in the common model
 \begin{equation}\label{eq:family}

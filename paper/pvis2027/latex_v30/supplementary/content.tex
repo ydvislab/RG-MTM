@@ -1,4 +1,4 @@
-% Supplement of paper 1037, v39 (2026-11-10). Organized by the sections of the paper and written so that it repeats
+% Supplement of paper 1037, v41 (2026-11-10). Organized by the sections of the paper and written so that it repeats
 % none of its text, statements, settings or figures: S1 <-> Sec. 3, S2 <-> Sec. 4 (proofs), S3 <-> Sec. 5, S4 <-> Sec. 6.
 % Proofs adapted from paper/anchor_full/supplement.tex (Oct 30 version) to the notation of the v30 manuscript;
 % implementation details only where that version or the v31 supplement states them.
@@ -210,7 +210,7 @@ Both volumes are flows, and both use the streamwise $x$ axis, along which the wa
 \caption{Cylinder, all 102 frames: the central-tree variant of AnchorMTM (guidance weight 16), TMTM and ST-MTM, all three built from identical simplified trees. Each map uses its own layout coordinate; dotted lines mark the snapshot times of Fig.~\ref{fig:cylinder-centered}.}
 \label{fig:supp-cylinder-compare}
 \end{figure*}
-This variant does not use the anchored axis. It takes its leaf order from a compact TMTM layout, keeps it fixed and steers the anchors, with weight $g$, toward that central tree layout, while the reference survives only as a cap of 56\% of the axis; its merge error is zero on every frame. Five stages separate in Fig.~\ref{fig:cylinder-centered}: an early, nearly steady wake (I), a transition (II), regular shedding (III), a second transition (IV) and the late wake (V), each matched by the source isosurfaces. The price is location: the mean absolute streamwise error rises from 21.1\% to 28.1\% of the axis as $g$ grows from 1 to 16, whereas the anchored default keeps NPE at 9.2\% with the tree exact (Fig.~5). A TMTM map shows the same stages (Fig.~\ref{fig:supp-cylinder-compare}), whereas ST-MTM spreads the vortices by their relative distances, so its bands drift across the axis as the wake develops.
+This variant does not use the anchored axis. It takes its leaf order from a compact TMTM layout, keeps it fixed and steers the anchors, with weight $g$, toward that central tree layout, while the reference survives only as a cap of 56\% of the axis; its merge error is zero on every frame. Five stages separate in Fig.~\ref{fig:cylinder-centered}: an early, nearly steady wake (I), a transition (II), regular shedding (III), a second transition (IV) and the late wake (V), each matched by the source isosurfaces. The price is location: the mean absolute streamwise error rises from 21.1\% to 28.1\% of the axis as $g$ grows from 1 to 16, whereas the anchored default keeps NPE at 9.2\% at zero budget (Fig.~5). A TMTM map shows the same stages (Fig.~\ref{fig:supp-cylinder-compare}), whereas ST-MTM spreads the vortices by their relative distances, so its bands drift across the axis as the wake develops.
 
 \subsection{Hourly PM$_{2.5}$, 22--27 January 2017}
 \begin{figure*}[t]

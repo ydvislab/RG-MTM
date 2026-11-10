@@ -1,0 +1,46 @@
+\begin{figure*}[!tb]
+\paperfigure{figures/anchor_framework.png}{fig:framework}{AnchorMTM workflow on a four-leaf example. Extract and reference: merge trees of the input frames $F(x,t)$, leaf supports matched across frames, and one direction $d=a^*$ that gives every extremum a reference position $q$; the bounds follow from these quantities alone. Topology-budgeted layout: with $\eta=0$ the leaf order keeps every subtree contiguous and the anchors $x$ leave their references; with $\eta>0$ a relaxation candidate admits an order that follows them, and the anchors are placed under a displacement cap. Linearized space: leaf-arc samples and optimal barriers fill each profile $\psi_t$, every rendered frame is checked against the budget, and the stacked profiles form the map.}
+\end{figure*}
+\section{AnchorMTM}\label{sec:method}\label{sec:construction}
+
+Figure~\ref{fig:framework} summarizes the construction. \emph{Extract \& reference} prepares the trees, identities and fixed targets defined in Section~\ref{sec:formulation}. \emph{Topology-budgeted layout} first chooses an admissible leaf order with low $\tau$ and then places the anchors, balancing spatial and temporal objectives within a cap on that order's displacement. \emph{Linearized space} builds the scalar profiles and stacks them along time. The output of each stage fixes the constraints passed to the next. The control is a normalized merge allowance $\varepsilon$, with $\eta=(\varepsilon_0+\varepsilon)\Delta_F$ for sequence scalar range $\Delta_F$ and numerical tolerance $\varepsilon_0=10^{-7}$. Exact Mode sets $\varepsilon=0$, so merge levels closer than $2\varepsilon_0\Delta_F$ count as equal; this matters only on Cylinder, where Exact then has merge error $10^{-7}$ of the range with respect to the original tree and NPE 9.2\%, against 13.6\% with these levels kept distinct (Supplementary Section~S4.11). Budgeted Mode uses a positive allowance; Balanced denotes one experimentally selected budget, not all budgeted maps. Widths, gap, slack and weights stay fixed during a budget sweep; the merge allowance controls hierarchical error rather than directly bounding positional error.
+
+\subsection{Order Selection and Optimal Barriers}
+Order search receives the prepared tree, reference targets, widths and merge allowance. A finite candidate pool $\mathcal C$ starts from midpoint orders of the strict tree, threshold flattenings and selective conflict flattenings. Width-aware block moves refine promising structures (Supplementary Section~S3). The point bound supplies an exact-topology initialization, and the interval analysis is why candidates are ranked by their packing cost $\tau$. Each visited order is checked against the original merge matrix, and selection is lexicographic:
+\begin{equation}\label{eq:orderobjective}
+\pi^\varepsilon\in\arg\min_{\pi\in\mathcal C}\bigl(\tau(\pi),\nroe(\pi)\bigr)
+\quad\mathrm{s.t.}\quad\delta^*(\pi)\le\eta.
+\end{equation}
+The exact tree supplies a feasible strict-topology seed. Selective flattening releases additional permutations while retaining deeper blocks, as illustrated in Fig.~\ref{fig:selective_relaxation}.
+
+
+\begin{figure}[!tb]
+\centering
+\includegraphics[width=\columnwidth]{figures/anchor_relaxation_open.png}
+\caption{Selective flattening admits order $A,C,D,B$ while retaining the $C,D$ grouping. The displayed barrier levels are corrected against the original merge matrix.}
+\label{fig:selective_relaxation}
+\end{figure}
+For gap $k$ of an order, set $C_k=\min_{i\le k<j}V_{\pi(i)\pi(j)}$ and let $F_k$ be the larger adjacent extremum value.
+\begin{proposition}[Optimal barriers]\label{prop:barriers}
+With fixed extrema, the least continuous merge error is
+\begin{equation}\label{eq:delta}
+\delta^*(\pi)=\max\Bigl\{0,\max_k(F_k-C_k),
+\tfrac12\max_{i<j}\bigl(V_{\pi(i)\pi(j)}-\max_{i\le k<j}C_k\bigr)\Bigr\},
+\end{equation}
+attained by $b_k=C_k+\delta^*(\pi)$.
+\end{proposition}
+Indeed, error $\delta$ requires $F_k\le b_k\le C_k+\delta$; choosing the largest permitted barriers meets every pair's lower requirement exactly when $\delta\ge\delta^*$. This gives a closed-form admission test for candidate orders. Barriers equal to $F_k$ keep every label and extremum value but can flatten a basin; requiring a basin depth of at least $\gamma$ replaces $F_k$ by $F_k+\gamma$ in Eq.~\ref{eq:delta} by the same argument. Our renderer adds a margin of one raster level after the barriers are chosen (Section~\ref{sec:reconstruction}).
+
+\subsection{Capped Spatiotemporal Placement}
+For the chosen order, the default weights are $(\lambda_R,\lambda_G,\lambda_M,\lambda_C)=(4,1,0.5,0.1)$. Each term in Eq.~\ref{eq:family} is a mean squared residual: anchor-to-reference distance, ordered anchor separation minus support-centroid distance, matched temporal-target error, or anchor-to-center offset. The temporal target follows projected motion:
+\begin{equation}\label{eq:temporal_target}
+\hat x_i^t=x_{\mu_t(i)}^{t-1}+q_i^t-q_{\mu_t(i)}^{t-1}.
+\end{equation}
+The selected order is now fixed, so placement changes coordinates without revisiting the discrete search. Unmatched leaves have no temporal penalty. Placement solves the convex quadratic objective under the interval constraints and
+\begin{equation}\label{eq:qp}
+\|x-q\|_\infty\le\tau(\pi^\varepsilon)+\beta_0,
+\end{equation}
+with fixed slack $\beta_0$. Because $\tau$ is attained, this cap is feasible and transfers the selected order's displacement control to the final anchors. The cap prevents a relative-distance or temporal term from moving an anchor arbitrarily far from its spatial target. Conversely, the fixed slack leaves room to improve these secondary relationships after the discrete order has been chosen. Within a frame the feasible set is linear and the objective quadratic; frame order enters only through matched predecessor targets.
+
+\subsection{Profile Reconstruction}\label{sec:reconstruction}
+The final stage receives the order, anchor intervals and optimal barriers. Leaf-arc samples fill the intervals and LCA paths fill their gaps~\cite{Koepp:2023:TMTM,STMTM:2026}. Barrier correction clips each inter-anchor interior to $b_k$ and raises its peak when needed. Where $b_k$ equals the larger adjacent extremum value, the renderer raises the barrier by one raster level, so no basin is drawn flat. Profiles share direction, origin, extent and pixel scale; their stack is $I^\varepsilon(t,u)=\psi_t^\varepsilon(u)$. Rounding and this margin can change merge levels, so the fixed-label matrix, including its diagonal, is rebuilt from every rendered column; its largest deviation from the tree is the merge error we report and compare with the budget (Supplementary Section~S4.10).

@@ -1,0 +1,108 @@
+% Paper 1037, PacificVis 2027 Conference Paper Track: main paper (final submission, v42).
+% Build: pdflatex main; bibtex main; pdflatex main; pdflatex main   (or: tectonic -X compile main.tex)
+\documentclass[preprint]{vgtc}   % single-blind: authors shown, submission ID in the page header
+\usepackage[T1]{fontenc}
+\usepackage{mathptmx}
+\usepackage{cite}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{placeins}
+\usepackage{float,stfloats,needspace}
+\usepackage{booktabs,multirow,colortbl}
+\makeatletter
+\setlength{\@dblfptop}{0pt}
+\setlength{\@dblfpsep}{12pt}
+\setlength{\@dblfpbot}{0pt plus 1fil}
+\makeatother
+\usepackage[ruled,vlined]{algorithm2e}
+\SetKwInput{KwData}{Data}
+\SetKwInput{KwResult}{Result}
+\SetKwProg{Fn}{Function}{:}{}
+\SetKw{KwReturn}{return}
+\SetKw{KwBreak}{break}
+\SetKwFunction{Construct}{ConstructTemporalMap}
+\SetKwFunction{Refine}{RefineOrder}
+\SetKwFunction{Barriers}{OptimalBarriers}
+\SetAlFnt{\small}
+\SetAlCapFnt{\small\bfseries}
+\SetAlCapNameFnt{\small\bfseries}
+\SetAlCapSkip{3pt}
+\DontPrintSemicolon
+\setcounter{secnumdepth}{3}
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}{Lemma}
+\newtheorem{proposition}{Proposition}
+\newcommand{\dtop}{d_{\mathrm{top}}}
+\newcommand{\lca}{\operatorname{lca}}
+\newcommand{\nroe}{\mathrm{NROE}}
+\newcommand{\pos}[1]{\left[#1\right]^+}
+\title{AnchorMTM: Spatially Anchored Merge Tree Maps with\\Topology--Position Tradeoffs}
+\author{%
+Lele~Wang$^{1,2}$\thanks{%
+Affiliations:
+$^{1}$ Advanced Interactive Technology and Application Laboratory, Computer Network Information Center, Chinese Academy of Sciences, Beijing, China;
+$^{2}$ University of Chinese Academy of Sciences, Beijing, China;
+$^{3}$ Hangzhou Institute for Advanced Study, UCAS, Hangzhou, China.
+E-mails: lelewang@cnic.cn; dongyu@cnic.cn; yxmeng@cnic.cn;
+liguan@sccas.cn; wangzhe@sccas.cn; sgh@sccas.cn;
+liujun@sccas.cn.
+Lele Wang and Yu Dong contributed equally to this work.
+Jun Liu is the corresponding author.}%
+\quad
+Yu~Dong$^{1,*}$%
+\quad
+Yuxiang~Meng$^{1,2}$%
+\quad
+Guan~Li$^{1,2}$%
+\quad
+Zhe~Wang$^{1,2}$%
+\quad
+Guihua~Shan$^{1,2,3}$%
+\quad
+Jun~Liu$^{1,2}$\thanks{Corresponding author. E-mail: liujun@sccas.cn.}
+}
+\preprinttext{Online Submission ID: 1037}
+\onlineid{1037}
+\vgtccategory{Research}
+\vgtcinsertpkg
+\hypersetup{pdftitle={AnchorMTM: Spatially Anchored Merge Tree Maps with Topology-Position Tradeoffs},pdfauthor={Lele Wang, Yu Dong, Yuxiang Meng, Guan Li, Zhe Wang, Guihua Shan, Jun Liu}}
+\abstract{Merge tree maps summarize a time-varying scalar field in one static image: each time step becomes a one-dimensional profile of its merge tree, and the profiles are stacked along time, so that nested features appear as nested bands. The vertical axis of these maps encodes tree order or relative distance rather than location, so an analyst sees how features nest but not where they are or how they move. We present AnchorMTM, a merge tree map whose vertical axis is one fixed spatial direction. Anchoring the axis exposes a conflict: a profile that shows the tree exactly keeps every subtree contiguous, whereas the locations of sibling subtrees may interleave along the direction. We derive lower bounds on the displacement this conflict forces, for exact topology, for features of finite width and for a bounded change of merge levels. The bounds depend on the trees, the feature locations and, for finite widths, the interval sizes, but not on any layout algorithm, so they are known before a map is drawn. AnchorMTM then builds the map under a single merge budget that limits how far the displayed merge levels may change. On four planar and two volumetric sequences, much of the order error and most of the displacement of existing merge tree maps prove not to be forced by the tree. AnchorMTM attains the exact-topology bound for finite widths on most planar frames and, with the tree kept exactly, draws features much closer to their locations, while ST-MTM, which optimizes relative distances, still preserves neighborhoods better at exact topology. Where conflicting subtrees merge at similar levels, a small budget removes most of the remaining displacement, and on both volumes it also lowers SNS below that of ST-MTM while matching or exceeding its TW. The bounds make the positional price of a spatial axis measurable before a map is drawn. The full study is available on \href{https://github.com/lelewang1109/AnchorMTM}{GitHub}.}
+\keywords{Time-varying scalar fields, merge tree maps, topology-based visualization, spatial anchoring, lower bounds, constrained layout.}
+\teaser{
+\centering
+\includegraphics[width=\linewidth]{figures/anchor_storms_overview.png}
+\par
+\refstepcounter{figure}\label{fig:storms_overview}
+{\captionfonts\raggedright\noindent\figurename~\thefigure: Storms temporal overview ($\varepsilon=5\%$): 744 hourly ERA5 sea-level-pressure fields, December 1999. Each frame's merge tree becomes a one-dimensional profile, rotated and stacked along time. The vertical axis is one fixed spatial direction $a^*$ (west to east), so the rising track is a storm moving east, from the open Atlantic to Scandinavia; the snapshots identify the matched extremum, and blue outlines show its leaf-arc support. Every labelled pairwise merge level stays within 5\% of the scalar range of its value in the tree, although the grouping of subtrees may change.\par}
+
+}
+\linespread{1.0}
+\setlength{\textfloatsep}{7pt}
+\setlength{\floatsep}{6pt}
+\setlength{\dbltextfloatsep}{7pt}
+\setcounter{dbltopnumber}{2}
+\renewcommand{\dbltopfraction}{0.9}
+\renewcommand{\dblfloatpagefraction}{0.7}
+\renewcommand{\floatpagefraction}{0.7}
+\setcounter{totalnumber}{6}
+\setcounter{topnumber}{3}
+\setcounter{bottomnumber}{3}
+\renewcommand{\textfraction}{0.07}
+
+\newcommand{\paperfigure}[4][\textwidth]{\centering\includegraphics[width=#1]{#2}\caption{#4}\label{#3}}
+
+
+\begin{document}
+\input{sections/introduction.tex}
+\input{sections/related_work.tex}
+\input{sections/problem_formulation.tex}
+\input{sections/position_bounds.tex}
+\input{sections/anchor_mtm.tex}
+\input{sections/experiments.tex}
+\input{sections/discussion_conclusion.tex}
+\FloatBarrier
+\begingroup
+\interlinepenalty=10000
+\bibliographystyle{abbrv-doi-narrow}
+\bibliography{references}
+\endgroup
+\end{document}

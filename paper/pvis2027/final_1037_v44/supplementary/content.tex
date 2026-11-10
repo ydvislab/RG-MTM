@@ -1,4 +1,4 @@
-% Paper 1037: supplementary material (final submission, v43).
+% Paper 1037: supplementary material (final submission, v44).
 % Build: pdflatex supplementary; bibtex supplementary; pdflatex supplementary x2   (or: tectonic -X compile supplementary.tex)
 \documentclass[preprint]{vgtc}
 \usepackage[T1]{fontenc}
@@ -144,7 +144,7 @@ With $S_X=\{k\in X:\ell_k\ge\alpha\}$ and $S_Y=\{k\in Y:r_k\le\zeta\}$, maximizi
 
 A direct evaluation of Eq.~13 costs $O(n^3)$ per order.
 
-\section{Construction (Section 5)}\label{sec:construction}
+\section{Method (Section 5)}\label{sec:construction}
 \subsection{Candidate Generation and Refinement}
 There is one \emph{threshold flattening} per distinct parent gap up to $2\eta$; it contracts every internal node whose parent gap does not exceed that value. The \emph{selective flattening} starts from the exact tree, finds the sibling pair with the largest order conflict, and tries to release one or both of its internal blocks while respecting accumulated ancestor gaps. Trials must pass the merge-error test and are compared by NROE, then merge error, then the number of released nodes; steps that do not increase NROE may continue the search, and the best strictly improving state is kept. The best admissible midpoint order stays in the pool, so the final choice is never worse than it in $\tau$.
 
@@ -188,7 +188,7 @@ Table~\ref{tab:family} moves from the default setting of AnchorMTM toward ST-MTM
 
 \subsection{Temporal Behavior and the Limit of One Axis}
 \input{tables/table_temporal.tex}
-In Table~\ref{tab:temporal}, the column $q$ shows what the data imply along the axis. TW of the references lies below that of ST-MTM on every sequence, so the gap in TW is largely the cost of one spatial axis. TD of AnchorMTM is close to that of the references on Storms, OLR and PM$_{2.5}$, where it mostly records real motion. On Ring, Wildfires and the volumes, Exact exceeds it by a factor of 2 to 6, because the leaf order changes between frames; a 10\% budget brings Ring, Wildfires and Cylinder close to the references but leaves Tangaroa high, although there even Exact has a smaller TD than ST-MTM. Exact makes fewer motion errors than both baselines everywhere.
+In Table~\ref{tab:temporal}, the column $q$ shows what the data imply along the axis. TW of the references lies below that of ST-MTM on every sequence, so the gap in TW is largely the cost of one spatial axis. TD of AnchorMTM is close to that of the references on Storms, OLR and PM$_{2.5}$, where it mostly records real motion. On Ring, Wildfires and the volumes, Exact exceeds it by a factor of 2 to 6, because the leaf order changes between frames; a 10\% budget brings Ring, Wildfires and Cylinder close to the references but leaves Tangaroa high, although there even Exact has a smaller TD than ST-MTM. Motion errors (ME) are fewer for Exact than for both baselines on every sequence, though by only one point on Wildfires and daily PM$_{2.5}$; on the volumes, Exact has 33\% against 46--67\% on Cylinder and 59\% against 70--97\% on Tangaroa. Even drawing the references gives 7--47\%, so part of this error comes with one axis.
 
 \subsection{Reference Axis of the Volumes}\label{sec:volume-axis}
 \input{tables/table_tangaroa_motion.tex}
@@ -223,9 +223,9 @@ High-concentration features are the leaves of the join tree of the negated field
 
 \subsection{Exactness on Cylinder}\label{sec:cylinder-exact}
 \input{tables/table_cylinder_exact.tex}
-The merge levels of Cylinder are float32 values. In 55 of its 102 frames two distinct merge levels differ by less than $2\varepsilon_0=2\times10^{-7}$ of the scalar range, by as little as $10^{-12}$; no planar sequence has such near ties, and Tangaroa has one frame with them. The construction does not collapse these levels beforehand. It allows a merge error of $\varepsilon_0$, so they count as equal, and the bound is evaluated at the same tolerance, which lowers it in 34 of these 55 frames. Table~\ref{tab:cylinder-exact} gives both readings. With the levels kept distinct, Exact has zero merge error with respect to the original tree, and its NPE of 13.6\% lies above the strict bound of 12.2\%. With the tolerance, its merge error is $1.0\times10^{-7}$ of the range, its NPE 9.2\% and the bound 7.7\%. Exact has zero merge error on every other sequence.
+The merge levels of Cylinder are float32 values. In 55 of its 102 frames two distinct merge levels differ by less than $2\varepsilon_0=2\times10^{-7}$ of the scalar range, by as little as $10^{-12}$; no planar sequence has such near ties, and Tangaroa has one frame with them. The method does not collapse these levels beforehand. It allows a merge error of $\varepsilon_0$, so they count as equal, and the bound is evaluated at the same tolerance, which lowers it in 34 of these 55 frames. Table~\ref{tab:cylinder-exact} gives both readings. With the levels kept distinct, Exact has zero merge error with respect to the original tree, and its NPE of 13.6\% lies above the strict bound of 12.2\%. With the tolerance, its merge error is $1.0\times10^{-7}$ of the range, its NPE 9.2\% and the bound 7.7\%. Exact has zero merge error on every other sequence.
 
-\subsection{What the Construction Adds}\label{sec:increments}
+\subsection{What Each Step of the Method Adds}\label{sec:increments}
 \input{tables/table_ablation.tex}
 Table~\ref{tab:ablation} separates the steps for all six sequences, on the same widths, gaps and slack. At zero budget, midpoint ordering of the exact tree is already within 0.3\% of the width-aware bound except on Tangaroa, and the search lowers $\tau$ further on Wildfires (0.70\% to 0.51\%) and Tangaroa (8.19\% to 8.00\%). Under a budget, threshold flattening alone stays well above the bound; selective flattening and the search lower $\tau$ from 4.83\% to 3.86\% on PM$_{2.5}$, from 4.71\% to 3.94\% on Tangaroa, from 0.53\% to 0.34\% on Wildfires and from 0.73\% to 0.64\% on Cylinder. The selected order attains the width-aware bound on 40/40, 31/32, 729/744, 471/744, 81/102 and 68/201 frames of Ring, Wildfires, Storms, PM$_{2.5}$, Cylinder and Tangaroa at zero budget, and on 40, 31, 725, 397, 79 and 5 frames at the Balanced budget. The final NPE exceeds the selected $\tau$ by at most the slack $\beta_0=L/120$ (0.83\% of the axis), which the capped placement spends on the relative-distance and temporal terms. The remaining distance to the bound is therefore $\tau$ minus the bound, plus at most $\beta_0$.
 
